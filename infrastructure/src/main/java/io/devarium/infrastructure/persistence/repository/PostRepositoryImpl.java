@@ -1,8 +1,8 @@
-package io.devarium.infrastructure.repository;
+package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.repository.PostRepository;
-import io.devarium.infrastructure.entity.PostEntity;
+import io.devarium.infrastructure.persistence.entity.PostEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

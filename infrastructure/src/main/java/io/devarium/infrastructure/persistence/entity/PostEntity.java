@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.entity;
+package io.devarium.infrastructure.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
