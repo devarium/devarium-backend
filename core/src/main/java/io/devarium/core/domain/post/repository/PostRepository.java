@@ -7,5 +7,7 @@ public interface PostRepository {
 
     Post save(Post post);
 
+    void deleteById(Long id);
+
     Optional<Post> findById(Long id);
 }
