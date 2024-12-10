@@ -30,6 +30,7 @@ public class PostRepositoryImpl implements PostRepository {
             .id(entity.getId())
             .title(entity.getTitle())
             .content(entity.getContent())
+            .createdAt(entity.getCreatedAt())
             .build();
     }
 
