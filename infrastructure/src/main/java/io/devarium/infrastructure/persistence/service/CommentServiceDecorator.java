@@ -17,4 +17,22 @@ public class CommentServiceDecorator implements CommentService {
     public Comment createComment(UpsertCommentCommand command) {
         return commentService.createComment(command);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Comment getComment(Long commentId) {
+        return commentService.getComment(commentId);
+    }
+
+    @Override
+    @Transactional
+    public Comment updateComment(Long commentId, UpsertCommentCommand command) {
+        return commentService.updateComment(commentId, command);
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId) {
+        commentService.deleteComment(commentId);
+    }
 }
