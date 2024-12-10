@@ -21,6 +21,11 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        commentJpaRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<Comment> findById(Long id) {
         return commentJpaRepository.findById(id).map(this::convertToDomain);
     }
