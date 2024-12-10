@@ -8,7 +8,11 @@ import io.devarium.core.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +27,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
         @RequestBody UpsertCommentRequest upsertCommentRequest
-        // TODO: @AuthenticationPrincipal UserDetails userDetails
+        // @AuthenticationPrincipal UserDetails userDetails
     ) {
         Comment comment = commentService.createComment((upsertCommentRequest));
         CommentResponse response = CommentResponse.from(comment);
@@ -31,5 +35,34 @@ public class CommentController {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(SingleItemResponse.from(response));
+    }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<SingleItemResponse<CommentResponse>> getComment(@PathVariable Long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        CommentResponse response = CommentResponse.from(comment);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<SingleItemResponse<CommentResponse>> updateComment(
+        @PathVariable Long commentId,
+        @RequestBody UpsertCommentRequest request
+        // @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Comment comment = commentService.updateComment(commentId, request);
+        CommentResponse response = CommentResponse.from(comment);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deletePost(
+        @PathVariable Long commentId
+        // @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
     }
 }
