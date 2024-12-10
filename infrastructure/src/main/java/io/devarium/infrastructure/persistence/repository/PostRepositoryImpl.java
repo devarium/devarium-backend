@@ -21,6 +21,11 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        postJpaRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<Post> findById(Long id) {
         return postJpaRepository.findById(id).map(this::convertToDomain);
     }

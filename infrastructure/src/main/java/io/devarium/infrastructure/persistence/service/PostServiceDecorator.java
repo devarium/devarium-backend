@@ -17,4 +17,22 @@ public class PostServiceDecorator implements PostService {
     public Post createPost(UpsertPostCommand command) {
         return postService.createPost(command);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Post getPost(Long postId) {
+        return postService.getPost(postId);
+    }
+
+    @Override
+    @Transactional
+    public Post updatePost(Long postId, UpsertPostCommand command) {
+        return postService.updatePost(postId, command);
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long postId) {
+        postService.deletePost(postId);
+    }
 }
