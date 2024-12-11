@@ -41,6 +41,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     private PostEntity convertToEntity(Post post) {
         return PostEntity.builder()
+            .id(post.getId())
             .title(post.getTitle())
             .content(post.getContent())
             .build();
