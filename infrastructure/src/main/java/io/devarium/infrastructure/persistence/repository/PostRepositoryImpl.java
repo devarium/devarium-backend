@@ -39,11 +39,11 @@ public class PostRepositoryImpl implements PostRepository {
             .build();
     }
 
-    private PostEntity convertToEntity(Post post) {
+    private PostEntity convertToEntity(Post domain) {
         return PostEntity.builder()
-            .id(post.getId())
-            .title(post.getTitle())
-            .content(post.getContent())
+            .id(domain.getId())
+            .title(domain.getTitle())
+            .content(domain.getContent())
             .build();
     }
 }
