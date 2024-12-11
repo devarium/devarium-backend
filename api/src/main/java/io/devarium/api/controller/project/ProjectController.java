@@ -1,10 +1,9 @@
 package io.devarium.api.controller.project;
 
 import io.devarium.api.common.dto.SingleItemResponse;
-import io.devarium.api.controller.post.dto.PostResponse;
-import io.devarium.api.controller.post.dto.UpsertPostRequest;
 import io.devarium.api.controller.project.dto.ProjectResponse;
 import io.devarium.api.controller.project.dto.UpsertProjectRequest;
+import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,28 +29,39 @@ public class ProjectController {
     public ResponseEntity<SingleItemResponse<ProjectResponse>> createProject(
         @Valid @RequestBody UpsertProjectRequest request
     ) {
+        Project project = projectService.createProject(request);
+        ProjectResponse response = ProjectResponse.from(project);
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(SingleItemResponse.from(null));
+            .body(SingleItemResponse.from(response));
     }
 
     @GetMapping("/{projectId}")
     public ResponseEntity<SingleItemResponse<ProjectResponse>> getProject(
         @PathVariable Long projectId
     ) {
-        return ResponseEntity.ok(SingleItemResponse.from(null));
+        Project project = projectService.getProject(projectId);
+        ProjectResponse response = ProjectResponse.from(project);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @PutMapping("/{projectId}")
-    public ResponseEntity<SingleItemResponse<PostResponse>> updateProject(
+    public ResponseEntity<SingleItemResponse<ProjectResponse>> updateProject(
         @PathVariable Long projectId,
-        @Valid @RequestBody UpsertPostRequest request
+        @Valid @RequestBody UpsertProjectRequest request
     ) {
-        return ResponseEntity.ok(SingleItemResponse.from(null));
+        Project project = projectService.updateProject(projectId, request);
+        ProjectResponse response = ProjectResponse.from(project);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
+        projectService.deleteProject(projectId);
+
         return ResponseEntity.noContent().build();
     }
 }
