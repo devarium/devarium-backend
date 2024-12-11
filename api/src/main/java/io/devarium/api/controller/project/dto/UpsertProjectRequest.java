@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 public record UpsertProjectRequest(
-    @NotBlank String name,
+    @NotBlank(message = "'name' must not be blank") String name,
     String description,
-    @NotNull Set<Skill> skills
+    @NotNull(message = "'skills' must not be null") Set<Skill> skills
 ) implements UpsertProjectCommand {
 
 }
