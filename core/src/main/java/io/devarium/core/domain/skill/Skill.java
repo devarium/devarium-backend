@@ -45,9 +45,9 @@ public enum Skill {
     JENKINS("Jenkins"),
     KUBERNETES("Kubernetes");
 
-    private final String name;
+    private final String displayName;
 
-    Skill(String name) {
-        this.name = name;
+    Skill(String displayName) {
+        this.displayName = displayName;
     }
 }
