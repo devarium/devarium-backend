@@ -5,6 +5,7 @@ import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,10 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
-        @RequestBody UpsertCommentRequest upsertCommentRequest
+        @Valid @RequestBody UpsertCommentRequest request
         // @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Comment comment = commentService.createComment((upsertCommentRequest));
+        Comment comment = commentService.createComment((request));
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity
@@ -48,7 +49,7 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<SingleItemResponse<CommentResponse>> updateComment(
         @PathVariable Long commentId,
-        @RequestBody UpsertCommentRequest request
+        @Valid @RequestBody UpsertCommentRequest request
         // @AuthenticationPrincipal UserDetails userDetails
     ) {
         Comment comment = commentService.updateComment(commentId, request);
