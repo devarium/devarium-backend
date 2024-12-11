@@ -5,6 +5,7 @@ import io.devarium.api.controller.post.dto.PostResponse;
 import io.devarium.api.controller.post.dto.UpsertPostRequest;
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<PostResponse>> createPost(
-        @RequestBody UpsertPostRequest request
+        @Valid @RequestBody UpsertPostRequest request
         // TODO: @AuthenticationPrincipal UserDetails userDetails
     ) {
         Post post = postService.createPost(request);
@@ -48,7 +49,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<SingleItemResponse<PostResponse>> updatePost(
         @PathVariable Long postId,
-        @RequestBody UpsertPostRequest request
+        @Valid @RequestBody UpsertPostRequest request
     ) {
         Post post = postService.updatePost(postId, request);
         PostResponse response = PostResponse.from(post);
