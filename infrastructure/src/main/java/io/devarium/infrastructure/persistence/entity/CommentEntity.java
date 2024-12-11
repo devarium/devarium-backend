@@ -23,7 +23,8 @@ public class CommentEntity extends BaseEntity {
     private String content;
 
     @Builder
-    public CommentEntity(String content) {
+    public CommentEntity(Long id, String content) {
+        this.id = id;
         this.content = content;
     }
 }

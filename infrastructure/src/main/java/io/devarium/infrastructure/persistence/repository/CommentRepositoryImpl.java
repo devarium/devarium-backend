@@ -38,9 +38,10 @@ public class CommentRepositoryImpl implements CommentRepository {
             .build();
     }
 
-    private CommentEntity convertToEntity(Comment comment) {
+    private CommentEntity convertToEntity(Comment domain) {
         return CommentEntity.builder()
-            .content(comment.getContent())
+            .id(domain.getId())
+            .content(domain.getContent())
             .build();
     }
 }
