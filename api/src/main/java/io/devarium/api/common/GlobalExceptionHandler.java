@@ -3,6 +3,8 @@ package io.devarium.api.common;
 import io.devarium.api.common.dto.ErrorResponse;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.project.exception.ProjectErrorCode;
+import io.devarium.core.domain.project.exception.ProjectException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
@@ -14,18 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(PostException.class)
-    public ResponseEntity<ErrorResponse> handlePostException(PostException e) {
-        PostErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(ErrorResponse.of(
-                errorCode.getStatus().name(),
-                errorCode.getStatus().value(),
-                e.getMessage())
-            );
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
@@ -47,5 +37,29 @@ public class GlobalExceptionHandler {
                 combinedErrorMessage
             )
         );
+    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorResponse> handlePostException(PostException e) {
+        PostErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(ProjectException.class)
+    public ResponseEntity<ErrorResponse> handleProjectException(ProjectException e) {
+        ProjectErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
     }
 }
