@@ -2,6 +2,8 @@ package io.devarium.core.domain.post.service;
 
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.command.UpsertPostCommand;
+import io.devarium.core.domain.post.exception.PostErrorCode;
+import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +24,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post getPost(Long postId) {
         return postRepository.findById(postId)
-            .orElseThrow(() -> new RuntimeException("Post not found."));
+            .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, postId));
     }
 
     @Override

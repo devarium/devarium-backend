@@ -25,7 +25,8 @@ public class PostEntity extends BaseEntity {
     private String content;
 
     @Builder
-    public PostEntity(String title, String content) {
+    public PostEntity(Long id, String title, String content) {
+        this.id = id;
         this.title = title;
         this.content = content;
     }
