@@ -2,6 +2,8 @@ package io.devarium.core.domain.comment.service;
 
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.command.UpsertCommentCommand;
+import io.devarium.core.domain.comment.exception.CommentErrorCode;
+import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +23,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment getComment(Long commentId) {
         return commentRepository.findById(commentId)
-            .orElseThrow(() -> new RuntimeException("comment not found."));
+            .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, commentId));
     }
 
     @Override
