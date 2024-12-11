@@ -1,6 +1,8 @@
 package io.devarium.api.common;
 
 import io.devarium.api.common.dto.ErrorResponse;
+import io.devarium.core.domain.comment.exception.CommentErrorCode;
+import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import java.util.List;
@@ -18,6 +20,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PostException.class)
     public ResponseEntity<ErrorResponse> handlePostException(PostException e) {
         PostErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<ErrorResponse> handleCommentException(CommentException e) {
+        CommentErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
