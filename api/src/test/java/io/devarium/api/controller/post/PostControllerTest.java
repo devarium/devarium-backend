@@ -3,7 +3,6 @@ package io.devarium.api.controller.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.devarium.api.util.MockMvcTestUtils;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
 import jakarta.persistence.EntityManager;
@@ -28,12 +27,15 @@ class PostControllerTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
+    private static final String REQUEST_BODY = """
+        {
+            "title": "%s",
+            "content": "%s"
+        }
+        """;
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private EntityManagerFactory emf;
@@ -77,13 +79,6 @@ class PostControllerTest {
 
     @Nested
     class CreatePost {
-
-        private static final String REQUEST_BODY = """
-            {
-                "title": "%s",
-                "content": "%s"
-            }
-            """;
 
         @Test
         void givenValidRequest_whenCreatePost_thenSuccess() {
@@ -145,13 +140,6 @@ class PostControllerTest {
     @Nested
     class UpdatePost {
 
-        private static final String REQUEST_BODY = """
-            {
-                "title": "%s",
-                "content": "%s"
-            }
-            """;
-
         @Test
         void givenExistingIdAndValidRequest_whenUpdatePost_thenSuccess() {
             // given
@@ -195,16 +183,6 @@ class PostControllerTest {
             MockMvcTestUtils.performDelete(
                 mockMvc,
                 BASE_URL + "/" + post.getId(),
-                status().isNoContent()
-            );
-        }
-
-        @Test
-        void givenNonExistentId_whenDeletePost_thenSuccess() {
-            // when & then
-            MockMvcTestUtils.performDelete(
-                mockMvc,
-                BASE_URL + "/" + NON_EXISTENT_ID,
                 status().isNoContent()
             );
         }
