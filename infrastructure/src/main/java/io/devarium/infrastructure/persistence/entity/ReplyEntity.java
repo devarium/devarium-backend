@@ -31,7 +31,7 @@ public class ReplyEntity extends BaseEntity {
         this.content = content;
     }
 
-    public void update(Reply reply) {
-        this.content = reply.getContent();
+    public void update(Reply domain) {
+        this.content = domain.getContent();
     }
 }
