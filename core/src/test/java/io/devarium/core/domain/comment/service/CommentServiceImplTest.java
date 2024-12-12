@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.command.UpsertCommentCommand;
+import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -100,8 +101,8 @@ public class CommentServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> commentService.getComment(NON_EXISTENT_ID))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Comment not found.");
+                .isInstanceOf(CommentException.class)
+                .hasMessageContaining("Comment not found with id:");
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -149,8 +150,8 @@ public class CommentServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, command))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Comment not found.");
+                .isInstanceOf(CommentException.class)
+                .hasMessageContaining("Comment not found with id:");
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
             then(commentRepository).shouldHaveNoMoreInteractions();
