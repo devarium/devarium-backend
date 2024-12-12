@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.command.UpsertPostCommand;
+import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.repository.PostRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -105,8 +106,8 @@ public class PostServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> postService.getPost(NON_EXISTENT_ID))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Post not found.");
+                .isInstanceOf(PostException.class)
+                .hasMessageContaining("Post not found with id:");
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -157,8 +158,8 @@ public class PostServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, command))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Post not found.");
+                .isInstanceOf(PostException.class)
+                .hasMessageContaining("Post not found with id:");
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
             then(postRepository).shouldHaveNoMoreInteractions();
