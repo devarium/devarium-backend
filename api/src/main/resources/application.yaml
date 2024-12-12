@@ -1,1 +1,8 @@
-spring.application.name=api
+spring:
+  application:
+    name: api
+  config:
+    import: file:infrastructure/src/main/resources/application.yaml
+
+api:
+  version: v1
