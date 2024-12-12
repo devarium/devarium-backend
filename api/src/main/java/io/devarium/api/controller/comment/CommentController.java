@@ -30,7 +30,7 @@ public class CommentController {
         @Valid @RequestBody UpsertCommentRequest request
         // @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Comment comment = commentService.createComment((request));
+        Comment comment = commentService.createComment(request);
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity

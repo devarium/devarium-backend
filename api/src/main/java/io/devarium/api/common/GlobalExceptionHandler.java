@@ -5,6 +5,8 @@ import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.reply.exception.ReplyErrorCode;
+import io.devarium.core.domain.reply.exception.ReplyException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CommentException.class)
     public ResponseEntity<ErrorResponse> handleCommentException(CommentException e) {
         CommentErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(ReplyException.class)
+    public ResponseEntity<ErrorResponse> handleReplyException(ReplyException e) {
+        ReplyErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
