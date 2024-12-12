@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
+import io.devarium.core.domain.comment.Comment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,5 +29,9 @@ public class CommentEntity extends BaseEntity {
     public CommentEntity(Long id, String content) {
         this.id = id;
         this.content = content;
+    }
+
+    public void update(Comment domain) {
+        this.content = domain.getContent();
     }
 }
