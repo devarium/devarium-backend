@@ -21,6 +21,11 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        postJpaRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<Post> findById(Long id) {
         return postJpaRepository.findById(id).map(this::convertToDomain);
     }
@@ -30,13 +35,15 @@ public class PostRepositoryImpl implements PostRepository {
             .id(entity.getId())
             .title(entity.getTitle())
             .content(entity.getContent())
+            .createdAt(entity.getCreatedAt())
             .build();
     }
 
-    private PostEntity convertToEntity(Post post) {
+    private PostEntity convertToEntity(Post domain) {
         return PostEntity.builder()
-            .title(post.getTitle())
-            .content(post.getContent())
+            .id(domain.getId())
+            .title(domain.getTitle())
+            .content(domain.getContent())
             .build();
     }
 }

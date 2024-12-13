@@ -1,5 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
+import io.devarium.core.domain.reply.Reply;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,23 +13,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "replies")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostEntity extends BaseEntity {
+public class ReplyEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
+    @Column(nullable = false)
     private String content;
 
     @Builder
-    public PostEntity(Long id, String title, String content) {
+    public ReplyEntity(Long id, String content) {
         this.id = id;
-        this.title = title;
         this.content = content;
+    }
+
+    public void update(Reply reply) {
+        this.content = reply.getContent();
     }
 }
