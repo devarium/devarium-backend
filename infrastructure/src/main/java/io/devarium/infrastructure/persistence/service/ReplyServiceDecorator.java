@@ -12,7 +12,6 @@ public class ReplyServiceDecorator implements ReplyService {
 
     private final ReplyServiceImpl replyService;
 
-
     @Override
     @Transactional
     public Reply createReply(UpsertReply request) {
