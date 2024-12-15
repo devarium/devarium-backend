@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.post.Post;
-import io.devarium.core.domain.post.command.UpsertPostCommand;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -33,10 +33,7 @@ public class PostServiceImplTest {
     @InjectMocks
     private PostServiceImpl postService;
 
-    private record TestUpsertPostCommand(
-        String title,
-        String content
-    ) implements UpsertPostCommand {
+    private record TestUpsertPost(String title, String content) implements UpsertPost {
 
     }
 
@@ -46,7 +43,7 @@ public class PostServiceImplTest {
         @Test
         void givenValidPostCommand_whenCreatePost_thenPostIsSaved() {
             // given
-            UpsertPostCommand command = new TestUpsertPostCommand(TITLE, CONTENT);
+            UpsertPost command = new TestUpsertPost(TITLE, CONTENT);
 
             Post expectedPost = Post.builder()
                 .title(TITLE)
@@ -120,7 +117,7 @@ public class PostServiceImplTest {
             // given
             String updatedTitle = "updated title";
             String updatedContent = "updated content";
-            UpsertPostCommand command = new TestUpsertPostCommand(updatedTitle, updatedContent);
+            UpsertPost command = new TestUpsertPost(updatedTitle, updatedContent);
 
             Post existingPost = Post.builder()
                 .id(POST_ID)
@@ -152,7 +149,7 @@ public class PostServiceImplTest {
         @Test
         void givenNonExistingPostAndValidPostCommand_whenUpdatePost_thenPostIsNotFound() {
             // given
-            UpsertPostCommand command = new TestUpsertPostCommand(TITLE, CONTENT);
+            UpsertPost command = new TestUpsertPost(TITLE, CONTENT);
             given(postRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
