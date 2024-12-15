@@ -16,8 +16,8 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User createUser(Map<String, Object> userInfo) {
-        return userService.createUser(userInfo);
+    public User createUser(Map<String, Object> userInfo,String provider) {
+        return userService.createUser(userInfo, provider);
     }
 
     @Override

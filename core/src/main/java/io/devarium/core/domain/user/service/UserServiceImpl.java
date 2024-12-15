@@ -1,6 +1,7 @@
 package io.devarium.core.domain.user.service;
 
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.UserRole;
 import io.devarium.core.domain.user.command.UpdateUserCommand;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
@@ -15,7 +16,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User createUser(Map<String, Object> userInfo) {
+    public User createUser(Map<String, Object> userInfo, String provider) {
         String name = (String) userInfo.get("name");
         String email = (String) userInfo.get("email");
         String picture = (String) userInfo.get("picture");
@@ -23,6 +24,8 @@ public class UserServiceImpl implements UserService {
             .name(name)
             .email(email)
             .picture(picture)
+            .provider(provider)
+            .role(UserRole.USER)
             .build();
         return userRepository.save(user);
     }

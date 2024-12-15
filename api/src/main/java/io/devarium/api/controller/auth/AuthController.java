@@ -2,7 +2,7 @@ package io.devarium.api.controller.auth;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
-import io.devarium.core.auth.service.AuthServiceImpl;
+import io.devarium.core.auth.service.AuthService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class AuthController {
 
-    private final AuthServiceImpl authService;
+    private final AuthService authService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
@@ -86,8 +86,10 @@ public class AuthController {
             );
 
             Map<String, Object> userInfo = userInfoResponse.getBody();
-
-            authService.login(userInfo);
+            if (userInfo == null) {
+                throw new CustomAuthException(AuthErrorCode.USER_NOT_FOUND);
+            }
+            authService.login(userInfo, "google");
 
             return ResponseEntity.ok(userInfo);
         }

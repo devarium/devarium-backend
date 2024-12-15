@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface UserService {
 
-    User createUser(Map<String, Object> userInfo);
+    User createUser(Map<String, Object> userInfo, String provider);
 
     User getUser(String email);
 
