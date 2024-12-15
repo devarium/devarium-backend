@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.project.Project;
-import io.devarium.core.domain.project.command.UpsertProjectCommand;
+import io.devarium.core.domain.project.command.UpsertProject;
 import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.project.service.ProjectServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,25 +14,25 @@ public class ProjectServiceDecorator implements ProjectService {
 
     @Override
     @Transactional
-    public Project createProject(UpsertProjectCommand command) {
-        return projectService.createProject(command);
+    public Project createProject(UpsertProject request) {
+        return projectService.createProject(request);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Project getProject(Long ProjectId) {
-        return projectService.getProject(ProjectId);
+    public Project getProject(Long projectId) {
+        return projectService.getProject(projectId);
     }
 
     @Override
     @Transactional
-    public Project updateProject(Long ProjectId, UpsertProjectCommand command) {
-        return projectService.updateProject(ProjectId, command);
+    public Project updateProject(Long projectId, UpsertProject request) {
+        return projectService.updateProject(projectId, request);
     }
 
     @Override
     @Transactional
-    public void deleteProject(Long ProjectId) {
-        projectService.deleteProject(ProjectId);
+    public void deleteProject(Long projectId) {
+        projectService.deleteProject(projectId);
     }
 }

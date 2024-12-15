@@ -1,15 +1,15 @@
 package io.devarium.core.domain.project.service;
 
 import io.devarium.core.domain.project.Project;
-import io.devarium.core.domain.project.command.UpsertProjectCommand;
+import io.devarium.core.domain.project.command.UpsertProject;
 
 public interface ProjectService {
 
-    Project createProject(UpsertProjectCommand command);
+    Project createProject(UpsertProject request);
 
     Project getProject(Long projectId);
 
-    Project updateProject(Long projectId, UpsertProjectCommand command);
+    Project updateProject(Long projectId, UpsertProject request);
 
     void deleteProject(Long projectId);
 }
