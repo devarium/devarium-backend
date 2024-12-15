@@ -41,9 +41,9 @@ public class PostServiceImplTest {
     class CreatePostTest {
 
         @Test
-        void givenValidPostCommand_whenCreatePost_thenPostIsSaved() {
+        void givenValidPostRequest_whenCreatePost_thenPostIsSaved() {
             // given
-            UpsertPost command = new TestUpsertPost(TITLE, CONTENT);
+            UpsertPost request = new TestUpsertPost(TITLE, CONTENT);
 
             Post expectedPost = Post.builder()
                 .title(TITLE)
@@ -59,7 +59,7 @@ public class PostServiceImplTest {
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post createdPost = postService.createPost(command);
+            Post createdPost = postService.createPost(request);
 
             // then
             then(postRepository).should().save(refEq(expectedPost));
@@ -96,7 +96,7 @@ public class PostServiceImplTest {
         }
 
         @Test
-        void givenNonExistingPost_whenGetPost_thenPostIsNotFound() {
+        void givenNonExistentPost_whenGetPost_thenPostIsNotFound() {
             // given
             given(postRepository.findById(NON_EXISTENT_ID))
                 .willReturn(Optional.empty());
@@ -113,11 +113,11 @@ public class PostServiceImplTest {
     class UpdatePostTest {
 
         @Test
-        void givenExistingPostAndValidPostCommand_whenUpdatePost_thenPostIsUpdated() {
+        void givenExistingPostAndValidPostRequest_whenUpdatePost_thenPostIsUpdated() {
             // given
             String updatedTitle = "updated title";
             String updatedContent = "updated content";
-            UpsertPost command = new TestUpsertPost(updatedTitle, updatedContent);
+            UpsertPost request = new TestUpsertPost(updatedTitle, updatedContent);
 
             Post existingPost = Post.builder()
                 .id(POST_ID)
@@ -135,7 +135,7 @@ public class PostServiceImplTest {
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post updatedPost = postService.updatePost(POST_ID, command);
+            Post updatedPost = postService.updatePost(POST_ID, request);
 
             // then
             then(postRepository).should().findById(POST_ID);
@@ -147,13 +147,13 @@ public class PostServiceImplTest {
         }
 
         @Test
-        void givenNonExistingPostAndValidPostCommand_whenUpdatePost_thenPostIsNotFound() {
+        void givenNonExistentPostAndValidPostRequest_whenUpdatePost_thenPostIsNotFound() {
             // given
-            UpsertPost command = new TestUpsertPost(TITLE, CONTENT);
+            UpsertPost request = new TestUpsertPost(TITLE, CONTENT);
             given(postRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, command))
+            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, request))
                 .isInstanceOf(PostException.class);
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
