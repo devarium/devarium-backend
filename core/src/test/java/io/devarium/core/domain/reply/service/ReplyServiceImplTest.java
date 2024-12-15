@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.command.UpsertReplyCommand;
 import io.devarium.core.domain.reply.exception.ReplyException;
+import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -32,9 +32,7 @@ public class ReplyServiceImplTest {
     @InjectMocks
     private ReplyServiceImpl replyService;
 
-    private record TestUpsertReplyCommand(
-        String content
-    ) implements UpsertReplyCommand {
+    private record TestUpsertReply(String content) implements UpsertReply {
 
     }
 
@@ -44,7 +42,7 @@ public class ReplyServiceImplTest {
         @Test
         void givenValidReplyCommand_whenCreateReply_thenReplyIsSaved() {
             // given
-            UpsertReplyCommand command = new TestUpsertReplyCommand(CONTENT);
+            UpsertReply request = new TestUpsertReply(CONTENT);
 
             Reply expectedReply = Reply.builder()
                 .content(CONTENT)
@@ -58,7 +56,7 @@ public class ReplyServiceImplTest {
             given(replyRepository.save(any(Reply.class))).willReturn(savedReply);
 
             // when
-            Reply createdReply = replyService.createReply(command);
+            Reply createdReply = replyService.createReply(request);
 
             // then
             then(replyRepository).should().save(refEq(expectedReply));
@@ -115,7 +113,7 @@ public class ReplyServiceImplTest {
         void givenExistingReplyAndValidReplyCommand_whenUpdateReply_thenReplyIsUpdated() {
             // given
             String updatedContent = "updated content";
-            UpsertReplyCommand command = new TestUpsertReplyCommand(updatedContent);
+            UpsertReply request = new TestUpsertReply(updatedContent);
 
             Reply existingReply = Reply.builder()
                 .id(REPLY_ID)
@@ -131,7 +129,7 @@ public class ReplyServiceImplTest {
             given(replyRepository.save(any(Reply.class))).willReturn(savedReply);
 
             // when
-            Reply updatedReply = replyService.updateReply(REPLY_ID, command);
+            Reply updatedReply = replyService.updateReply(REPLY_ID, request);
 
             // then
             then(replyRepository).should().findById(REPLY_ID);
@@ -145,11 +143,11 @@ public class ReplyServiceImplTest {
         @Test
         void givenNonExistingReplyAndValidReplyCommand_whenUpdateReply_thenReplyIsNotFound() {
             // given
-            UpsertReplyCommand command = new TestUpsertReplyCommand(CONTENT);
+            UpsertReply request = new TestUpsertReply(CONTENT);
             given(replyRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> replyService.updateReply(NON_EXISTENT_ID, command))
+            assertThatThrownBy(() -> replyService.updateReply(NON_EXISTENT_ID, request))
                 .isInstanceOf(ReplyException.class)
                 .hasMessageContaining("Reply not found with id:");
 
