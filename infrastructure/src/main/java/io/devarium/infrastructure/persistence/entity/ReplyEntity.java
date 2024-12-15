@@ -26,7 +26,7 @@ public class ReplyEntity extends BaseEntity {
     private String content;
 
     @Builder
-    public ReplyEntity(Long id, String content) {
+    private ReplyEntity(Long id, String content) {
         this.id = id;
         this.content = content;
     }
