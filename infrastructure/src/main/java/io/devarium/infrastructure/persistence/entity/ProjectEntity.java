@@ -46,7 +46,7 @@ public class ProjectEntity extends BaseEntity {
     private Set<Skill> skills;
 
     @Builder
-    public ProjectEntity(Long id, String name, String description, Set<Skill> skills) {
+    private ProjectEntity(Long id, String name, String description, Set<Skill> skills) {
         this.id = id;
         this.name = name;
         this.description = description;
