@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -32,9 +32,7 @@ public class CommentServiceImplTest {
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private record TestUpsertCommentCommand(
-        String content
-    ) implements UpsertCommentCommand {
+    private record TestUpsertComment(String content) implements UpsertComment {
 
     }
 
@@ -44,7 +42,7 @@ public class CommentServiceImplTest {
         @Test
         void givenValidCommentCommand_whenCreateComment_thenCommentIsSaved() {
             // given
-            UpsertCommentCommand command = new TestUpsertCommentCommand(CONTENT);
+            UpsertComment command = new TestUpsertComment(CONTENT);
 
             Comment expectedComment = Comment.builder()
                 .content(CONTENT)
@@ -115,7 +113,7 @@ public class CommentServiceImplTest {
         void givenExistingCommentAndValidCommentCommand_whenUpdateComment_thenCommentIsUpdated() {
             // given
             String updatedContent = "updated content";
-            UpsertCommentCommand command = new TestUpsertCommentCommand(updatedContent);
+            UpsertComment command = new TestUpsertComment(updatedContent);
 
             Comment existingComment = Comment.builder()
                 .id(COMMENT_ID)
@@ -145,7 +143,7 @@ public class CommentServiceImplTest {
         @Test
         void givenNonExistingCommentAndValidCommentCommand_whenUpdateComment_thenCommentIsNotFound() {
             // given
-            UpsertCommentCommand command = new TestUpsertCommentCommand(CONTENT);
+            UpsertComment command = new TestUpsertComment(CONTENT);
             given(commentRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then

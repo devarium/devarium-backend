@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
+import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ public class CommentServiceDecorator implements CommentService {
 
     @Override
     @Transactional
-    public Comment createComment(UpsertCommentCommand command) {
-        return commentService.createComment(command);
+    public Comment createComment(UpsertComment request) {
+        return commentService.createComment(request);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class CommentServiceDecorator implements CommentService {
 
     @Override
     @Transactional
-    public Comment updateComment(Long commentId, UpsertCommentCommand command) {
-        return commentService.updateComment(commentId, command);
+    public Comment updateComment(Long commentId, UpsertComment request) {
+        return commentService.updateComment(commentId, request);
     }
 
     @Override

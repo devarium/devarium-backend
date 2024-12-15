@@ -1,9 +1,9 @@
 package io.devarium.core.domain.comment.service;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -13,9 +13,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public Comment createComment(UpsertCommentCommand command) {
+    public Comment createComment(UpsertComment request) {
         Comment comment = Comment.builder()
-            .content(command.content())
+            .content(request.content())
             .build();
         return commentRepository.save(comment);
     }
@@ -27,9 +27,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateComment(Long commentId, UpsertCommentCommand command) {
+    public Comment updateComment(Long commentId, UpsertComment request) {
         Comment comment = getComment(commentId);
-        comment.updateContent(command.content());
+        comment.updateContent(request.content());
         return commentRepository.save(comment);
     }
 

@@ -1,6 +1,8 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.core.domain.comment.Comment;
+import io.devarium.core.domain.comment.exception.CommentErrorCode;
+import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import java.util.Optional;
@@ -39,8 +41,12 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     private CommentEntity convertToEntity(Comment domain) {
+        if (domain.getId() != null) {
+            CommentEntity entity = commentJpaRepository.findById(domain.getId())
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getId()));
+            entity.update(domain);
+        }
         return CommentEntity.builder()
-            .id(domain.getId())
             .content(domain.getContent())
             .build();
     }
