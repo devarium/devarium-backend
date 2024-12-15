@@ -12,6 +12,7 @@ import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
+import io.devarium.infrastructure.persistence.service.UserServiceDecorator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
