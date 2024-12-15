@@ -13,7 +13,7 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "{baseUrl}/api/${api.version}/auth/google/callback"
+            redirect-uri: ${api.base-url}/api/${api.version}/auth/google/callback
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/auth
@@ -22,6 +22,7 @@ spring:
 
 api:
   version: v1
+  base-url: http://localhost:8080
 
 jwt:
   secret: ${JWT_SECRET}
