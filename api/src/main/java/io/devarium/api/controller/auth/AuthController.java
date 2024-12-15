@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +39,7 @@ public class AuthController {
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String redirectUri;
 
-    @PostMapping("/google/callback")
+    @GetMapping("/google/callback")
     public ResponseEntity<?> handleGoogleCallback(@RequestParam String code) {
         // 1. Google 토큰 요청 엔드포인트 설정
         String tokenEndpoint = "https://oauth2.googleapis.com/token";
