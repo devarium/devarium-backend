@@ -32,4 +32,9 @@ public class ServiceConfig {
     public ReplyService replyService(ReplyRepository replyRepository) {
         return new ReplyServiceDecorator(new ReplyServiceImpl(replyRepository));
     }
+
+    @Bean
+    public UserService userService(UserRepository userRepository) {
+        return new UserServiceDecorator(new UserServiceImpl(userRepository));
+    }
 }

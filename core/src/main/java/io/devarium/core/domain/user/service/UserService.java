@@ -1,10 +1,18 @@
 package io.devarium.core.domain.user.service;
 
-import io.devarium.core.auth.dto.OAuthUserDetails;
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.command.UpdateUserCommand;
+import java.util.Map;
 
 public interface UserService {
 
-    User handleSocialLogin(OAuthUserDetails userDetails);
+    User createUser(Map<String, Object> userInfo);
 
+    User getUser(String email);
+
+    User updateUserInfo(User user, Map<String, Object> userInfo);
+
+    User updateUserProfile(String email, UpdateUserCommand command);
+
+    void deleteUser(String email);
 }

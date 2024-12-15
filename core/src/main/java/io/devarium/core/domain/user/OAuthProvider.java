@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserRole {
-    ADMIN("ROLE_ADMIN"),
-    USER("ROLE_USER");
+public enum OAuthProvider {
+    GITHUB("PROVIDER_GITHUB"),
+    GOOGLE("PROVIDER_GOOGLE");
 
-    private final String authority;
+    private final String provider;
 }

@@ -2,6 +2,7 @@ package io.devarium.api.controller.auth;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
+import io.devarium.core.auth.service.AuthServiceImpl;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class AuthController {
 
-    // private final AuthService authService;
+    private final AuthServiceImpl authService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
@@ -86,6 +87,8 @@ public class AuthController {
 
             Map<String, Object> userInfo = userInfoResponse.getBody();
 
+            authService.login(userInfo);
+
             return ResponseEntity.ok(userInfo);
         }
 
@@ -128,6 +131,15 @@ public class AuthController {
             .status(HttpStatus.OK)
             .body(SingleItemResponse.from(userResponse));
     }
+
+        @GetMapping("/google/callback")
+    public ResponseEntity<?> handleGoogleCallbackGet(@RequestParam String code) {
+        // GET 요청 처리 후 내부적으로 POST 로직 호출
+        return handleGoogleCallbackPost(code);
+    }
+
+    @PostMapping("/google/callback")
+    public ResponseEntity<?> handleGoogleCallbackPost(@RequestParam String code) {
 */
 
 }

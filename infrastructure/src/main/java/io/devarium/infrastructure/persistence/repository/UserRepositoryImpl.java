@@ -28,21 +28,24 @@ public class UserRepositoryImpl implements UserRepository {
         return User.builder()
             .id(entity.getId())
             .email(entity.getEmail())
-            .nickname(entity.getNickname())
+            .name(entity.getName())
+            .picture(entity.getPicture())
             .role(entity.getRole())
-            //.provider(entity.getProvider())
-            //.deletedAt(entity.getDeletedAt())
+            .provider(entity.getProvider())
+            .createdAt(entity.getCreatedAt())
+            .blogUrl(entity.getBlogUrl())
+            .githubUrl(entity.getGithubUrl())
+            .content(entity.getContent())
             .build();
     }
 
-    public UserEntity convertToEntity(User user) {
+    public UserEntity convertToEntity(User domain) {
         return UserEntity.builder()
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .role(user.getRole())
-            //.provider(user.getProvider())
-            //.deletedAt(user.getDeletedAt())
+            .email(domain.getEmail())
+            .name(domain.getName())
+            .picture(domain.getPicture())
+            .role(domain.getRole())
+            .provider(domain.getProvider())
             .build();
     }
-
 }

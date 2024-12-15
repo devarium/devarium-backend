@@ -29,33 +29,50 @@ public class UserEntity extends BaseEntity{
     private String email;
 
     @Column(nullable = false)
-    private String nickname;
+    private String name;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
+    private String picture;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-   /* @Column(nullable = false)
-    private String provider; // "GOOGLE"*/
+    @Column(nullable = false)
+    private String provider;
 
-    /*    @Column
-    private Instant deletedAt;*/
+    @Column
+    private String blogUrl;
+
+    @Column
+    private String githubUrl;
+
+    @Column
+    private String content;
+
+    @Column
+    private Instant deletedAt;
 
     @Builder
     private UserEntity(
         Long id,
         String email,
-        String nickname,
-        UserRole role
-        //String provider,
-        //Instant deletedAt
+        String name,
+        String picture,
+        UserRole role,
+        String provider,
+        String blogUrl,
+        String githubUrl,
+        String content
     ) {
         this.id = id;
         this.email = email;
-        this.nickname = nickname;
+        this.name = name;
+        this.picture = picture;
         this.role = role;
-        //this.provider = provider;
-        //this.deletedAt = deletedAt;
+        this.provider = provider;
+        this.blogUrl = blogUrl;
+        this.githubUrl = githubUrl;
+        this.content = content;
     }
-
 }
