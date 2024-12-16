@@ -25,6 +25,7 @@ public class CommentServiceImplTest {
     private static final Long COMMENT_ID = 1L;
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
+    private static final Long POST_ID = 2L;
 
     @Mock
     private CommentRepository commentRepository;
@@ -32,7 +33,7 @@ public class CommentServiceImplTest {
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private record TestUpsertComment(String content) implements UpsertComment {
+    private record TestUpsertComment(String content, Long postId) implements UpsertComment {
 
     }
 
@@ -42,7 +43,7 @@ public class CommentServiceImplTest {
         @Test
         void givenValidCommentRequest_whenCreateComment_thenCommentIsSaved() {
             // given
-            UpsertComment request = new TestUpsertComment(CONTENT);
+            UpsertComment request = new TestUpsertComment(CONTENT, POST_ID);
 
             Comment expectedComment = Comment.builder()
                 .content(CONTENT)
@@ -112,7 +113,7 @@ public class CommentServiceImplTest {
         void givenExistingCommentAndValidCommentRequest_whenUpdateComment_thenCommentIsUpdated() {
             // given
             String updatedContent = "updated content";
-            UpsertComment request = new TestUpsertComment(updatedContent);
+            UpsertComment request = new TestUpsertComment(updatedContent, POST_ID);
 
             Comment existingComment = Comment.builder()
                 .id(COMMENT_ID)
@@ -142,7 +143,7 @@ public class CommentServiceImplTest {
         @Test
         void givenNonExistentCommentAndValidCommentRequest_whenUpdateComment_thenCommentIsNotFound() {
             // given
-            UpsertComment request = new TestUpsertComment(CONTENT);
+            UpsertComment request = new TestUpsertComment(CONTENT, POST_ID);
             given(commentRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
