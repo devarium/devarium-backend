@@ -18,7 +18,7 @@ public class Reply {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
-        this.comment =comment;
+        this.comment = comment;
     }
 
     public void updateContent(String content) {
