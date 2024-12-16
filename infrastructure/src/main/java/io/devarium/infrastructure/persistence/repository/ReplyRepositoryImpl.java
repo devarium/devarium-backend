@@ -22,13 +22,16 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     @Override
     public Reply save(Reply reply) {
         ReplyEntity entity = convertToEntity(reply);
+        entity.getComment().addReply(entity);
         ReplyEntity savedEntity = replyJpaRepository.save(entity);
         return convertToDomain(savedEntity);
     }
 
     @Override
-    public void deleteById(Long id) {
-        replyJpaRepository.deleteById(id);
+    public void delete(Reply reply) {
+        ReplyEntity entity = convertToEntity(reply);
+        entity.getComment().removeReply(entity);
+        replyJpaRepository.delete(entity);
     }
 
     @Override
