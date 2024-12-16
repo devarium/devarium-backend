@@ -45,6 +45,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             CommentEntity entity = commentJpaRepository.findById(domain.getId())
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getId()));
             entity.update(domain);
+            return entity;
         }
         return CommentEntity.builder()
             .content(domain.getContent())
