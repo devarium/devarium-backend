@@ -22,13 +22,16 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Comment save(Comment comment) {
         CommentEntity entity = convertToEntity(comment);
+        entity.getPost().addComment(entity);
         CommentEntity savedEntity = commentJpaRepository.save(entity);
         return convertToDomain(savedEntity);
     }
 
     @Override
-    public void deleteById(Long id) {
-        commentJpaRepository.deleteById(id);
+    public void delete(Comment comment) {
+        CommentEntity entity = convertToEntity(comment);
+        entity.getPost().removeComment(entity);
+        commentJpaRepository.delete(entity);
     }
 
     @Override
