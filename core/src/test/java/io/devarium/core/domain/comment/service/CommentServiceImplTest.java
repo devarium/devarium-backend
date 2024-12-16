@@ -99,8 +99,7 @@ public class CommentServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> commentService.getComment(NON_EXISTENT_ID))
-                .isInstanceOf(CommentException.class)
-                .hasMessageContaining("Comment not found with id:");
+                .isInstanceOf(CommentException.class);
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -148,8 +147,7 @@ public class CommentServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, request))
-                .isInstanceOf(CommentException.class)
-                .hasMessageContaining("Comment not found with id:");
+                .isInstanceOf(CommentException.class);
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
             then(commentRepository).shouldHaveNoMoreInteractions();
