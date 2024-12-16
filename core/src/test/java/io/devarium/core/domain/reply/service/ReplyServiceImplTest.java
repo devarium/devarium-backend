@@ -40,7 +40,7 @@ public class ReplyServiceImplTest {
     class CreateReplyTest {
 
         @Test
-        void givenValidReplyCommand_whenCreateReply_thenReplyIsSaved() {
+        void givenValidReplyRequest_whenCreateReply_thenReplyIsSaved() {
             // given
             UpsertReply request = new TestUpsertReply(CONTENT);
 
@@ -109,7 +109,7 @@ public class ReplyServiceImplTest {
     class UpdateReplyTest {
 
         @Test
-        void givenExistingReplyAndValidReplyCommand_whenUpdateReply_thenReplyIsUpdated() {
+        void givenExistingReplyAndValidReplyRequest_whenUpdateReply_thenReplyIsUpdated() {
             // given
             String updatedContent = "updated content";
             UpsertReply request = new TestUpsertReply(updatedContent);
@@ -140,7 +140,7 @@ public class ReplyServiceImplTest {
         }
 
         @Test
-        void givenNonExistingReplyAndValidReplyCommand_whenUpdateReply_thenReplyIsNotFound() {
+        void givenNonExistingReplyAndValidReplyRequest_whenUpdateReply_thenReplyIsNotFound() {
             // given
             UpsertReply request = new TestUpsertReply(CONTENT);
             given(replyRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
