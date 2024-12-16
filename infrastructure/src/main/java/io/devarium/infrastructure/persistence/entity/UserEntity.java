@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
+import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,5 +75,14 @@ public class UserEntity extends BaseEntity{
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
         this.content = content;
+    }
+
+    public void update(User domain) {
+        this.email = domain.getEmail();
+        this.name = domain.getName();
+        this.picture = domain.getPicture();
+        this.blogUrl = domain.getBlogUrl();
+        this.githubUrl = domain.getGithubUrl();
+        this.content = domain.getContent();
     }
 }

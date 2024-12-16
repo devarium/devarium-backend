@@ -1,6 +1,8 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.Optional;
@@ -40,6 +42,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public UserEntity convertToEntity(User domain) {
+        if (domain.getId() != null) {
+            UserEntity entity = userJpaRepository.findByEmail(domain.getEmail())
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, domain.getEmail()));
+            entity.update(domain);
+            return entity;
+        }
         return UserEntity.builder()
             .email(domain.getEmail())
             .name(domain.getName())
