@@ -26,7 +26,7 @@ public class CommentEntity extends BaseEntity {
     private String content;
 
     @Builder
-    public CommentEntity(Long id, String content) {
+    private CommentEntity(Long id, String content) {
         this.id = id;
         this.content = content;
     }
