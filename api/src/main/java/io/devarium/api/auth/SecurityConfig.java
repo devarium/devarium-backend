@@ -1,5 +1,6 @@
 package io.devarium.api.auth;
 
+import io.devarium.api.auth.handler.JwtAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
