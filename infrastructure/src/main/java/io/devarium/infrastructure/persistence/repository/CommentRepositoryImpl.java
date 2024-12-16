@@ -47,6 +47,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             entity.update(domain);
             return entity;
         }
+
         return CommentEntity.builder()
             .content(domain.getContent())
             .build();
