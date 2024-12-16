@@ -25,6 +25,7 @@ public class ReplyServiceImplTest {
     private static final Long REPLY_ID = 1L;
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
+    private static final Long COMMENT_ID = 2L;
 
     @Mock
     private ReplyRepository replyRepository;
@@ -32,7 +33,7 @@ public class ReplyServiceImplTest {
     @InjectMocks
     private ReplyServiceImpl replyService;
 
-    private record TestUpsertReply(String content) implements UpsertReply {
+    private record TestUpsertReply(String content, Long commentId) implements UpsertReply {
 
     }
 
@@ -42,7 +43,7 @@ public class ReplyServiceImplTest {
         @Test
         void givenValidReplyRequest_whenCreateReply_thenReplyIsSaved() {
             // given
-            UpsertReply request = new TestUpsertReply(CONTENT);
+            UpsertReply request = new TestUpsertReply(CONTENT, COMMENT_ID);
 
             Reply expectedReply = Reply.builder()
                 .content(CONTENT)
@@ -112,7 +113,7 @@ public class ReplyServiceImplTest {
         void givenExistingReplyAndValidReplyRequest_whenUpdateReply_thenReplyIsUpdated() {
             // given
             String updatedContent = "updated content";
-            UpsertReply request = new TestUpsertReply(updatedContent);
+            UpsertReply request = new TestUpsertReply(updatedContent, COMMENT_ID);
 
             Reply existingReply = Reply.builder()
                 .id(REPLY_ID)
@@ -142,7 +143,7 @@ public class ReplyServiceImplTest {
         @Test
         void givenNonExistingReplyAndValidReplyRequest_whenUpdateReply_thenReplyIsNotFound() {
             // given
-            UpsertReply request = new TestUpsertReply(CONTENT);
+            UpsertReply request = new TestUpsertReply(CONTENT, COMMENT_ID);
             given(replyRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then

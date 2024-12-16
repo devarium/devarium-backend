@@ -1,6 +1,5 @@
 package io.devarium.core.domain.reply;
 
-import io.devarium.core.domain.comment.Comment;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,14 +10,14 @@ public class Reply {
     private final Long id;
     private final Instant createdAt;
     private String content;
-    private final Comment comment;
+    private final Long commentId;
 
     @Builder
-    public Reply(Long id, String content, Instant createdAt, Comment comment) {
+    public Reply(Long id, String content, Instant createdAt, Long commentId) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
-        this.comment = comment;
+        this.commentId = commentId;
     }
 
     public void updateContent(String content) {

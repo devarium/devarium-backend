@@ -1,9 +1,12 @@
 package io.devarium.infrastructure.persistence.repository;
 
+import io.devarium.core.domain.comment.exception.CommentErrorCode;
+import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.ReplyEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository;
 public class ReplyRepositoryImpl implements ReplyRepository {
 
     private final ReplyJpaRepository replyJpaRepository;
+    private final CommentJpaRepository commentJpaRepository;
 
     @Override
     public Reply save(Reply reply) {
@@ -37,6 +41,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
             .id(entity.getId())
             .content(entity.getContent())
             .createdAt(entity.getCreatedAt())
+            .commentId(entity.getComment().getId())
             .build();
     }
 
@@ -48,8 +53,11 @@ public class ReplyRepositoryImpl implements ReplyRepository {
             return entity;
         }
 
+        CommentEntity comment = commentJpaRepository.findById(domain.getCommentId())
+            .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getCommentId()));
         return ReplyEntity.builder()
             .content(domain.getContent())
+            .comment(comment)
             .build();
     }
 }

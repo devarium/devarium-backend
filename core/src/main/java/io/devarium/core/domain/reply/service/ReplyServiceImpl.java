@@ -16,6 +16,7 @@ public class ReplyServiceImpl implements ReplyService {
     public Reply createReply(UpsertReply request) {
         Reply reply = Reply.builder()
             .content(request.content())
+            .commentId(request.commentId())
             .build();
         return replyRepository.save(reply);
     }
