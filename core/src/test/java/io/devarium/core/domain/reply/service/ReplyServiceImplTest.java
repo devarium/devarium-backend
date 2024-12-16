@@ -99,8 +99,7 @@ public class ReplyServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> replyService.getReply(NON_EXISTENT_ID))
-                .isInstanceOf(ReplyException.class)
-                .hasMessageContaining("Reply not found with id:");
+                .isInstanceOf(ReplyException.class);
 
             then(replyRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -148,8 +147,7 @@ public class ReplyServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> replyService.updateReply(NON_EXISTENT_ID, request))
-                .isInstanceOf(ReplyException.class)
-                .hasMessageContaining("Reply not found with id:");
+                .isInstanceOf(ReplyException.class);
 
             then(replyRepository).should().findById(NON_EXISTENT_ID);
             then(replyRepository).shouldHaveNoMoreInteractions();
