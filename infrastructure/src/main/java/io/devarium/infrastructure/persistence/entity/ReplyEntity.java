@@ -30,7 +30,7 @@ public class ReplyEntity extends BaseEntity {
     private String content;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentEntity comment;
 
