@@ -1,8 +1,11 @@
 package io.devarium.core.domain.user;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Collections;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 public class User {
@@ -47,4 +50,9 @@ public class User {
     public void delete(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(role); // UserRole은 이제 GrantedAuthority 구현체
+    }
+
 }
