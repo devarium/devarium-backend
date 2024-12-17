@@ -1,5 +1,6 @@
 package io.devarium.api.controller.auth;
 
+import io.devarium.core.auth.Token;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.auth.service.AuthService;
@@ -89,9 +90,14 @@ public class AuthController {
             if (userInfo == null) {
                 throw new CustomAuthException(AuthErrorCode.USER_NOT_FOUND);
             }
-            authService.login(userInfo, "google");
+            /*authService.login(userInfo, "google");
 
-            return ResponseEntity.ok(userInfo);
+            return ResponseEntity.ok(userInfo);*/
+            // 3. JWT 발급
+            Token token = authService.login(userInfo, "google");
+
+            // 4. 서버 토큰 반환
+            return ResponseEntity.ok(token);
         }
 
         throw new CustomAuthException(AuthErrorCode.GOOGLE_ACCESS_TOKEN_IS_NULL);
