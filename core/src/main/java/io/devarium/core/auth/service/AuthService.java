@@ -25,7 +25,7 @@ public class AuthService {
 
         User user = userService.getUser(email);
         if (user == null) {
-            userService.createUser(userInfo,provider);
+            user=userService.createUser(userInfo,provider);
         } else {
             userService.updateUserInfo(user, userInfo);
         }
