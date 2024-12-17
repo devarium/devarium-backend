@@ -36,7 +36,6 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void deleteReply(Long replyId) {
-        Reply reply = getReply(replyId);
-        replyRepository.delete(reply);
+        replyRepository.deleteById(replyId);
     }
 }

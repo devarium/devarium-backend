@@ -1,7 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
 import io.devarium.core.domain.comment.Comment;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,28 +34,14 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReplyEntity> replies = new ArrayList<>();
-
     @Builder
-    private CommentEntity(Long id, String content, PostEntity post, List<ReplyEntity> replies) {
+    private CommentEntity(Long id, String content, PostEntity post) {
         this.id = id;
         this.content = content;
         this.post = post;
-        this.replies = replies;
     }
 
     public void update(Comment domain) {
         this.content = domain.getContent();
-    }
-
-    public void addReply(ReplyEntity reply) {
-        replies.add(reply);
-        reply.setComment(this);
-    }
-
-    public void removeReply(ReplyEntity reply) {
-        replies.remove(reply);
-        reply.setComment(null);
     }
 }

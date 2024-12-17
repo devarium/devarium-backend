@@ -7,7 +7,7 @@ public interface ReplyRepository {
 
     Reply save(Reply reply);
 
-    void delete(Reply reply);
+    void deleteById(Long replyId);
 
     Optional<Reply> findById(Long id);
 }
