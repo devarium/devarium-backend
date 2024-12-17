@@ -11,8 +11,7 @@ public enum AuthErrorCode {
     GOOGLE_ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Google Access Token is null"),
     GITHUB_ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Github Access Token is null"),
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "User not found");
-
-
+    
     private final HttpStatus status;
     private final String message;
 
