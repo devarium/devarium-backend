@@ -9,11 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
 
-    @Override
+/*    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().name()));
+    }*/
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(userEntity.getRole()); // UserRole이 GrantedAuthority 구현체
     }
-
 
     @Override
     public String getUsername() { // username 대신 email을 반환
