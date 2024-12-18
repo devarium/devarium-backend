@@ -1,6 +1,5 @@
 package io.devarium.infrastructure.token;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,4 +18,3 @@ public class RedisProperties {
         private long expiration;
     }
 }
-

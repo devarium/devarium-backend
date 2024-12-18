@@ -7,13 +7,10 @@ import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public record CustomUserDetails(UserEntity userEntity) implements UserDetailsInterface,
-    UserDetails {
+public record CustomUserDetails(
+    UserEntity userEntity
+) implements UserDetailsInterface, UserDetails {
 
-    /*    @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().name()));
-        }*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(userEntity.getRole()); // UserRole이 GrantedAuthority 구현체
@@ -46,4 +43,3 @@ public record CustomUserDetails(UserEntity userEntity) implements UserDetailsInt
         return userEntity.getDeletedAt() == null;
     }
 }
-

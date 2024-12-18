@@ -1,6 +1,5 @@
 package io.devarium.infrastructure.security.userdetails;
 
-
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.infrastructure.persistence.repository.UserJpaRepository;

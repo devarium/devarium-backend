@@ -1,6 +1,5 @@
 package io.devarium.infrastructure.security.jwt.util;
 
-
 import io.devarium.infrastructure.security.jwt.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -119,4 +118,3 @@ public class JwtUtil {
             .compact();
     }
 }
-

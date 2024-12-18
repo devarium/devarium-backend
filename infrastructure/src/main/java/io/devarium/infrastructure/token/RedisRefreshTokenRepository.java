@@ -1,6 +1,5 @@
 package io.devarium.infrastructure.token;
 
-
 import io.devarium.core.auth.repository.RefreshTokenRepository;
 import io.devarium.infrastructure.security.jwt.properties.JwtProperties;
 import java.util.Optional;
@@ -37,4 +36,3 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
         redisTemplate.delete("refreshToken:" + email);
     }
 }
-

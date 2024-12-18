@@ -2,7 +2,7 @@ package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.command.UpdateUserCommand;
+import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User updateUserProfile(String email, UpdateUserCommand command) {
+    public User updateUserProfile(String email, UpdateUser command) {
         return userService.updateUserProfile(email, command);
     }
 

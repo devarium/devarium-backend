@@ -45,7 +45,6 @@ public class AuthService {
         if (principal instanceof UserDetailsInterface userDetails) {
             String username = userDetails.getUsername();
 
-            // 리프레시 토큰 삭제 요청
             tokenService.deleteRefreshTokenByUsername(username);
 
             log.info("User logged out successfully: {}", username);
@@ -54,7 +53,6 @@ public class AuthService {
             throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
         }
 
-        // SecurityContext 초기화
         SecurityContextHolder.clearContext();
     }
 }

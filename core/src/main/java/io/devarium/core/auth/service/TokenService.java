@@ -11,5 +11,4 @@ public interface TokenService {
     Token refreshTokens(String refreshToken);
 
     void deleteRefreshTokenByUsername(String email);
-
 }
