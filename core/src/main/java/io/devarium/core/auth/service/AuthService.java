@@ -7,8 +7,10 @@ import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.service.UserService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AuthService {
@@ -25,11 +27,16 @@ public class AuthService {
 
         User user = userService.getUser(email);
         if (user == null) {
-            user=userService.createUser(userInfo,provider);
+            user = userService.createUser(userInfo, provider);
         } else {
             userService.updateUserInfo(user, userInfo);
         }
 
         return tokenService.generateTokens(email, user.getAuthorities());
     }
+
+    public Token refresh(String refreshToken) {
+        return tokenService.refreshTokens(refreshToken);
+    }
+
 }
