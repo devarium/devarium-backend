@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum OAuthProvider {
+public enum OAuth2Provider {
     GITHUB("PROVIDER_GITHUB"),
     GOOGLE("PROVIDER_GOOGLE");
 
