@@ -116,4 +116,10 @@ public class AuthController {
             SingleItemResponse.from(TokenResponse.from(authService.refresh(refreshToken)))
         );
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        authService.logout();
+        return ResponseEntity.noContent().build();
+    }
 }
