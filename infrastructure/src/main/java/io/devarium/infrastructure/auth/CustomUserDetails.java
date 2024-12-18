@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.security.userdetails;
+package io.devarium.infrastructure.auth;
 
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
     public String getPassword() {
         return null;
     }
-    
+
     @Override
     public String getUsername() {
         return null;

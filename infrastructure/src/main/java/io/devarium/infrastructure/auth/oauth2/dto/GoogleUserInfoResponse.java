@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.oauth2.dto;
+package io.devarium.infrastructure.auth.oauth2.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

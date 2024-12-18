@@ -1,7 +1,7 @@
-package io.devarium.infrastructure.token;
+package io.devarium.infrastructure.redis.repository;
 
 import io.devarium.core.auth.repository.RefreshTokenRepository;
-import io.devarium.infrastructure.security.jwt.properties.JwtProperties;
+import io.devarium.infrastructure.auth.jwt.JwtProperties;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;

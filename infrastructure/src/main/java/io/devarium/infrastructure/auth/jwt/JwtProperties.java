@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.security.jwt.properties;
+package io.devarium.infrastructure.auth.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

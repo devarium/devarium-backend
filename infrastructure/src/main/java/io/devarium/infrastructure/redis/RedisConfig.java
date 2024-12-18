@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.token;
+package io.devarium.infrastructure.redis;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

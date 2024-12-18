@@ -1,8 +1,8 @@
-package io.devarium.infrastructure.oauth2.config;
+package io.devarium.infrastructure.auth.oauth2.config;
 
 import io.devarium.core.domain.user.port.OAuth2Client;
-import io.devarium.infrastructure.oauth2.client.GoogleOAuth2Client;
-import io.devarium.infrastructure.oauth2.properties.GoogleOAuth2Properties;
+import io.devarium.infrastructure.auth.oauth2.GoogleOAuth2Client;
+import io.devarium.infrastructure.auth.oauth2.GoogleOAuth2Properties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

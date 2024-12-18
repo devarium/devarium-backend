@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.security.jwt;
+package io.devarium.infrastructure.auth.service;
 
 import io.devarium.core.auth.Token;
 import io.devarium.core.auth.exception.AuthErrorCode;
@@ -7,7 +7,7 @@ import io.devarium.core.auth.exception.TokenStorageErrorCode;
 import io.devarium.core.auth.exception.TokenStorageException;
 import io.devarium.core.auth.repository.RefreshTokenRepository;
 import io.devarium.core.auth.service.TokenService;
-import io.devarium.infrastructure.security.jwt.util.JwtUtil;
+import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

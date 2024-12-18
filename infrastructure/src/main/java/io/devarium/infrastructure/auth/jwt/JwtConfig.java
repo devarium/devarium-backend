@@ -1,6 +1,5 @@
-package io.devarium.infrastructure.security.jwt;
+package io.devarium.infrastructure.auth.jwt;
 
-import io.devarium.infrastructure.security.jwt.properties.JwtProperties;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Base64;

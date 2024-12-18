@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.oauth2.properties;
+package io.devarium.infrastructure.auth.oauth2;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

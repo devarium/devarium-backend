@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.security.jwt.constants;
+package io.devarium.infrastructure.auth.jwt;
 
 
 public final class JwtConstants {

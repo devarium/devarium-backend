@@ -4,7 +4,7 @@ import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
 import io.devarium.core.auth.service.AuthService;
-import io.devarium.infrastructure.security.jwt.constants.JwtConstants;
+import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,15 +1,14 @@
-package io.devarium.infrastructure.oauth2.client;
+package io.devarium.infrastructure.auth.oauth2;
 
-import static io.devarium.infrastructure.security.jwt.constants.JwtConstants.BEARER_PREFIX;
+import static io.devarium.infrastructure.auth.jwt.JwtConstants.BEARER_PREFIX;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.user.OAuth2Provider;
 import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.port.OAuth2Client;
-import io.devarium.infrastructure.oauth2.dto.GoogleTokenResponse;
-import io.devarium.infrastructure.oauth2.dto.GoogleUserInfoResponse;
-import io.devarium.infrastructure.oauth2.properties.GoogleOAuth2Properties;
+import io.devarium.infrastructure.auth.oauth2.dto.GoogleTokenResponse;
+import io.devarium.infrastructure.auth.oauth2.dto.GoogleUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

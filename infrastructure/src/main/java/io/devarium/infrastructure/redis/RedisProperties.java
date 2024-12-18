@@ -1,4 +1,4 @@
-package io.devarium.infrastructure.token;
+package io.devarium.infrastructure.redis;
 
 import lombok.Getter;
 import lombok.Setter;
