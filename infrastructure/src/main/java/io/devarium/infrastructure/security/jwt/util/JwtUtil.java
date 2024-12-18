@@ -25,8 +25,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
+    public static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTHORIZATION_KEY = "auth";
-    private static final String BEARER_PREFIX = "Bearer ";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
     private final JwtProperties jwtProperties;
