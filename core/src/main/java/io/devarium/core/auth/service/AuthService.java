@@ -4,9 +4,10 @@ import io.devarium.core.auth.Token;
 import io.devarium.core.auth.command.UserDetailsInterface;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
+import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.port.OAuth2Client;
 import io.devarium.core.domain.user.service.UserService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,22 +20,20 @@ public class AuthService {
 
     private final UserService userService;
     private final TokenService tokenService;
+    private final OAuth2Client oAuth2Client;
 
-    public Token login(Map<String, Object> userInfo, String provider) {
+    public Token loginWithGoogle(String code) {
+        OAuth2UserInfo userInfo = oAuth2Client.getUserInfo(code);
+        System.out.println("userInfo:" + userInfo);
+        User user = userService.getUser(userInfo.email());
 
-        String email = (String) userInfo.get("email");
-        if (email == null) {
-            throw new CustomAuthException(AuthErrorCode.USER_NOT_FOUND);
-        }
-
-        User user = userService.getUser(email);
         if (user == null) {
-            user = userService.createUser(userInfo, provider);
+            user = userService.createUser(userInfo);
         } else {
             userService.updateUserInfo(user, userInfo);
         }
 
-        return tokenService.generateTokens(email, user.getAuthorities());
+        return tokenService.generateTokens(user.getEmail(), user.getAuthorities());
     }
 
     public Token refresh(String refreshToken) {
