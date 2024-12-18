@@ -1,13 +1,11 @@
 package io.devarium.core.domain.user.service;
 
+import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import io.devarium.core.domain.user.command.UpdateUserCommand;
-import io.devarium.core.domain.user.exception.UserErrorCode;
-import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.repository.UserRepository;
 import java.time.Instant;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,15 +14,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User createUser(Map<String, Object> userInfo, String provider) {
-        String name = (String) userInfo.get("name");
-        String email = (String) userInfo.get("email");
-        String picture = (String) userInfo.get("picture");
+    public User createUser(OAuth2UserInfo userInfo) {
         User user = User.builder()
-            .name(name)
-            .email(email)
-            .picture(picture)
-            .provider(provider)
+            .email(userInfo.email())
+            .name(userInfo.name())
+            .picture(userInfo.picture())
+            .provider(userInfo.provider())
             .role(UserRole.USER)
             .build();
         return userRepository.save(user);
@@ -36,15 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserInfo(User user, Map<String, Object> userInfo) {
-        String name = (String) userInfo.get("name");
-        String picture = (String) userInfo.get("picture");
-        user.update(name, picture);
+    public User updateUserInfo(User user, OAuth2UserInfo userInfo) {
+        user.update(userInfo.name(), userInfo.picture());
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUserProfile(String email, UpdateUserCommand command){
+    public User updateUserProfile(String email, UpdateUserCommand command) {
         User user = getUser(email);
         user.update(command.blogUrl(), command.githubUrl(), command.content());
         return userRepository.save(user);

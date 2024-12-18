@@ -1,11 +1,10 @@
 package io.devarium.infrastructure.persistence.service;
 
+import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.command.UpdateUserCommand;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
-
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +15,8 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User createUser(Map<String, Object> userInfo,String provider) {
-        return userService.createUser(userInfo, provider);
+    public User createUser(OAuth2UserInfo userInfo) {
+        return userService.createUser(userInfo);
     }
 
     @Override
@@ -28,14 +27,14 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User updateUserInfo(User user, Map<String, Object> userInfo){
+    public User updateUserInfo(User user, OAuth2UserInfo userInfo) {
         return userService.updateUserInfo(user, userInfo);
     }
 
     @Override
     @Transactional
-    public User updateUserProfile(String email, UpdateUserCommand command){
-        return userService.updateUserProfile(email,command);
+    public User updateUserProfile(String email, UpdateUserCommand command) {
+        return userService.updateUserProfile(email, command);
     }
 
     @Override
