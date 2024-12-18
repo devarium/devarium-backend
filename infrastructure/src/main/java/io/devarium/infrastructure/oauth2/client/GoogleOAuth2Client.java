@@ -33,7 +33,7 @@ public class GoogleOAuth2Client implements OAuth2Client {
         String accessToken = requestGoogleToken(code).accessToken();
         GoogleUserInfoResponse userInfo = requestGoogleUserInfo(accessToken);
 
-        return new OAuth2UserInfo(
+        return OAuth2UserInfo.of(
             userInfo.id(),
             userInfo.email(),
             userInfo.name(),
