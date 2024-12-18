@@ -41,7 +41,6 @@ public record CustomUserDetails(UserEntity userEntity) implements UserDetailsInt
         return true;
     }
 
-
     @Override
     public boolean isEnabled() {
         return userEntity.getDeletedAt() == null;
