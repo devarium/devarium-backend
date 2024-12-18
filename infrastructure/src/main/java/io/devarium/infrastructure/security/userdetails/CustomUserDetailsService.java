@@ -17,6 +17,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return null;
+    }
+
+    public UserDetails loadUserByEmail(String email) throws UserException {
         return userJpaRepository.findByEmail(email)
             .map(CustomUserDetails::new)
             .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND));

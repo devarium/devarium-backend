@@ -33,25 +33,25 @@ public class JwtUtil {
     private final Key key;
 
     public String generateAccessToken(
-        String username,
+        String email,
         Collection<? extends GrantedAuthority> authorities
     ) {
         return BEARER_PREFIX + generateToken(
-            username,
+            email,
             authorities,
             jwtProperties.getAccessTokenExpiration()
         );
     }
 
     public String generateRefreshToken(
-        String username,
+        String email,
         Collection<? extends GrantedAuthority> authorities
     ) {
-        return generateToken(username, authorities, jwtProperties.getRefreshTokenExpiration());
+        return generateToken(email, authorities, jwtProperties.getRefreshTokenExpiration());
     }
 
-    public String extractUsername(String token) {
-        return getClaims(token).getSubject();
+    public String extractEmail(String email) {
+        return getClaims(email).getSubject();
     }
 
     public Collection<? extends GrantedAuthority> extractAuthorities(String token) {
@@ -101,12 +101,12 @@ public class JwtUtil {
     }
 
     private String generateToken(
-        String username,
+        String email,
         Collection<? extends GrantedAuthority> authorities,
         long expiration
     ) {
         Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(email);
         claims.put(
             AUTHORIZATION_KEY,
             authorities.stream()

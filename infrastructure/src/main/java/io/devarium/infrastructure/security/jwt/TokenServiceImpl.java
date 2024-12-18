@@ -10,27 +10,26 @@ import io.devarium.core.auth.service.TokenService;
 import io.devarium.infrastructure.security.jwt.util.JwtUtil;
 import java.util.Collection;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
-class JwtTokenService implements TokenService {
+class TokenServiceImpl implements TokenService {
 
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtTokenService(JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
-        this.jwtUtil = jwtUtil;
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
-
     @Override
-    public Token generateTokens(String username,
-        Collection<? extends GrantedAuthority> authorities) {
-        String accessToken = jwtUtil.generateAccessToken(username, authorities);
-        String refreshToken = jwtUtil.generateRefreshToken(username, authorities);
+    public Token generateTokens(
+        String email,
+        Collection<? extends GrantedAuthority> authorities
+    ) {
+        String accessToken = jwtUtil.generateAccessToken(email, authorities);
+        String refreshToken = jwtUtil.generateRefreshToken(email, authorities);
 
-        refreshTokenRepository.save(username, refreshToken);
+        refreshTokenRepository.save(email, refreshToken);
 
         return Token.of(accessToken, refreshToken);
     }
@@ -43,7 +42,7 @@ class JwtTokenService implements TokenService {
         }
 
         // 2. Refresh Token에서 사용자명 추출
-        String username = jwtUtil.extractUsername(refreshToken);
+        String username = jwtUtil.extractEmail(refreshToken);
 
         // 3. 저장된 Refresh Token 확인 및 클라이언트가 보낸 Refresh Token과 저장된 토큰 비교
         Optional<String> savedToken = refreshTokenRepository.findByEmail(username);

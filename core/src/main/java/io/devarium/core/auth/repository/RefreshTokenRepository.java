@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface RefreshTokenRepository {
 
-    void save(String username, String refreshToken);
+    void save(String email, String refreshToken);
 
     Optional<String> findByEmail(String email);
 
