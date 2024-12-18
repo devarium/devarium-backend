@@ -9,7 +9,6 @@ public record Token(String accessToken, String refreshToken) {
         return Token.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
-
             .build();
     }
 }
