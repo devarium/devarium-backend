@@ -57,7 +57,6 @@ public class SecurityConfig {
                 .failureUrl("/loginFailure")
             ) // OAuth 2.0 로그인 지원 활성화
             .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
-            .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
             .exceptionHandling(it -> it
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들러
                 .accessDeniedHandler(jwtAccessDeniedHandler) // 접근 거부 핸들러
