@@ -67,4 +67,9 @@ class JwtTokenService implements TokenService {
         return Token.of(newAccessToken, newRefreshToken);
     }
 
+    @Override
+    public void deleteRefreshTokenByUsername(String email) {
+        refreshTokenRepository.deleteByEmail(email);
+    }
+
 }
