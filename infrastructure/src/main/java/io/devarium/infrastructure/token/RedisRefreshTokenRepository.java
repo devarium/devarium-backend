@@ -14,13 +14,12 @@ import org.springframework.stereotype.Repository;
 public class RedisRefreshTokenRepository implements RefreshTokenRepository {
 
     private final StringRedisTemplate redisTemplate;
-    //private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60; // 7 days
     private final JwtProperties jwtProperties;
 
     @Override
-    public void save(String username, String refreshToken) {
+    public void save(String email, String refreshToken) {
         redisTemplate.opsForValue().set(
-            "refreshToken:" + username,
+            "refreshToken:" + email,
             refreshToken,
             jwtProperties.getRefreshTokenExpiration(),
             TimeUnit.SECONDS
