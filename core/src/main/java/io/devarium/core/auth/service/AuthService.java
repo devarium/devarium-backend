@@ -24,7 +24,6 @@ public class AuthService {
 
     public Token loginWithGoogle(String code) {
         OAuth2UserInfo userInfo = oAuth2Client.getUserInfo(code);
-        System.out.println("userInfo:" + userInfo);
         User user = userService.getUser(userInfo.email());
 
         if (user == null) {
