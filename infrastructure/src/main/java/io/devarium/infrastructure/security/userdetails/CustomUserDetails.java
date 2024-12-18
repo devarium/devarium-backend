@@ -1,18 +1,19 @@
 package io.devarium.infrastructure.security.userdetails;
 
+import io.devarium.core.auth.command.UserDetailsInterface;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.Collection;
 import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
+public record CustomUserDetails(UserEntity userEntity) implements UserDetailsInterface,
+    UserDetails {
 
-/*    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().name()));
-    }*/
+    /*    @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().name()));
+        }*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(userEntity.getRole()); // UserRole이 GrantedAuthority 구현체
