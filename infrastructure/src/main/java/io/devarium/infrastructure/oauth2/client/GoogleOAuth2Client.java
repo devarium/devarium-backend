@@ -1,6 +1,6 @@
 package io.devarium.infrastructure.oauth2.client;
 
-import static io.devarium.infrastructure.security.jwt.util.JwtUtil.BEARER_PREFIX;
+import static io.devarium.infrastructure.security.jwt.constants.JwtConstants.BEARER_PREFIX;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;

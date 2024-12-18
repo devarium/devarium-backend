@@ -1,6 +1,6 @@
 package io.devarium.api.auth.filter;
 
-import io.devarium.core.auth.constants.JwtConstants;
+import io.devarium.infrastructure.security.jwt.constants.JwtConstants;
 import io.devarium.infrastructure.security.jwt.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

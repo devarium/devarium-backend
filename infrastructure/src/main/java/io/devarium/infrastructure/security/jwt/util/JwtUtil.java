@@ -1,5 +1,7 @@
 package io.devarium.infrastructure.security.jwt.util;
 
+import static io.devarium.infrastructure.security.jwt.constants.JwtConstants.BEARER_PREFIX;
+
 import io.devarium.infrastructure.security.jwt.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    public static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTHORIZATION_KEY = "auth";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -35,8 +36,11 @@ public class JwtUtil {
         String username,
         Collection<? extends GrantedAuthority> authorities
     ) {
-        return BEARER_PREFIX +
-            generateToken(username, authorities, jwtProperties.getAccessTokenExpiration());
+        return BEARER_PREFIX + generateToken(
+            username,
+            authorities,
+            jwtProperties.getAccessTokenExpiration()
+        );
     }
 
     public String generateRefreshToken(
