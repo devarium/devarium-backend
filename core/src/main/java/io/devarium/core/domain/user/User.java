@@ -49,8 +49,8 @@ public class User {
         this.content = content;
     }
 
-    public void delete(Instant deletedAt) {
-        this.deletedAt = deletedAt;
+    public void delete() {
+        this.deletedAt = Instant.now();
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {

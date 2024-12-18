@@ -5,7 +5,6 @@ import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import io.devarium.core.domain.user.command.UpdateUserCommand;
 import io.devarium.core.domain.user.repository.UserRepository;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String email) {
         User user = getUser(email);
-        user.delete(Instant.now());
+        user.delete();
         userRepository.save(user);
     }
 }
