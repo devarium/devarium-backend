@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
+import io.devarium.core.domain.user.OAuth2Provider;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import jakarta.persistence.Column;
@@ -17,10 +18,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity extends BaseEntity{
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +41,8 @@ public class UserEntity extends BaseEntity{
     private UserRole role;
 
     @Column(nullable = false)
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    private OAuth2Provider provider;
 
     @Column
     private String blogUrl;
@@ -61,7 +63,7 @@ public class UserEntity extends BaseEntity{
         String name,
         String picture,
         UserRole role,
-        String provider,
+        OAuth2Provider provider,
         String blogUrl,
         String githubUrl,
         String content

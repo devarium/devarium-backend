@@ -12,18 +12,20 @@ public class User {
 
     private final Long id;
     private final String email;
-    private  String name;
-    private  String picture;
     private final UserRole role;
-    private final String provider;
+    private final OAuth2Provider provider;
     private final Instant createdAt;
+    private String name;
+    private String picture;
     private Instant deletedAt;
     private String blogUrl;
     private String githubUrl;
     private String content;
 
     @Builder
-    public User(Long id, String email, String name, String picture, UserRole role, String provider, Instant createdAt,String blogUrl, String githubUrl, String content) {
+    public User(Long id, String email, String name, String picture, UserRole role,
+        OAuth2Provider provider, Instant createdAt, String blogUrl, String githubUrl,
+        String content) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -32,7 +34,7 @@ public class User {
         this.provider = provider;
         this.createdAt = createdAt;
         this.blogUrl = blogUrl;
-        this.githubUrl= githubUrl;
+        this.githubUrl = githubUrl;
         this.content = content;
     }
 
