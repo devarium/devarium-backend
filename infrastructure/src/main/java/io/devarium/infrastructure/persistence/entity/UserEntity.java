@@ -86,5 +86,6 @@ public class UserEntity extends BaseEntity {
         this.blogUrl = domain.getBlogUrl();
         this.githubUrl = domain.getGithubUrl();
         this.content = domain.getContent();
+        this.deletedAt = domain.getDeletedAt();
     }
 }
