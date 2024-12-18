@@ -1,6 +1,9 @@
 package io.devarium.api.controller.auth;
 
+import io.devarium.api.auth.dto.TokenResponse;
+import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.core.auth.Token;
+import io.devarium.core.auth.constants.JwtConstants;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.auth.service.AuthService;
@@ -16,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,7 +65,8 @@ public class AuthController {
             tokenEndpoint,
             HttpMethod.POST,
             request,
-            new ParameterizedTypeReference<>() {}
+            new ParameterizedTypeReference<>() {
+            }
         );
 
         Map<String, Object> body = response.getBody();
@@ -83,16 +89,15 @@ public class AuthController {
                 userInfoEndpoint,
                 HttpMethod.GET,
                 userInfoRequest,
-                new ParameterizedTypeReference<>() {}
+                new ParameterizedTypeReference<>() {
+                }
             );
 
             Map<String, Object> userInfo = userInfoResponse.getBody();
             if (userInfo == null) {
                 throw new CustomAuthException(AuthErrorCode.USER_NOT_FOUND);
             }
-            /*authService.login(userInfo, "google");
 
-            return ResponseEntity.ok(userInfo);*/
             // 3. JWT 발급
             Token token = authService.login(userInfo, "google");
 
@@ -103,51 +108,12 @@ public class AuthController {
         throw new CustomAuthException(AuthErrorCode.GOOGLE_ACCESS_TOKEN_IS_NULL);
     }
 
-/*
-    @GetMapping("/google/callback")
-    public ResponseEntity<SingleItemResponse<AuthResponse>> handleGoogleCallback(
-        @RequestParam("code") String code
+    @PostMapping("/refresh")
+    public ResponseEntity<SingleItemResponse<TokenResponse>> refresh(
+        @RequestHeader(JwtConstants.REFRESH_HEADER) String refreshToken
     ) {
-        // 사용자 인증 처리 (구글 API 호출은 Core에서 숨겨짐)
-        AuthResponse authResponse = AuthService.authenticateWithGoogle(code);
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(SingleItemResponse.from(authResponse));
+        return ResponseEntity.ok(
+            SingleItemResponse.from(TokenResponse.from(authService.refresh(refreshToken)))
+        );
     }
-
-    //소셜 로그인 처리(구글)
-    @PostMapping("/google")
-    public ResponseEntity<SingleItemResponse<AuthResponse>> loginWithGoogle(
-        @RequestBody GoogleLoginRequest googleLoginRequest
-    ) {
-        // AuthService를 호출해 로그인 처리
-        AuthResponse authResponse = authService.loginWithGoogle(googleLoginRequest.getAccessToken());
-
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(SingleItemResponse.from(authResponse));
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<SingleItemResponse<UserResponse>> getCurrentUser(
-        @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        // 인증된 사용자 정보 반환
-        UserResponse userResponse = authService.getCurrentUser(userDetails.getEmail());
-
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(SingleItemResponse.from(userResponse));
-    }
-
-        @GetMapping("/google/callback")
-    public ResponseEntity<?> handleGoogleCallbackGet(@RequestParam String code) {
-        // GET 요청 처리 후 내부적으로 POST 로직 호출
-        return handleGoogleCallbackPost(code);
-    }
-
-    @PostMapping("/google/callback")
-    public ResponseEntity<?> handleGoogleCallbackPost(@RequestParam String code) {
-*/
-
 }
