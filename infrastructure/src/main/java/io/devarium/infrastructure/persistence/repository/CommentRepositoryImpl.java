@@ -10,7 +10,6 @@ import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.QCommentEntity;
-import io.devarium.infrastructure.persistence.entity.QReplyEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,8 +19,9 @@ import org.springframework.stereotype.Repository;
 public class CommentRepositoryImpl implements CommentRepository {
 
     private final CommentJpaRepository commentJpaRepository;
-    private final JPAQueryFactory queryFactory;
     private final PostJpaRepository postJpaRepository;
+    private final JPAQueryFactory queryFactory;
+    private final ReplyRepositoryImpl replyRepository;
 
     @Override
     public Comment save(Comment comment) {
@@ -31,16 +31,20 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void deleteWithRepliesByCommentId(Long commentId) {
-        QReplyEntity reply = QReplyEntity.replyEntity;
+    public void deleteById(Long id) {
+        replyRepository.deleteRepliesByCommentId(id);
         QCommentEntity comment = QCommentEntity.commentEntity;
-
-        queryFactory.delete(reply)
-            .where(reply.comment.id.eq(commentId))
-            .execute();
-
         queryFactory.delete(comment)
-            .where(comment.id.eq(commentId))
+            .where(comment.id.eq(id))
+            .execute();
+    }
+
+    @Override
+    public void deleteCommentsByPostId(Long postId) {
+        replyRepository.deleteRepliesByPostId(postId);
+        QCommentEntity comment = QCommentEntity.commentEntity;
+        queryFactory.delete(comment)
+            .where(comment.post.id.eq(postId))
             .execute();
     }
 

@@ -6,7 +6,6 @@ import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
-import io.devarium.infrastructure.persistence.entity.QCommentEntity;
 import io.devarium.infrastructure.persistence.entity.QPostEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
     private final JPAQueryFactory queryFactory;
+    private final CommentRepositoryImpl commentRepository;
 
     @Override
     public Post save(Post post) {
@@ -27,16 +27,11 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public void deleteWithCommentsByPostId(Long postId) {
-        QCommentEntity comment = QCommentEntity.commentEntity;
+    public void deleteById(Long id) {
+        commentRepository.deleteCommentsByPostId(id);
         QPostEntity post = QPostEntity.postEntity;
-
-        queryFactory.delete(comment)
-            .where(comment.post.id.eq(postId))
-            .execute();
-
         queryFactory.delete(post)
-            .where(post.id.eq(postId))
+            .where(post.id.eq(id))
             .execute();
     }
 

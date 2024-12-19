@@ -7,7 +7,7 @@ public interface PostRepository {
 
     Post save(Post post);
 
-    void deleteWithCommentsByPostId(Long id);
+    void deleteById(Long id);
 
     Optional<Post> findById(Long id);
 }

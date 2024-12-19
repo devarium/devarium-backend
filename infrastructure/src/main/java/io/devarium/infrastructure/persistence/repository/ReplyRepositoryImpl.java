@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
@@ -8,6 +9,7 @@ import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
+import io.devarium.infrastructure.persistence.entity.QCommentEntity;
 import io.devarium.infrastructure.persistence.entity.QReplyEntity;
 import io.devarium.infrastructure.persistence.entity.ReplyEntity;
 import java.util.Optional;
@@ -19,8 +21,8 @@ import org.springframework.stereotype.Repository;
 public class ReplyRepositoryImpl implements ReplyRepository {
 
     private final ReplyJpaRepository replyJpaRepository;
-    private final JPAQueryFactory queryFactory;
     private final CommentJpaRepository commentJpaRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Reply save(Reply reply) {
@@ -32,9 +34,29 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     @Override
     public void deleteById(Long id) {
         QReplyEntity reply = QReplyEntity.replyEntity;
-
         queryFactory.delete(reply)
             .where(reply.id.eq(id))
+            .execute();
+    }
+
+    @Override
+    public void deleteRepliesByCommentId(Long commentId) {
+        QReplyEntity reply = QReplyEntity.replyEntity;
+        queryFactory.delete(reply)
+            .where(reply.comment.id.eq(commentId))
+            .execute();
+    }
+
+    @Override
+    public void deleteRepliesByPostId(Long postId) {
+        QReplyEntity reply = QReplyEntity.replyEntity;
+        QCommentEntity comment = QCommentEntity.commentEntity;
+        queryFactory.delete(reply)
+            .where(reply.comment.id.in(
+                JPAExpressions.select(comment.id)
+                    .from(comment)
+                    .where(comment.post.id.eq(postId))
+            ))
             .execute();
     }
 
