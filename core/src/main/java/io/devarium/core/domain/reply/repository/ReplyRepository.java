@@ -7,7 +7,7 @@ public interface ReplyRepository {
 
     Reply save(Reply reply);
 
-    void deleteById(Long replyId);
+    void deleteById(Long id);
 
     void deleteRepliesByCommentId(Long commentId);
 

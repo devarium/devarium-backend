@@ -1,6 +1,8 @@
 package io.devarium.api.common;
 
 import io.devarium.api.common.dto.ErrorResponse;
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
@@ -46,6 +48,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ReplyException.class)
     public ResponseEntity<ErrorResponse> handleReplyException(ReplyException e) {
         ReplyErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(CustomAuthException.class)
+    public ResponseEntity<ErrorResponse> handleAuthException(CustomAuthException e) {
+        AuthErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
