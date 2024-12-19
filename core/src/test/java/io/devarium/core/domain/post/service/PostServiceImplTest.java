@@ -170,7 +170,7 @@ public class PostServiceImplTest {
             postService.deletePost(POST_ID);
 
             // then
-            then(postRepository).should().deleteById(POST_ID);
+            then(postRepository).should().deleteWithCommentsByPostId(POST_ID);
         }
     }
 }
