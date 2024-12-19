@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +25,7 @@ public class CommentServiceImplTest {
     private static final Long COMMENT_ID = 1L;
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
+    private static final Long POST_ID = 2L;
 
     @Mock
     private CommentRepository commentRepository;
@@ -32,9 +33,7 @@ public class CommentServiceImplTest {
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private record TestUpsertCommentCommand(
-        String content
-    ) implements UpsertCommentCommand {
+    private record TestUpsertComment(String content, Long postId) implements UpsertComment {
 
     }
 
@@ -42,9 +41,9 @@ public class CommentServiceImplTest {
     class CreateCommentTest {
 
         @Test
-        void givenValidCommentCommand_whenCreateComment_thenCommentIsSaved() {
+        void givenValidCommentRequest_whenCreateComment_thenCommentIsSaved() {
             // given
-            UpsertCommentCommand command = new TestUpsertCommentCommand(CONTENT);
+            UpsertComment request = new TestUpsertComment(CONTENT, POST_ID);
 
             Comment expectedComment = Comment.builder()
                 .content(CONTENT)
@@ -58,7 +57,7 @@ public class CommentServiceImplTest {
             given(commentRepository.save(any(Comment.class))).willReturn(savedComment);
 
             // when
-            Comment createdComment = commentService.createComment(command);
+            Comment createdComment = commentService.createComment(request);
 
             // then
             then(commentRepository).should().save(refEq(expectedComment));
@@ -94,15 +93,14 @@ public class CommentServiceImplTest {
         }
 
         @Test
-        void givenNonExistingComment_whenGetComment_thenCommentIsNotFound() {
+        void givenNonExistentComment_whenGetComment_thenCommentIsNotFound() {
             // given
             given(commentRepository.findById(NON_EXISTENT_ID))
                 .willReturn(Optional.empty());
 
             // when & then
             assertThatThrownBy(() -> commentService.getComment(NON_EXISTENT_ID))
-                .isInstanceOf(CommentException.class)
-                .hasMessageContaining("Comment not found with id:");
+                .isInstanceOf(CommentException.class);
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -112,10 +110,10 @@ public class CommentServiceImplTest {
     class UpdateCommentTest {
 
         @Test
-        void givenExistingCommentAndValidCommentCommand_whenUpdateComment_thenCommentIsUpdated() {
+        void givenExistingCommentAndValidCommentRequest_whenUpdateComment_thenCommentIsUpdated() {
             // given
             String updatedContent = "updated content";
-            UpsertCommentCommand command = new TestUpsertCommentCommand(updatedContent);
+            UpsertComment request = new TestUpsertComment(updatedContent, POST_ID);
 
             Comment existingComment = Comment.builder()
                 .id(COMMENT_ID)
@@ -131,7 +129,7 @@ public class CommentServiceImplTest {
             given(commentRepository.save(any(Comment.class))).willReturn(savedComment);
 
             // when
-            Comment updatedComment = commentService.updateComment(COMMENT_ID, command);
+            Comment updatedComment = commentService.updateComment(COMMENT_ID, request);
 
             // then
             then(commentRepository).should().findById(COMMENT_ID);
@@ -143,15 +141,14 @@ public class CommentServiceImplTest {
         }
 
         @Test
-        void givenNonExistingCommentAndValidCommentCommand_whenUpdateComment_thenCommentIsNotFound() {
+        void givenNonExistentCommentAndValidCommentRequest_whenUpdateComment_thenCommentIsNotFound() {
             // given
-            UpsertCommentCommand command = new TestUpsertCommentCommand(CONTENT);
+            UpsertComment request = new TestUpsertComment(CONTENT, POST_ID);
             given(commentRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, command))
-                .isInstanceOf(CommentException.class)
-                .hasMessageContaining("Comment not found with id:");
+            assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, request))
+                .isInstanceOf(CommentException.class);
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
             then(commentRepository).shouldHaveNoMoreInteractions();

@@ -1,5 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
+import io.devarium.core.domain.post.Post;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +24,18 @@ public class PostEntity extends BaseEntity {
 
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
     @Builder
-    public PostEntity(Long id, String title, String content) {
+    private PostEntity(Long id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;
+    }
+
+    public void update(Post post) {
+        this.title = post.getTitle();
+        this.content = post.getContent();
     }
 }

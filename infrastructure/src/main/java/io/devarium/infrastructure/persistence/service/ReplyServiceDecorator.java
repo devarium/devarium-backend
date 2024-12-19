@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.command.UpsertReplyCommand;
+import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +12,10 @@ public class ReplyServiceDecorator implements ReplyService {
 
     private final ReplyServiceImpl replyService;
 
-
     @Override
     @Transactional
-    public Reply createReply(UpsertReplyCommand command) {
-        return replyService.createReply(command);
+    public Reply createReply(UpsertReply request) {
+        return replyService.createReply(request);
     }
 
     @Override
@@ -27,8 +26,8 @@ public class ReplyServiceDecorator implements ReplyService {
 
     @Override
     @Transactional
-    public Reply updateReply(Long replyId, UpsertReplyCommand command) {
-        return replyService.updateReply(replyId, command);
+    public Reply updateReply(Long replyId, UpsertReply request) {
+        return replyService.updateReply(replyId, request);
     }
 
     @Override

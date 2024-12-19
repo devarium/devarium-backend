@@ -11,5 +11,4 @@ public class ReplyException extends RuntimeException {
         super(errorCode.getMessage(args));
         this.errorCode = errorCode;
     }
-
 }
