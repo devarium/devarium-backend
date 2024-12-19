@@ -1,15 +1,16 @@
 package io.devarium.core.auth.service;
 
+import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.core.auth.OAuth2Client;
+import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.auth.Token;
-import io.devarium.core.auth.command.UserDetailsInterface;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
-import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.port.OAuth2Client;
 import io.devarium.core.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,19 +41,19 @@ public class AuthService {
     }
 
     public void logout() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (principal instanceof UserDetailsInterface userDetails) {
-            String username = userDetails.getUsername();
-
-            tokenService.deleteRefreshTokenByUsername(username);
-
-            log.info("User logged out successfully: {}", username);
+        if (authentication != null &&
+            authentication.getPrincipal() instanceof EmailPrincipal principal
+        ) {
+            String email = principal.getEmail();
+            tokenService.deleteRefreshTokenByEmail(email);
+            SecurityContextHolder.clearContext();
+            log.info("User logged out successfully: {}", email);
         } else {
-            log.warn("Unauthenticated user attempted to log out.");
+            log.warn("Unauthenticated user attempted to log out");
+            SecurityContextHolder.clearContext();
             throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
         }
-
-        SecurityContextHolder.clearContext();
     }
 }
