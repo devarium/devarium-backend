@@ -67,8 +67,7 @@ class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void deleteRefreshTokenByUsername(String email) {
+    public void deleteRefreshTokenByEmail(String email) {
         refreshTokenRepository.deleteByEmail(email);
     }
-
 }
