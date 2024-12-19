@@ -3,6 +3,8 @@ package io.devarium.core.domain.user.service;
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +27,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND, userId));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, email));
     }
 
     @Override
@@ -36,15 +45,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserProfile(String email, UpdateUser command) {
-        User user = getUser(email);
-        user.update(command.blogUrl(), command.githubUrl(), command.content());
+    public User updateUserProfile(Long userId, UpdateUser request) {
+        User user = getUser(userId);
+        user.update(request.blogUrl(), request.githubUrl(), request.content());
         return userRepository.save(user);
     }
 
     @Override
-    public void deleteUser(String email) {
-        User user = getUser(email);
+    public void deleteUser(Long userId) {
+        User user = getUser(userId);
         user.delete();
         userRepository.save(user);
     }

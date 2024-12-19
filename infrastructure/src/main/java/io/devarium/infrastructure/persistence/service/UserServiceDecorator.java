@@ -21,8 +21,14 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUser(String email) {
-        return userService.getUser(email);
+    public User getUser(Long userId) {
+        return userService.getUser(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserByEmail(String email) {
+        return userService.getUserByEmail(email);
     }
 
     @Override
@@ -33,13 +39,13 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User updateUserProfile(String email, UpdateUser command) {
-        return userService.updateUserProfile(email, command);
+    public User updateUserProfile(Long userId, UpdateUser command) {
+        return userService.updateUserProfile(userId, command);
     }
 
     @Override
     @Transactional
-    public void deleteUser(String email) {
-        userService.deleteUser(email);
+    public void deleteUser(Long userId) {
+        userService.deleteUser(userId);
     }
 }

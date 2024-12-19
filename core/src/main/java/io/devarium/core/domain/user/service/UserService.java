@@ -8,11 +8,13 @@ public interface UserService {
 
     User createUser(OAuth2UserInfo userInfo);
 
-    User getUser(String email);
+    User getUser(Long userId);
+
+    User getUserByEmail(String email);
 
     User updateUserInfo(User user, OAuth2UserInfo userInfo);
 
-    User updateUserProfile(String email, UpdateUser command);
+    User updateUserProfile(Long userId, UpdateUser request);
 
-    void deleteUser(String email);
+    void deleteUser(Long userId);
 }
