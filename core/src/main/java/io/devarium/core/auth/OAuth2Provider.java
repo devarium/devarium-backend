@@ -1,4 +1,4 @@
-package io.devarium.core.domain.user;
+package io.devarium.core.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

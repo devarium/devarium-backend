@@ -1,4 +1,4 @@
-package io.devarium.core.domain.user;
+package io.devarium.core.auth;
 
 public record OAuth2UserInfo(
     String id,

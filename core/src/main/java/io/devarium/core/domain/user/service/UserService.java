@@ -1,6 +1,6 @@
 package io.devarium.core.domain.user.service;
 
-import io.devarium.core.domain.user.OAuth2UserInfo;
+import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.port.UpdateUser;
 
