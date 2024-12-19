@@ -164,7 +164,7 @@ public class CommentServiceImplTest {
             commentService.deleteComment(COMMENT_ID);
 
             // then
-            then(commentRepository).should().deleteById(COMMENT_ID);
+            then(commentRepository).should().deleteWithRepliesByCommentId(COMMENT_ID);
         }
     }
 }

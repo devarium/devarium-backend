@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
@@ -8,6 +9,8 @@ import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
+import io.devarium.infrastructure.persistence.entity.QCommentEntity;
+import io.devarium.infrastructure.persistence.entity.QReplyEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Repository;
 public class CommentRepositoryImpl implements CommentRepository {
 
     private final CommentJpaRepository commentJpaRepository;
+    private final JPAQueryFactory queryFactory;
     private final PostJpaRepository postJpaRepository;
 
     @Override
@@ -27,8 +31,17 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void deleteById(Long commentId) {
-        commentJpaRepository.deleteById(commentId);
+    public void deleteWithRepliesByCommentId(Long commentId) {
+        QReplyEntity reply = QReplyEntity.replyEntity;
+        QCommentEntity comment = QCommentEntity.commentEntity;
+
+        queryFactory.delete(reply)
+            .where(reply.comment.id.eq(commentId))
+            .execute();
+
+        queryFactory.delete(comment)
+            .where(comment.id.eq(commentId))
+            .execute();
     }
 
     @Override
@@ -48,7 +61,8 @@ public class CommentRepositoryImpl implements CommentRepository {
     private CommentEntity convertToEntity(Comment domain) {
         if (domain.getId() != null) {
             CommentEntity entity = commentJpaRepository.findById(domain.getId())
-                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getId()));
+                .orElseThrow(
+                    () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getId()));
             entity.update(domain);
             return entity;
         }
