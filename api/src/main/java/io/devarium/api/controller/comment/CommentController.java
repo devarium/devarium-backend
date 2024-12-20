@@ -1,5 +1,6 @@
 package io.devarium.api.controller.comment;
 
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
@@ -7,6 +8,10 @@ import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,11 +44,23 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<SingleItemResponse<CommentResponse>> getComment(@PathVariable Long commentId) {
+    public ResponseEntity<SingleItemResponse<CommentResponse>> getComment(
+        @PathVariable Long commentId
+    ) {
         Comment comment = commentService.getComment(commentId);
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @GetMapping("/all/{postId}")
+    public ResponseEntity<PagedListResponse<Comment>> getCommentsByPostId(
+        @PathVariable Long postId,
+        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable
+    ) {
+        Page<Comment> comments = commentService.getCommentsByPostId(postId, pageable);
+
+        return ResponseEntity.ok(PagedListResponse.from(comments));
     }
 
     @PutMapping("/{commentId}")

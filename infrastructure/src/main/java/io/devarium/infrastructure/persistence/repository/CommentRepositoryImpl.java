@@ -12,6 +12,8 @@ import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.QCommentEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -51,6 +53,11 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Optional<Comment> findById(Long id) {
         return commentJpaRepository.findById(id).map(this::convertToDomain);
+    }
+
+    @Override
+    public Page<Comment> findByPostId(Long postId, Pageable pageable) {
+        return commentJpaRepository.findByPostId(postId, pageable).map(this::convertToDomain);
     }
 
     private Comment convertToDomain(CommentEntity entity) {

@@ -17,5 +17,5 @@ public interface ReplyRepository {
 
     Optional<Reply> findById(Long id);
 
-    Page<Reply> findByCommentId(Long postId, Pageable pageable);
+    Page<Reply> findByCommentId(Long commentId, Pageable pageable);
 }
