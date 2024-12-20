@@ -6,6 +6,8 @@ import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -25,6 +27,11 @@ public class PostServiceImpl implements PostService {
     public Post getPost(Long postId) {
         return postRepository.findById(postId)
             .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, postId));
+    }
+
+    @Override
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     @Override
