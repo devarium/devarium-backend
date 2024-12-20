@@ -25,12 +25,12 @@ public class AuthService {
 
     public Token loginWithGoogle(String code) {
         OAuth2UserInfo userInfo = oAuth2Client.getUserInfo(code);
-        User user = userService.getUser(userInfo.email());
+        User user = userService.getUserByEmail(userInfo.email());
 
         if (user == null) {
             user = userService.createUser(userInfo);
         } else {
-            userService.updateUserInfo(user, userInfo);
+            userService.updateUserInfo(userInfo, user);
         }
 
         return tokenService.generateTokens(user.getEmail(), user.getAuthorities());
