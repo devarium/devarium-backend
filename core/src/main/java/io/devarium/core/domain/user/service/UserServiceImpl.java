@@ -39,21 +39,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserInfo(User user, OAuth2UserInfo userInfo) {
+    public User updateUserInfo(OAuth2UserInfo userInfo, User user) {
         user.update(userInfo.name(), userInfo.picture());
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUserProfile(Long userId, UpdateUser request) {
-        User user = getUser(userId);
-        user.update(request.blogUrl(), request.githubUrl(), request.content());
+    public User updateUserProfile(UpdateUser request, User user) {
+        user.update(request.bio(), request.blogUrl(), request.githubUrl());
         return userRepository.save(user);
     }
 
     @Override
-    public void deleteUser(Long userId) {
-        User user = getUser(userId);
+    public void withdraw(User user) {
         user.delete();
         userRepository.save(user);
     }

@@ -12,9 +12,9 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    User updateUserInfo(User user, OAuth2UserInfo userInfo);
+    User updateUserInfo(OAuth2UserInfo userInfo, User user);
 
-    User updateUserProfile(Long userId, UpdateUser request);
+    User updateUserProfile(UpdateUser request, User user);
 
-    void deleteUser(Long userId);
+    void withdraw(User user);
 }
