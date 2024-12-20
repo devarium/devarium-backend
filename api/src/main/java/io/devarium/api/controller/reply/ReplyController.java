@@ -56,7 +56,7 @@ public class ReplyController {
     @GetMapping("/all/{commentId}")
     public ResponseEntity<PagedListResponse<Reply>> getRepliesByCommentId(
         @PathVariable Long commentId,
-        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable
+        @PageableDefault(size = Reply.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
     ) {
         Page<Reply> replies = replyService.getRepliesByCommentId(commentId, pageable);
 

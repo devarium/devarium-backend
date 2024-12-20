@@ -7,6 +7,8 @@ import lombok.Getter;
 @Getter
 public class Reply {
 
+    public static final int DEFAULT_PAGE_SIZE = 3;
+
     private final Long id;
     private final Instant createdAt;
     private String content;
