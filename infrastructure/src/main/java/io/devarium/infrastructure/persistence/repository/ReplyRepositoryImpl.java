@@ -14,6 +14,8 @@ import io.devarium.infrastructure.persistence.entity.QReplyEntity;
 import io.devarium.infrastructure.persistence.entity.ReplyEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -63,6 +65,11 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     @Override
     public Optional<Reply> findById(Long id) {
         return replyJpaRepository.findById(id).map(this::convertToDomain);
+    }
+
+    @Override
+    public Page<Reply> findByCommentId(Long commentId, Pageable pageable) {
+        return replyJpaRepository.findByCommentId(commentId, pageable).map(this::convertToDomain);
     }
 
     private Reply convertToDomain(ReplyEntity entity) {

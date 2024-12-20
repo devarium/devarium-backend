@@ -6,6 +6,8 @@ import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class ReplyServiceImpl implements ReplyService {
@@ -25,6 +27,11 @@ public class ReplyServiceImpl implements ReplyService {
     public Reply getReply(Long replyId) {
         return replyRepository.findById(replyId)
             .orElseThrow(() -> new ReplyException(ReplyErrorCode.REPLY_NOT_FOUND, replyId));
+    }
+
+    @Override
+    public Page<Reply> getRepliesByCommentId(Long commentId, Pageable pageable) {
+        return replyRepository.findByCommentId(commentId, pageable);
     }
 
     @Override

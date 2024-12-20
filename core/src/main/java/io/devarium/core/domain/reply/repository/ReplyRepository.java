@@ -2,6 +2,8 @@ package io.devarium.core.domain.reply.repository;
 
 import io.devarium.core.domain.reply.Reply;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReplyRepository {
 
@@ -14,4 +16,6 @@ public interface ReplyRepository {
     void deleteRepliesByPostId(Long postId);
 
     Optional<Reply> findById(Long id);
+
+    Page<Reply> findByCommentId(Long postId, Pageable pageable);
 }

@@ -5,6 +5,8 @@ import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class ReplyServiceDecorator implements ReplyService {
     @Transactional(readOnly = true)
     public Reply getReply(Long replyId) {
         return replyService.getReply(replyId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Reply> getRepliesByCommentId(Long commentId, Pageable pageable) {
+        return replyService.getRepliesByCommentId(commentId, pageable);
     }
 
     @Override
