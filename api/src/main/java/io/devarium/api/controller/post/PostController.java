@@ -53,7 +53,7 @@ public class PostController {
 
     @GetMapping("/all")
     public ResponseEntity<PagedListResponse<Post>> getAllPosts(
-        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable
+        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
         Page<Post> posts = postService.getAllPosts(pageable);
 
