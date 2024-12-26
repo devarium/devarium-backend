@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-public class RedisRefreshTokenRepository implements RefreshTokenRepository {
+public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 
     private final StringRedisTemplate redisTemplate;
     private final JwtProperties jwtProperties;
