@@ -6,9 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 public interface TokenService {
 
-    Token generateTokens(String username, Collection<? extends GrantedAuthority> authorities);
+    Token generateTokens(String email, Collection<? extends GrantedAuthority> authorities);
 
     Token refreshTokens(String refreshToken);
 
-    void deleteRefreshTokenByUsername(String email);
+    void deleteRefreshTokenByEmail(String email);
 }

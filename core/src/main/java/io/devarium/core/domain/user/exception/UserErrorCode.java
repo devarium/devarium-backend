@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum UserErrorCode {
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found with id: %d"),
     USER_EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found with email: %s");
 
     private final HttpStatus status;
