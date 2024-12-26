@@ -5,6 +5,7 @@ import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
+import io.devarium.core.domain.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final ReplyService replyService;
 
     @Override
     public Comment createComment(UpsertComment request) {
@@ -43,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long commentId) {
+        replyService.deleteReplies(commentId);
         commentRepository.deleteById(commentId);
     }
 }

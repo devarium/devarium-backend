@@ -28,8 +28,9 @@ public class ServiceConfig {
     }
 
     @Bean
-    public CommentService commentService(CommentRepository commentRepository) {
-        return new CommentServiceDecorator(new CommentServiceImpl(commentRepository));
+    public CommentService commentService(CommentRepository commentRepository,
+        ReplyService replyService) {
+        return new CommentServiceDecorator(new CommentServiceImpl(commentRepository, replyService));
     }
 
     @Bean
