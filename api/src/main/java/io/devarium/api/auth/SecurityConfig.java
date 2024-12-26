@@ -3,7 +3,7 @@ package io.devarium.api.auth;
 import io.devarium.api.auth.filter.JwtAuthenticationFilter;
 import io.devarium.api.auth.handler.JwtAccessDeniedHandler;
 import io.devarium.api.auth.handler.JwtAuthenticationEntryPoint;
-import io.devarium.infrastructure.security.jwt.util.JwtUtil;
+import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,15 +1,16 @@
 package io.devarium.core.auth.service;
 
+import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.core.auth.OAuth2Client;
+import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.auth.Token;
-import io.devarium.core.auth.command.UserDetailsInterface;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
-import io.devarium.core.domain.user.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.port.OAuth2Client;
 import io.devarium.core.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +25,12 @@ public class AuthService {
 
     public Token loginWithGoogle(String code) {
         OAuth2UserInfo userInfo = oAuth2Client.getUserInfo(code);
-        User user = userService.getUser(userInfo.email());
+        User user = userService.getUserByEmail(userInfo.email());
 
         if (user == null) {
             user = userService.createUser(userInfo);
         } else {
-            userService.updateUserInfo(user, userInfo);
+            userService.updateUserInfo(userInfo, user);
         }
 
         return tokenService.generateTokens(user.getEmail(), user.getAuthorities());
@@ -40,19 +41,21 @@ public class AuthService {
     }
 
     public void logout() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (principal instanceof UserDetailsInterface userDetails) {
-            String username = userDetails.getUsername();
-
-            tokenService.deleteRefreshTokenByUsername(username);
-
-            log.info("User logged out successfully: {}", username);
-        } else {
-            log.warn("Unauthenticated user attempted to log out.");
-            throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
+            if (authentication != null &&
+                authentication.getPrincipal() instanceof EmailPrincipal principal
+            ) {
+                String email = principal.getEmail();
+                tokenService.deleteRefreshTokenByEmail(email);
+                log.info("User logged out successfully: {}", email);
+            } else {
+                log.warn("Unauthenticated user attempted to log out");
+                throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
+            }
+        } finally {
+            SecurityContextHolder.clearContext();
         }
-
-        SecurityContextHolder.clearContext();
     }
 }

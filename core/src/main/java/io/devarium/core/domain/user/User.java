@@ -1,5 +1,6 @@
 package io.devarium.core.domain.user;
 
+import io.devarium.core.auth.OAuth2Provider;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,28 +15,35 @@ public class User {
     private final String email;
     private final UserRole role;
     private final OAuth2Provider provider;
-    private final Instant createdAt;
+
     private String name;
     private String picture;
-    private Instant deletedAt;
     private String blogUrl;
     private String githubUrl;
-    private String content;
+    private String bio;
+    private Instant deletedAt;
 
     @Builder
-    public User(Long id, String email, String name, String picture, UserRole role,
-        OAuth2Provider provider, Instant createdAt, String blogUrl, String githubUrl,
-        String content) {
+    public User(
+        Long id,
+        String email,
+        String name,
+        String bio,
+        String picture,
+        String blogUrl,
+        String githubUrl,
+        UserRole role,
+        OAuth2Provider provider
+    ) {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.bio = bio;
         this.picture = picture;
-        this.role = role;
-        this.provider = provider;
-        this.createdAt = createdAt;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
-        this.content = content;
+        this.role = role;
+        this.provider = provider;
     }
 
     public void update(String name, String picture) {
@@ -43,10 +51,10 @@ public class User {
         this.picture = picture;
     }
 
-    public void update(String blogUrl, String githubUrl, String content) {
+    public void update(String bio, String blogUrl, String githubUrl) {
+        this.bio = bio;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
-        this.content = content;
     }
 
     public void delete() {
@@ -56,5 +64,4 @@ public class User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(role); // UserRole은 이제 GrantedAuthority 구현체
     }
-
 }
