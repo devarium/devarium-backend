@@ -23,13 +23,19 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfig {
 
     @Bean
-    public PostService postService(PostRepository postRepository) {
-        return new PostServiceDecorator(new PostServiceImpl(postRepository));
+    public PostService postService(
+        PostRepository postRepository,
+        CommentService commentService
+    ) {
+        return new PostServiceDecorator(new PostServiceImpl(postRepository, commentService));
     }
 
     @Bean
-    public CommentService commentService(CommentRepository commentRepository) {
-        return new CommentServiceDecorator(new CommentServiceImpl(commentRepository));
+    public CommentService commentService(
+        CommentRepository commentRepository,
+        ReplyService replyService
+    ) {
+        return new CommentServiceDecorator(new CommentServiceImpl(commentRepository, replyService));
     }
 
     @Bean

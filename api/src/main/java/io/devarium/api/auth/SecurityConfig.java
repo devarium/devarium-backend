@@ -46,10 +46,11 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/api/v1/auth/google/callback/**", "/error",
-                    "/favicon.ico")
-                .permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers("/", "/login", "/api/v1/auth/google/callback/**", "/error",
+                        "/favicon.ico")
+                    .permitAll()
+                    .anyRequest().authenticated()
+                //.anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")

@@ -103,7 +103,7 @@ public class PostServiceImplTest {
 
             // when & then
             assertThatThrownBy(() -> postService.getPost(NON_EXISTENT_ID))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(PostException.class);
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
         }

@@ -1,10 +1,12 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
+import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -14,8 +16,8 @@ public class CommentServiceDecorator implements CommentService {
 
     @Override
     @Transactional
-    public Comment createComment(UpsertCommentCommand command) {
-        return commentService.createComment(command);
+    public Comment createComment(UpsertComment request) {
+        return commentService.createComment(request);
     }
 
     @Override
@@ -25,14 +27,26 @@ public class CommentServiceDecorator implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<Comment> getCommentsByPostId(Long postId, Pageable pageable) {
+        return commentService.getCommentsByPostId(postId, pageable);
+    }
+
+    @Override
     @Transactional
-    public Comment updateComment(Long commentId, UpsertCommentCommand command) {
-        return commentService.updateComment(commentId, command);
+    public Comment updateComment(Long commentId, UpsertComment request) {
+        return commentService.updateComment(commentId, request);
     }
 
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentsByPostId(Long postId) {
+        commentService.deleteCommentsByPostId(postId);
     }
 }

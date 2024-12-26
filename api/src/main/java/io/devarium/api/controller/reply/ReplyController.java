@@ -1,5 +1,6 @@
 package io.devarium.api.controller.reply;
 
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
@@ -7,8 +8,14 @@ import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +34,8 @@ public class ReplyController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
-        @Valid @RequestBody UpsertReplyRequest request
-        // @AuthenticationPrincipal UserDetails userDetails
+        @Valid @RequestBody UpsertReplyRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
     ) {
         Reply reply = replyService.createReply(request);
         ReplyResponse response = ReplyResponse.from(reply);
@@ -49,8 +56,8 @@ public class ReplyController {
     @PutMapping("/{replyId}")
     public ResponseEntity<SingleItemResponse<ReplyResponse>> updateReply(
         @PathVariable Long replyId,
-        @Valid @RequestBody UpsertReplyRequest request
-        // @AuthenticationPrincipal UserDetails userDetails
+        @Valid @RequestBody UpsertReplyRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
     ) {
         Reply reply = replyService.updateReply(replyId, request);
         ReplyResponse response = ReplyResponse.from(reply);
@@ -60,8 +67,8 @@ public class ReplyController {
 
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
-        @PathVariable Long replyId
-        // @AuthenticationPrincipal UserDetails userDetails
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal UserDetails userDetails
     ) {
         replyService.deleteReply(replyId);
         return ResponseEntity.noContent().build();

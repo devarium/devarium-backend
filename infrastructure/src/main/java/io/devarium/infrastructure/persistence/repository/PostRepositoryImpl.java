@@ -1,10 +1,12 @@
 package io.devarium.infrastructure.persistence.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
+import io.devarium.infrastructure.persistence.entity.QPostEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Post save(Post post) {
@@ -26,7 +29,10 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public void deleteById(Long id) {
-        postJpaRepository.deleteById(id);
+        QPostEntity post = QPostEntity.postEntity;
+        queryFactory.delete(post)
+            .where(post.id.eq(id))
+            .execute();
     }
 
     @Override

@@ -1,10 +1,12 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.command.UpsertReplyCommand;
+import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -12,11 +14,10 @@ public class ReplyServiceDecorator implements ReplyService {
 
     private final ReplyServiceImpl replyService;
 
-
     @Override
     @Transactional
-    public Reply createReply(UpsertReplyCommand command) {
-        return replyService.createReply(command);
+    public Reply createReply(UpsertReply request) {
+        return replyService.createReply(request);
     }
 
     @Override
@@ -26,14 +27,32 @@ public class ReplyServiceDecorator implements ReplyService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<Reply> getRepliesByCommentId(Long commentId, Pageable pageable) {
+        return replyService.getRepliesByCommentId(commentId, pageable);
+    }
+
+    @Override
     @Transactional
-    public Reply updateReply(Long replyId, UpsertReplyCommand command) {
-        return replyService.updateReply(replyId, command);
+    public Reply updateReply(Long replyId, UpsertReply request) {
+        return replyService.updateReply(replyId, request);
     }
 
     @Override
     @Transactional
     public void deleteReply(Long replyId) {
         replyService.deleteReply(replyId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRepliesByCommentId(Long commentId) {
+        replyService.deleteRepliesByCommentId(commentId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRepliesByPostId(Long postId) {
+        replyService.deleteRepliesByPostId(postId);
     }
 }

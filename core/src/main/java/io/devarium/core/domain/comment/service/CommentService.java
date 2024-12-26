@@ -1,15 +1,21 @@
 package io.devarium.core.domain.comment.service;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.command.UpsertCommentCommand;
+import io.devarium.core.domain.comment.port.UpsertComment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
 
-    Comment createComment(UpsertCommentCommand command);
+    Comment createComment(UpsertComment request);
 
     Comment getComment(Long commentId);
 
-    Comment updateComment(Long commentId, UpsertCommentCommand command);
+    Page<Comment> getCommentsByPostId(Long postId, Pageable pageable);
+
+    Comment updateComment(Long commentId, UpsertComment request);
 
     void deleteComment(Long commentId);
+
+    void deleteCommentsByPostId(Long postId);
 }
