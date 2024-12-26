@@ -11,5 +11,4 @@ public class TokenStorageException extends RuntimeException {
         super(errorCode.getMessage(args));
         this.errorCode = errorCode;
     }
-
 }

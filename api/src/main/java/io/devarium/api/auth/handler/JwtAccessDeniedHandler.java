@@ -1,6 +1,5 @@
 package io.devarium.api.auth.handler;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.devarium.api.common.dto.ErrorResponse;
 import jakarta.servlet.ServletException;
@@ -42,4 +41,3 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         objectMapper.writeValue(response.getOutputStream(), errorResponse);
     }
 }
-
