@@ -45,4 +45,14 @@ public class ReplyServiceImpl implements ReplyService {
     public void deleteReply(Long replyId) {
         replyRepository.deleteById(replyId);
     }
+
+    @Override
+    public void deleteRepliesByCommentId(Long commentId) {
+        replyRepository.deleteByCommentId(commentId);
+    }
+
+    @Override
+    public void deleteRepliesByPostId(Long postId) {
+        replyRepository.deleteByPostId(postId);
+    }
 }

@@ -23,7 +23,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final CommentJpaRepository commentJpaRepository;
     private final PostJpaRepository postJpaRepository;
     private final JPAQueryFactory queryFactory;
-    private final ReplyRepositoryImpl replyRepository;
 
     @Override
     public Comment save(Comment comment) {
@@ -34,7 +33,6 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public void deleteById(Long id) {
-        replyRepository.deleteRepliesByCommentId(id);
         QCommentEntity comment = QCommentEntity.commentEntity;
         queryFactory.delete(comment)
             .where(comment.id.eq(id))
@@ -42,8 +40,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void deleteCommentsByPostId(Long postId) {
-        replyRepository.deleteRepliesByPostId(postId);
+    public void deleteByPostId(Long postId) {
         QCommentEntity comment = QCommentEntity.commentEntity;
         queryFactory.delete(comment)
             .where(comment.post.id.eq(postId))

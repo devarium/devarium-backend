@@ -43,4 +43,10 @@ public class CommentServiceDecorator implements CommentService {
     public void deleteComment(Long commentId) {
         commentService.deleteComment(commentId);
     }
+
+    @Override
+    @Transactional
+    public void deleteCommentsByPostId(Long postId) {
+        commentService.deleteCommentsByPostId(postId);
+    }
 }

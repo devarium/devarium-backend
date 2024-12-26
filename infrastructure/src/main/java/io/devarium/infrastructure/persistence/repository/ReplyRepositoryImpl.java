@@ -42,7 +42,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     }
 
     @Override
-    public void deleteRepliesByCommentId(Long commentId) {
+    public void deleteByCommentId(Long commentId) {
         QReplyEntity reply = QReplyEntity.replyEntity;
         queryFactory.delete(reply)
             .where(reply.comment.id.eq(commentId))
@@ -50,7 +50,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     }
 
     @Override
-    public void deleteRepliesByPostId(Long postId) {
+    public void deleteByPostId(Long postId) {
         QReplyEntity reply = QReplyEntity.replyEntity;
         QCommentEntity comment = QCommentEntity.commentEntity;
         queryFactory.delete(reply)

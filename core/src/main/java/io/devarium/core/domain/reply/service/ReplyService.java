@@ -16,4 +16,8 @@ public interface ReplyService {
     Reply updateReply(Long replyId, UpsertReply request);
 
     void deleteReply(Long replyId);
+
+    void deleteRepliesByCommentId(Long commentId);
+
+    void deleteRepliesByPostId(Long postId);
 }
