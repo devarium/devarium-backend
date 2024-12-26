@@ -1,11 +1,13 @@
 package io.devarium.core.domain.post.service;
 
 import io.devarium.core.domain.post.Post;
-import io.devarium.core.domain.post.command.UpsertPostCommand;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -13,10 +15,10 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
     @Override
-    public Post createPost(UpsertPostCommand command) {
+    public Post createPost(UpsertPost request) {
         Post post = Post.builder()
-            .title(command.title())
-            .content(command.content())
+            .title(request.title())
+            .content(request.content())
             .build();
         return postRepository.save(post);
     }
@@ -28,10 +30,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Long postId, UpsertPostCommand command) {
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
+    }
+
+    @Override
+    public Post updatePost(Long postId, UpsertPost request) {
         Post post = getPost(postId);
-        post.updateTitle(command.title());
-        post.updateContent(command.content());
+        post.updateTitle(request.title());
+        post.updateContent(request.content());
         return postRepository.save(post);
     }
 

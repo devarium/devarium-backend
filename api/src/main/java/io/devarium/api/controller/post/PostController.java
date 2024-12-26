@@ -1,5 +1,6 @@
 package io.devarium.api.controller.post;
 
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.post.dto.PostResponse;
 import io.devarium.api.controller.post.dto.UpsertPostRequest;
@@ -7,6 +8,10 @@ import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +49,15 @@ public class PostController {
         PostResponse response = PostResponse.from(post);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<PagedListResponse<Post>> getAllPosts(
+        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    ) {
+        Page<Post> posts = postService.getAllPosts(pageable);
+
+        return ResponseEntity.ok(PagedListResponse.from(posts));
     }
 
     @PutMapping("/{postId}")
