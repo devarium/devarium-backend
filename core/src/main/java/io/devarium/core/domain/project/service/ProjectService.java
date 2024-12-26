@@ -1,7 +1,7 @@
 package io.devarium.core.domain.project.service;
 
 import io.devarium.core.domain.project.Project;
-import io.devarium.core.domain.project.command.UpsertProject;
+import io.devarium.core.domain.project.port.UpsertProject;
 
 public interface ProjectService {
 
