@@ -40,8 +40,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public void deleteCommentsByPostId(Long postId) {
-        replyRepository.deleteRepliesByPostId(postId);
+    public void deleteByPostId(Long postId) {
         QCommentEntity comment = QCommentEntity.commentEntity;
         queryFactory.delete(comment)
             .where(comment.post.id.eq(postId))

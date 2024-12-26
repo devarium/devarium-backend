@@ -11,9 +11,9 @@ public interface ReplyRepository {
 
     void deleteById(Long id);
 
-    void deleteRepliesByCommentId(Long commentId);
+    void deleteByCommentId(Long commentId);
 
-    void deleteRepliesByPostId(Long postId);
+    void deleteByPostId(Long postId);
 
     Optional<Reply> findById(Long id);
 

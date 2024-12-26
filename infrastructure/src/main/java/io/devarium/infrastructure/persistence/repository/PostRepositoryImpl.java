@@ -17,7 +17,6 @@ public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
     private final JPAQueryFactory queryFactory;
-    private final CommentRepositoryImpl commentRepository;
 
     @Override
     public Post save(Post post) {
@@ -28,7 +27,6 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public void deleteById(Long id) {
-        commentRepository.deleteCommentsByPostId(id);
         QPostEntity post = QPostEntity.postEntity;
         queryFactory.delete(post)
             .where(post.id.eq(id))

@@ -46,7 +46,13 @@ public class ReplyServiceDecorator implements ReplyService {
 
     @Override
     @Transactional
-    public void deleteReplies(Long commentId) {
-        replyService.deleteReplies(commentId);
+    public void deleteRepliesByCommentId(Long commentId) {
+        replyService.deleteRepliesByCommentId(commentId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRepliesByPostId(Long postId) {
+        replyService.deleteRepliesByPostId(postId);
     }
 }

@@ -47,7 +47,12 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void deleteReplies(Long commentId) {
-        replyRepository.deleteRepliesByCommentId(commentId);
+    public void deleteRepliesByCommentId(Long commentId) {
+        replyRepository.deleteByCommentId(commentId);
+    }
+
+    @Override
+    public void deleteRepliesByPostId(Long postId) {
+        replyRepository.deleteByPostId(postId);
     }
 }
