@@ -53,6 +53,7 @@ public class ReplyController {
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
+    // TODO: URL 구조 논의 필요
     @GetMapping("/all/{commentId}")
     public ResponseEntity<PagedListResponse<Reply>> getRepliesByCommentId(
         @PathVariable Long commentId,
