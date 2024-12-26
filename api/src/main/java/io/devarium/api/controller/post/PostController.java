@@ -63,6 +63,14 @@ public class PostController {
         Page<Comment> comments = commentService.getCommentsByPostId(postId, pageable);
 
         return ResponseEntity.ok(PagedListResponse.from(comments));
+
+    @GetMapping("/all")
+    public ResponseEntity<PagedListResponse<Post>> getAllPosts(
+        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    ) {
+        Page<Post> posts = postService.getAllPosts(pageable);
+
+        return ResponseEntity.ok(PagedListResponse.from(posts));
     }
 
     @PutMapping("/{postId}")
