@@ -5,6 +5,8 @@ import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class CommentServiceDecorator implements CommentService {
     @Transactional(readOnly = true)
     public Comment getComment(Long commentId) {
         return commentService.getComment(commentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comment> getCommentsByPostId(Long postId, Pageable pageable) {
+        return commentService.getCommentsByPostId(postId, pageable);
     }
 
     @Override

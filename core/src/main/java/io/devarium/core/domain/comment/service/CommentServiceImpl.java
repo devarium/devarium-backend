@@ -6,6 +6,8 @@ import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -25,6 +27,11 @@ public class CommentServiceImpl implements CommentService {
     public Comment getComment(Long commentId) {
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, commentId));
+    }
+
+    @Override
+    public Page<Comment> getCommentsByPostId(Long postId, Pageable pageable) {
+        return commentRepository.findByPostId(postId, pageable);
     }
 
     @Override
