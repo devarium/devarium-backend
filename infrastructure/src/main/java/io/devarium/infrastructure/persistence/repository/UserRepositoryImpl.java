@@ -12,39 +12,31 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 @Repository
 public class UserRepositoryImpl implements UserRepository {
+
     private final UserJpaRepository userJpaRepository;
 
     @Override
     public User save(User user) {
         UserEntity entity = convertToEntity(user);
         UserEntity savedEntity = userJpaRepository.save(entity);
-        return convertToDomain(savedEntity);
+        return savedEntity.toDomain();
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userJpaRepository.findByEmail(email).map(this::convertToDomain);
+        return userJpaRepository.findByEmail(email).map(UserEntity::toDomain);
     }
 
-    public User convertToDomain(UserEntity entity) {
-        return User.builder()
-            .id(entity.getId())
-            .email(entity.getEmail())
-            .name(entity.getName())
-            .picture(entity.getPicture())
-            .role(entity.getRole())
-            .provider(entity.getProvider())
-            .createdAt(entity.getCreatedAt())
-            .blogUrl(entity.getBlogUrl())
-            .githubUrl(entity.getGithubUrl())
-            .content(entity.getContent())
-            .build();
+    @Override
+    public Optional<User> findById(Long userId) {
+        return userJpaRepository.findById(userId).map(UserEntity::toDomain);
     }
 
     public UserEntity convertToEntity(User domain) {
         if (domain.getId() != null) {
             UserEntity entity = userJpaRepository.findByEmail(domain.getEmail())
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, domain.getEmail()));
+                .orElseThrow(
+                    () -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, domain.getEmail()));
             entity.update(domain);
             return entity;
         }

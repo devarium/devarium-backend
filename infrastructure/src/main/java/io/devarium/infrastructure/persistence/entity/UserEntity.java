@@ -1,6 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
-import io.devarium.core.domain.user.OAuth2Provider;
+import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import jakarta.persistence.Column;
@@ -33,8 +33,14 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    private String bio;
+
     @Column(nullable = false)
     private String picture;
+
+    private String blogUrl;
+
+    private String githubUrl;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -44,16 +50,6 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
 
-    @Column
-    private String blogUrl;
-
-    @Column
-    private String githubUrl;
-
-    @Column
-    private String content;
-
-    @Column
     private Instant deletedAt;
 
     @Builder
@@ -61,31 +57,44 @@ public class UserEntity extends BaseEntity {
         Long id,
         String email,
         String name,
+        String bio,
         String picture,
-        UserRole role,
-        OAuth2Provider provider,
         String blogUrl,
         String githubUrl,
-        String content
+        UserRole role,
+        OAuth2Provider provider
     ) {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.bio = bio;
         this.picture = picture;
-        this.role = role;
-        this.provider = provider;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
-        this.content = content;
+        this.role = role;
+        this.provider = provider;
+    }
+
+    public User toDomain() {
+        return User.builder()
+            .id(this.id)
+            .email(this.email)
+            .name(this.name)
+            .bio(this.bio)
+            .picture(this.picture)
+            .blogUrl(this.blogUrl)
+            .githubUrl(this.githubUrl)
+            .role(this.role)
+            .provider(this.provider)
+            .build();
     }
 
     public void update(User domain) {
-        this.email = domain.getEmail();
         this.name = domain.getName();
+        this.bio = domain.getBio();
         this.picture = domain.getPicture();
         this.blogUrl = domain.getBlogUrl();
         this.githubUrl = domain.getGithubUrl();
-        this.content = domain.getContent();
         this.deletedAt = domain.getDeletedAt();
     }
 }
