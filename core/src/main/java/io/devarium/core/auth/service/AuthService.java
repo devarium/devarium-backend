@@ -41,19 +41,21 @@ public class AuthService {
     }
 
     public void logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null &&
-            authentication.getPrincipal() instanceof EmailPrincipal principal
-        ) {
-            String email = principal.getEmail();
-            tokenService.deleteRefreshTokenByEmail(email);
+            if (authentication != null &&
+                authentication.getPrincipal() instanceof EmailPrincipal principal
+            ) {
+                String email = principal.getEmail();
+                tokenService.deleteRefreshTokenByEmail(email);
+                log.info("User logged out successfully: {}", email);
+            } else {
+                log.warn("Unauthenticated user attempted to log out");
+                throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
+            }
+        } finally {
             SecurityContextHolder.clearContext();
-            log.info("User logged out successfully: {}", email);
-        } else {
-            log.warn("Unauthenticated user attempted to log out");
-            SecurityContextHolder.clearContext();
-            throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
         }
     }
 }
