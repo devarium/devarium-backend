@@ -8,7 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.domain.post.Post;
-import io.devarium.core.domain.post.command.UpsertPostCommand;
+import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
@@ -32,10 +33,7 @@ public class PostServiceImplTest {
     @InjectMocks
     private PostServiceImpl postService;
 
-    private record TestUpsertPostCommand(
-        String title,
-        String content
-    ) implements UpsertPostCommand {
+    private record TestUpsertPost(String title, String content) implements UpsertPost {
 
     }
 
@@ -43,9 +41,9 @@ public class PostServiceImplTest {
     class CreatePostTest {
 
         @Test
-        void givenValidPostCommand_whenCreatePost_thenPostIsSaved() {
+        void givenValidPostRequest_whenCreatePost_thenPostIsSaved() {
             // given
-            UpsertPostCommand command = new TestUpsertPostCommand(TITLE, CONTENT);
+            UpsertPost request = new TestUpsertPost(TITLE, CONTENT);
 
             Post expectedPost = Post.builder()
                 .title(TITLE)
@@ -61,7 +59,7 @@ public class PostServiceImplTest {
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post createdPost = postService.createPost(command);
+            Post createdPost = postService.createPost(request);
 
             // then
             then(postRepository).should().save(refEq(expectedPost));
@@ -98,15 +96,14 @@ public class PostServiceImplTest {
         }
 
         @Test
-        void givenNonExistingPost_whenGetPost_thenPostIsNotFound() {
+        void givenNonExistentPost_whenGetPost_thenPostIsNotFound() {
             // given
             given(postRepository.findById(NON_EXISTENT_ID))
                 .willReturn(Optional.empty());
 
             // when & then
             assertThatThrownBy(() -> postService.getPost(NON_EXISTENT_ID))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Post not found.");
+                .isInstanceOf(PostException.class);
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
         }
@@ -116,11 +113,11 @@ public class PostServiceImplTest {
     class UpdatePostTest {
 
         @Test
-        void givenExistingPostAndValidPostCommand_whenUpdatePost_thenPostIsUpdated() {
+        void givenExistingPostAndValidPostRequest_whenUpdatePost_thenPostIsUpdated() {
             // given
             String updatedTitle = "updated title";
             String updatedContent = "updated content";
-            UpsertPostCommand command = new TestUpsertPostCommand(updatedTitle, updatedContent);
+            UpsertPost request = new TestUpsertPost(updatedTitle, updatedContent);
 
             Post existingPost = Post.builder()
                 .id(POST_ID)
@@ -138,7 +135,7 @@ public class PostServiceImplTest {
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post updatedPost = postService.updatePost(POST_ID, command);
+            Post updatedPost = postService.updatePost(POST_ID, request);
 
             // then
             then(postRepository).should().findById(POST_ID);
@@ -150,15 +147,14 @@ public class PostServiceImplTest {
         }
 
         @Test
-        void givenNonExistingPostAndValidPostCommand_whenUpdatePost_thenPostIsNotFound() {
+        void givenNonExistentPostAndValidPostRequest_whenUpdatePost_thenPostIsNotFound() {
             // given
-            UpsertPostCommand command = new TestUpsertPostCommand(TITLE, CONTENT);
+            UpsertPost request = new TestUpsertPost(TITLE, CONTENT);
             given(postRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, command))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Post not found.");
+            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, request))
+                .isInstanceOf(PostException.class);
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
             then(postRepository).shouldHaveNoMoreInteractions();

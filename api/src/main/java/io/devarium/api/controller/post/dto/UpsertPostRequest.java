@@ -1,11 +1,11 @@
 package io.devarium.api.controller.post.dto;
 
-import io.devarium.core.domain.post.command.UpsertPostCommand;
+import io.devarium.core.domain.post.port.UpsertPost;
 import jakarta.validation.constraints.NotBlank;
 
 public record UpsertPostRequest(
     String title,
-    @NotBlank(message = "'content' must not be blank.") String content
-) implements UpsertPostCommand {
+    @NotBlank(message = "'content' must not be blank") String content
+) implements UpsertPost {
 
 }

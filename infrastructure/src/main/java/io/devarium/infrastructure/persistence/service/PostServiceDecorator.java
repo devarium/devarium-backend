@@ -1,10 +1,12 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.post.Post;
-import io.devarium.core.domain.post.command.UpsertPostCommand;
+import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -14,8 +16,8 @@ public class PostServiceDecorator implements PostService {
 
     @Override
     @Transactional
-    public Post createPost(UpsertPostCommand command) {
-        return postService.createPost(command);
+    public Post createPost(UpsertPost request) {
+        return postService.createPost(request);
     }
 
     @Override
@@ -25,9 +27,15 @@ public class PostServiceDecorator implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postService.getAllPosts(pageable);
+    }
+
+    @Override
     @Transactional
-    public Post updatePost(Long postId, UpsertPostCommand command) {
-        return postService.updatePost(postId, command);
+    public Post updatePost(Long postId, UpsertPost request) {
+        return postService.updatePost(postId, request);
     }
 
     @Override
