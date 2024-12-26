@@ -5,6 +5,8 @@ import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class PostServiceDecorator implements PostService {
     @Transactional(readOnly = true)
     public Post getPost(Long postId) {
         return postService.getPost(postId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postService.getAllPosts(pageable);
     }
 
     @Override

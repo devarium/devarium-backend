@@ -54,6 +54,7 @@ public class PostController {
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
+    // TODO: 책임분리 및 URL 구조 논의 필요
     @GetMapping("/{postId}/comments")
     public ResponseEntity<PagedListResponse<Comment>> getCommentsByPostId(
         @PathVariable Long postId,
@@ -62,6 +63,15 @@ public class PostController {
         Page<Comment> comments = commentService.getCommentsByPostId(postId, pageable);
 
         return ResponseEntity.ok(PagedListResponse.from(comments));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<PagedListResponse<Post>> getAllPosts(
+        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    ) {
+        Page<Post> posts = postService.getAllPosts(pageable);
+
+        return ResponseEntity.ok(PagedListResponse.from(posts));
     }
 
     @PutMapping("/{postId}")

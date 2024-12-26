@@ -1,5 +1,6 @@
 package io.devarium.api.controller.reply;
 
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
@@ -7,6 +8,10 @@ import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

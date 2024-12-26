@@ -56,6 +56,7 @@ public class CommentController {
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
+    // TODO: 책임분리 및 URL 구조 논의 필요
     @GetMapping("/{commentId}/replies")
     public ResponseEntity<PagedListResponse<Reply>> getRepliesByCommentId(
         @PathVariable Long commentId,

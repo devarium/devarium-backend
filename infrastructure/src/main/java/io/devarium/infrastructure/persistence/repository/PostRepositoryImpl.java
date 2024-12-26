@@ -9,6 +9,8 @@ import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.QPostEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -36,6 +38,11 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Optional<Post> findById(Long id) {
         return postJpaRepository.findById(id).map(this::convertToDomain);
+    }
+
+    @Override
+    public Page<Post> findAll(Pageable pageable) {
+        return postJpaRepository.findAll(pageable).map(this::convertToDomain);
     }
 
     private Post convertToDomain(PostEntity entity) {
