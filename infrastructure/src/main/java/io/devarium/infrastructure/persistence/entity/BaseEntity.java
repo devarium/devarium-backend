@@ -21,4 +21,3 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private Instant updatedAt;
 }
-

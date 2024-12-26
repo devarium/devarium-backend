@@ -1,6 +1,5 @@
 package io.devarium.infrastructure.auth.jwt;
 
-
 public final class JwtConstants {
 
     public static final String BEARER_PREFIX = "Bearer ";
