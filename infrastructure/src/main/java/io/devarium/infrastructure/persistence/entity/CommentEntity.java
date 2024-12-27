@@ -28,15 +28,20 @@ public class CommentEntity extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Builder
-    private CommentEntity(Long id, String content, PostEntity post) {
+    private CommentEntity(Long id, String content, PostEntity post, UserEntity user) {
         this.id = id;
         this.content = content;
         this.post = post;
+        this.user = user;
     }
 
     public void update(Comment domain) {
