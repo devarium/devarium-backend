@@ -32,11 +32,16 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity author;
+
     @Builder
-    private CommentEntity(Long id, String content, PostEntity post) {
+    private CommentEntity(Long id, String content, PostEntity post, UserEntity author) {
         this.id = id;
         this.content = content;
         this.post = post;
+        this.author = author;
     }
 
     public void update(Comment domain) {

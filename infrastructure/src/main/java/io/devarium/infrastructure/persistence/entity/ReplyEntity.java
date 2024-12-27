@@ -32,11 +32,16 @@ public class ReplyEntity extends BaseEntity {
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentEntity comment;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity author;
+
     @Builder
-    private ReplyEntity(Long id, String content, CommentEntity comment) {
+    private ReplyEntity(Long id, String content, CommentEntity comment, UserEntity author) {
         this.id = id;
         this.content = content;
         this.comment = comment;
+        this.author = author;
     }
 
     public void update(Reply domain) {
