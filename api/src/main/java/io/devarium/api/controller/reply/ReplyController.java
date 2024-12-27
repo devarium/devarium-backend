@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,7 @@ public class ReplyController {
         @Valid @RequestBody UpsertReplyRequest request,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Reply reply = replyService.createReply(request);
+        Reply reply = replyService.createReply(request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity
@@ -54,7 +53,7 @@ public class ReplyController {
         @Valid @RequestBody UpsertReplyRequest request,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Reply reply = replyService.updateReply(replyId, request);
+        Reply reply = replyService.updateReply(replyId, request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -65,7 +64,7 @@ public class ReplyController {
         @PathVariable Long replyId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        replyService.deleteReply(replyId);
+        replyService.deleteReply(replyId, emailPrincipal.getUser());
         return ResponseEntity.noContent().build();
     }
 }
