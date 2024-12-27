@@ -7,10 +7,13 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.repository.CommentRepository;
+import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,9 @@ public class CommentServiceImplTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
     private static final Long POST_ID = 2L;
+    private static final User USER = new User(10L, "testUser@email.com", "testUser", "bio",
+        "picture", "blogUrl", "githubUrl",
+        UserRole.USER, OAuth2Provider.GOOGLE);
 
     @Mock
     private CommentRepository commentRepository;
@@ -57,7 +63,7 @@ public class CommentServiceImplTest {
             given(commentRepository.save(any(Comment.class))).willReturn(savedComment);
 
             // when
-            Comment createdComment = commentService.createComment(request);
+            Comment createdComment = commentService.createComment(request, USER);
 
             // then
             then(commentRepository).should().save(refEq(expectedComment));
@@ -129,7 +135,7 @@ public class CommentServiceImplTest {
             given(commentRepository.save(any(Comment.class))).willReturn(savedComment);
 
             // when
-            Comment updatedComment = commentService.updateComment(COMMENT_ID, request);
+            Comment updatedComment = commentService.updateComment(COMMENT_ID, request, USER);
 
             // then
             then(commentRepository).should().findById(COMMENT_ID);
@@ -147,7 +153,7 @@ public class CommentServiceImplTest {
             given(commentRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, request))
+            assertThatThrownBy(() -> commentService.updateComment(NON_EXISTENT_ID, request, USER))
                 .isInstanceOf(CommentException.class);
 
             then(commentRepository).should().findById(NON_EXISTENT_ID);
@@ -161,7 +167,7 @@ public class CommentServiceImplTest {
         @Test
         void givenCommentId_whenDeleteComment_thenCommentIsDeleted() {
             // when
-            commentService.deleteComment(COMMENT_ID);
+            commentService.deleteComment(COMMENT_ID, USER);
 
             // then
             then(commentRepository).should().deleteById(COMMENT_ID);

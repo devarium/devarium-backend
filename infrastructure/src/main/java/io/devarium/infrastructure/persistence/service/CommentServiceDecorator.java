@@ -4,6 +4,7 @@ import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.port.UpsertComment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ public class CommentServiceDecorator implements CommentService {
 
     @Override
     @Transactional
-    public Comment createComment(UpsertComment request) {
-        return commentService.createComment(request);
+    public Comment createComment(UpsertComment request, User user) {
+        return commentService.createComment(request, user);
     }
 
     @Override
@@ -34,14 +35,14 @@ public class CommentServiceDecorator implements CommentService {
 
     @Override
     @Transactional
-    public Comment updateComment(Long commentId, UpsertComment request) {
-        return commentService.updateComment(commentId, request);
+    public Comment updateComment(Long commentId, UpsertComment request, User user) {
+        return commentService.updateComment(commentId, request, user);
     }
 
     @Override
     @Transactional
-    public void deleteComment(Long commentId) {
-        commentService.deleteComment(commentId);
+    public void deleteComment(Long commentId, User user) {
+        commentService.deleteComment(commentId, user);
     }
 
     @Override

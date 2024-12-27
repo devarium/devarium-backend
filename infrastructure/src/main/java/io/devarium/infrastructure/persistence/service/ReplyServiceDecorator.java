@@ -4,6 +4,7 @@ import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import io.devarium.core.domain.reply.service.ReplyServiceImpl;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ public class ReplyServiceDecorator implements ReplyService {
 
     @Override
     @Transactional
-    public Reply createReply(UpsertReply request) {
-        return replyService.createReply(request);
+    public Reply createReply(UpsertReply request, User user) {
+        return replyService.createReply(request, user);
     }
 
     @Override
@@ -34,14 +35,14 @@ public class ReplyServiceDecorator implements ReplyService {
 
     @Override
     @Transactional
-    public Reply updateReply(Long replyId, UpsertReply request) {
-        return replyService.updateReply(replyId, request);
+    public Reply updateReply(Long replyId, UpsertReply request, User user) {
+        return replyService.updateReply(replyId, request, user);
     }
 
     @Override
     @Transactional
-    public void deleteReply(Long replyId) {
-        replyService.deleteReply(replyId);
+    public void deleteReply(Long replyId, User user) {
+        replyService.deleteReply(replyId, user);
     }
 
     @Override
