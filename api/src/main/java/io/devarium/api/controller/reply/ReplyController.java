@@ -3,6 +3,7 @@ package io.devarium.api.controller.reply;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
+import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         Reply reply = replyService.createReply(request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
@@ -51,7 +52,7 @@ public class ReplyController {
     public ResponseEntity<SingleItemResponse<ReplyResponse>> updateReply(
         @PathVariable Long replyId,
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         Reply reply = replyService.updateReply(replyId, request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
@@ -62,7 +63,7 @@ public class ReplyController {
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
         @PathVariable Long replyId,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         replyService.deleteReply(replyId, emailPrincipal.getUser());
         return ResponseEntity.noContent().build();
