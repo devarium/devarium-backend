@@ -7,6 +7,8 @@ import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.project.exception.ProjectErrorCode;
+import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import java.util.List;
@@ -60,6 +62,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomAuthException.class)
     public ResponseEntity<ErrorResponse> handleAuthException(CustomAuthException e) {
         AuthErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(ProjectException.class)
+    public ResponseEntity<ErrorResponse> handleProjectException(ProjectException e) {
+        ProjectErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(

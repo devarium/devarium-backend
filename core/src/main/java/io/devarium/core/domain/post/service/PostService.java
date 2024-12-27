@@ -10,7 +10,7 @@ public interface PostService {
     Post createPost(UpsertPost request);
 
     Post getPost(Long postId);
-  
+
     Page<Post> getAllPosts(Pageable pageable);
 
     Post updatePost(Long postId, UpsertPost request);
