@@ -13,13 +13,15 @@ public class Post {
     private final Instant createdAt;
     private String title;
     private String content;
+    private final Long authorId;
 
     @Builder
-    public Post(Long id, String title, String content, Instant createdAt) {
+    public Post(Long id, String title, String content, Instant createdAt, Long authorId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+        this.authorId = authorId;
     }
 
     public void updateTitle(String title) {
