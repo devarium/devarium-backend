@@ -6,6 +6,7 @@ import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +18,11 @@ public class PostServiceImpl implements PostService {
     private final CommentService commentService;
 
     @Override
-    public Post createPost(UpsertPost request) {
+    public Post createPost(UpsertPost request, User user) {
         Post post = Post.builder()
             .title(request.title())
             .content(request.content())
+            .authorId(user.getId())
             .build();
         return postRepository.save(post);
     }
@@ -37,7 +39,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Long postId, UpsertPost request) {
+    public Post updatePost(Long postId, UpsertPost request, User user) {
         Post post = getPost(postId);
         post.updateTitle(request.title());
         post.updateContent(request.content());
@@ -45,7 +47,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, User user) {
         commentService.deleteCommentsByPostId(postId);
         postRepository.deleteById(postId);
     }
