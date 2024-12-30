@@ -10,20 +10,19 @@ public class Reply {
     public static final int DEFAULT_PAGE_SIZE = 3;
 
     private final Long id;
-    private final Instant createdAt;
-    private String content;
     private final Long commentId;
-    private final Long authorId;
+    private final Long userId;
+    private final Instant createdAt;
 
+    private String content;
 
     @Builder
-    public Reply(Long id, String content, Instant createdAt, Long commentId, Long authorId) {
+    public Reply(Long id, String content, Long commentId, Long userId, Instant createdAt) {
         this.id = id;
         this.content = content;
-        this.createdAt = createdAt;
         this.commentId = commentId;
-        this.authorId = authorId;
-
+        this.userId = userId;
+        this.createdAt = createdAt;
     }
 
     public void updateContent(String content) {

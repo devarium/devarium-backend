@@ -32,14 +32,32 @@ public class PostEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity author;
+    private UserEntity user;
 
     @Builder
-    private PostEntity(Long id, String title, String content, UserEntity author) {
+    private PostEntity(Long id, String title, String content, UserEntity user) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.author = author;
+        this.user = user;
+    }
+
+    public static PostEntity fromDomain(Post post, UserEntity userEntity) {
+        return PostEntity.builder()
+            .title(post.getTitle())
+            .content(post.getContent())
+            .user(userEntity)
+            .build();
+    }
+
+    public Post toDomain() {
+        return Post.builder()
+            .id(id)
+            .title(title)
+            .content(content)
+            .userId(user.getId())
+            .createdAt(getCreatedAt())
+            .build();
     }
 
     public void update(Post post) {
