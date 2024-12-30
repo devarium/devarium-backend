@@ -11,7 +11,7 @@ public record GoogleUserInfoResponse(
     String name,
     String givenName,
     String familyName,
-    String picture,
+    String profileImageUrl,
     String locale
 ) {
 

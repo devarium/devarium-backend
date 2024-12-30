@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
             .email(userInfo.email())
             .name(userInfo.name())
-            .picture(userInfo.picture())
+            .profileImageUrl(userInfo.profileImageUrl())
             .provider(userInfo.provider())
             .role(UserRole.USER)
             .build();
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserInfo(OAuth2UserInfo userInfo, User user) {
-        user.update(userInfo.name(), userInfo.picture());
+        user.update(userInfo.name(), userInfo.profileImageUrl());
         return userRepository.save(user);
     }
 

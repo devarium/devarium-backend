@@ -6,7 +6,7 @@ public interface UpdateUser {
 
     String bio();
 
-    String picture();
+    String profileImageUrl();
 
     String blogUrl();
 

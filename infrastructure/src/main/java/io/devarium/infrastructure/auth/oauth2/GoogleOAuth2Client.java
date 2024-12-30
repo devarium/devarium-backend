@@ -36,7 +36,7 @@ public class GoogleOAuth2Client implements OAuth2Client {
             userInfo.id(),
             userInfo.email(),
             userInfo.name(),
-            userInfo.picture(),
+            userInfo.profileImageUrl(),
             OAuth2Provider.GOOGLE
         );
     }

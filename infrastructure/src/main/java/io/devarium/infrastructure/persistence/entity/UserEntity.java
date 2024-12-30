@@ -36,7 +36,7 @@ public class UserEntity extends BaseEntity {
     private String bio;
 
     @Column(nullable = false)
-    private String picture;
+    private String profileImageUrl;
 
     private String blogUrl;
 
@@ -58,7 +58,7 @@ public class UserEntity extends BaseEntity {
         String email,
         String name,
         String bio,
-        String picture,
+        String profileImageUrl,
         String blogUrl,
         String githubUrl,
         UserRole role,
@@ -68,7 +68,7 @@ public class UserEntity extends BaseEntity {
         this.email = email;
         this.name = name;
         this.bio = bio;
-        this.picture = picture;
+        this.profileImageUrl = profileImageUrl;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
         this.role = role;
@@ -80,7 +80,7 @@ public class UserEntity extends BaseEntity {
             .email(user.getEmail())
             .name(user.getName())
             .bio(user.getBio())
-            .picture(user.getPicture())
+            .profileImageUrl(user.getProfileImageUrl())
             .blogUrl(user.getBlogUrl())
             .githubUrl(user.getGithubUrl())
             .role(user.getRole())
@@ -94,7 +94,7 @@ public class UserEntity extends BaseEntity {
             .email(email)
             .name(name)
             .bio(bio)
-            .picture(picture)
+            .profileImageUrl(profileImageUrl)
             .blogUrl(blogUrl)
             .githubUrl(githubUrl)
             .role(role)
@@ -105,7 +105,7 @@ public class UserEntity extends BaseEntity {
     public void update(User domain) {
         this.name = domain.getName();
         this.bio = domain.getBio();
-        this.picture = domain.getPicture();
+        this.profileImageUrl = domain.getProfileImageUrl();
         this.blogUrl = domain.getBlogUrl();
         this.githubUrl = domain.getGithubUrl();
         this.deletedAt = domain.getDeletedAt();
