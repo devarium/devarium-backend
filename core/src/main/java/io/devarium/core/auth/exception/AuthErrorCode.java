@@ -23,7 +23,8 @@ public enum AuthErrorCode {
     GOOGLE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Google server error occurred: %s"),
     GOOGLE_INVALID_CODE(HttpStatus.BAD_REQUEST, "Invalid authorization code"),
 
-    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "forbidden access"),
+    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN,
+        "userId %d is not allowed to access resourceId %d"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "invalid token"),
     UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "unauthenticated user attempt");
 
