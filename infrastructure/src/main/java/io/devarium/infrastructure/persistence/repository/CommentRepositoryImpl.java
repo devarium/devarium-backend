@@ -7,9 +7,12 @@ import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.QCommentEntity;
+import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     private final CommentJpaRepository commentJpaRepository;
     private final PostJpaRepository postJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -63,6 +67,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             .content(entity.getContent())
             .createdAt(entity.getCreatedAt())
             .postId(entity.getPost().getId())
+            .authorId(entity.getAuthor().getId())
             .build();
     }
 
@@ -77,9 +82,15 @@ public class CommentRepositoryImpl implements CommentRepository {
 
         PostEntity post = postJpaRepository.findById(domain.getPostId())
             .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, domain.getPostId()));
+
+        UserEntity author = userJpaRepository.findById(domain.getAuthorId()).orElseThrow(
+            () -> new UserException(UserErrorCode.USER_NOT_FOUND, domain.getAuthorId())
+        );
+
         return CommentEntity.builder()
             .content(domain.getContent())
             .post(post)
+            .author(author)
             .build();
     }
 }

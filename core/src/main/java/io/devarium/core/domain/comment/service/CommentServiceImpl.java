@@ -22,6 +22,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = Comment.builder()
             .content(request.content())
             .postId(request.postId())
+            .authorId(user.getId())
             .build();
         return commentRepository.save(comment);
     }

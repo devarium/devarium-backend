@@ -13,13 +13,16 @@ public class Comment {
     private final Instant createdAt;
     private String content;
     private final Long postId;
+    private final Long authorId;
 
     @Builder
-    public Comment(Long id, String content, Instant createdAt, Long postId) {
+    public Comment(Long id, String content, Instant createdAt, Long postId, Long authorId) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.postId = postId;
+        this.authorId = authorId;
+
     }
 
     public void updateContent(String content) {
