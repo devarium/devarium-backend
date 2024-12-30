@@ -39,12 +39,15 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Reply updateReply(Long replyId, UpsertReply request, User user) {
         Reply reply = getReply(replyId);
+        reply.validateAuthor(user.getId());
         reply.updateContent(request.content());
         return replyRepository.save(reply);
     }
 
     @Override
     public void deleteReply(Long replyId, User user) {
+        Reply reply = getReply(replyId);
+        reply.validateAuthor(user.getId());
         replyRepository.deleteById(replyId);
     }
 
