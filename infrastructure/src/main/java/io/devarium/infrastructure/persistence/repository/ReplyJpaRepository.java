@@ -8,4 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReplyJpaRepository extends JpaRepository<ReplyEntity, Long> {
 
     Page<ReplyEntity> findByCommentId(Long commentId, Pageable pageable);
+
+    void deleteByCommentId(Long commentId);
+
+    void deleteByCommentPostId(Long postId);
 }
