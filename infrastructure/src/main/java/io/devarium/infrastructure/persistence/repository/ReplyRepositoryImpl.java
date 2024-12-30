@@ -8,10 +8,13 @@ import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.QCommentEntity;
 import io.devarium.infrastructure.persistence.entity.QReplyEntity;
 import io.devarium.infrastructure.persistence.entity.ReplyEntity;
+import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
     private final ReplyJpaRepository replyJpaRepository;
     private final CommentJpaRepository commentJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -78,6 +82,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
             .content(entity.getContent())
             .createdAt(entity.getCreatedAt())
             .commentId(entity.getComment().getId())
+            .authorId(entity.getAuthor().getId())
             .build();
     }
 
@@ -93,9 +98,15 @@ public class ReplyRepositoryImpl implements ReplyRepository {
         CommentEntity comment = commentJpaRepository.findById(domain.getCommentId())
             .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
                 domain.getCommentId()));
+
+        UserEntity author = userJpaRepository.findById(domain.getAuthorId()).orElseThrow(
+            () -> new UserException(UserErrorCode.USER_NOT_FOUND, domain.getAuthorId())
+        );
+
         return ReplyEntity.builder()
             .content(domain.getContent())
             .comment(comment)
+            .author(author)
             .build();
     }
 }

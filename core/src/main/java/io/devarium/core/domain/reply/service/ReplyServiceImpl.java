@@ -20,6 +20,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = Reply.builder()
             .content(request.content())
             .commentId(request.commentId())
+            .authorId(user.getId())
             .build();
         return replyRepository.save(reply);
     }

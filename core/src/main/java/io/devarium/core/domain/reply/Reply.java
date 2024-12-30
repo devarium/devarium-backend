@@ -13,13 +13,17 @@ public class Reply {
     private final Instant createdAt;
     private String content;
     private final Long commentId;
+    private final Long authorId;
+
 
     @Builder
-    public Reply(Long id, String content, Instant createdAt, Long commentId) {
+    public Reply(Long id, String content, Instant createdAt, Long commentId, Long authorId) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.commentId = commentId;
+        this.authorId = authorId;
+
     }
 
     public void updateContent(String content) {
