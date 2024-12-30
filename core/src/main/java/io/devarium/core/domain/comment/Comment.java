@@ -10,16 +10,19 @@ public class Comment {
     public static final int DEFAULT_PAGE_SIZE = 5;
 
     private final Long id;
-    private final Instant createdAt;
-    private String content;
     private final Long postId;
+    private final Long userId;
+    private final Instant createdAt;
+
+    private String content;
 
     @Builder
-    public Comment(Long id, String content, Instant createdAt, Long postId) {
+    public Comment(Long id, String content, Long postId, Long userId, Instant createdAt) {
         this.id = id;
         this.content = content;
-        this.createdAt = createdAt;
         this.postId = postId;
+        this.userId = userId;
+        this.createdAt = createdAt;
     }
 
     public void updateContent(String content) {
