@@ -8,10 +8,12 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +35,9 @@ public class ProjectEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    // TODO: 1:1 mapping to Team
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "team_id", nullable = false, unique = true)
+    private TeamEntity team;
 
     private String description;
 
@@ -46,11 +50,18 @@ public class ProjectEntity extends BaseEntity {
     private Set<Skill> skills;
 
     @Builder
-    private ProjectEntity(Long id, String name, String description, Set<Skill> skills) {
+    private ProjectEntity(
+        Long id,
+        String name,
+        String description,
+        Set<Skill> skills,
+        TeamEntity team
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.skills = skills != null ? new HashSet<>(skills) : new HashSet<>();
+        this.team = team;
     }
 
     public void update(Project project) {
