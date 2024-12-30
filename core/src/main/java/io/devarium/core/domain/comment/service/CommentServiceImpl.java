@@ -41,12 +41,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment updateComment(Long commentId, UpsertComment request, User user) {
         Comment comment = getComment(commentId);
+        comment.validateAuthor(user.getId());
         comment.updateContent(request.content());
         return commentRepository.save(comment);
     }
 
     @Override
     public void deleteComment(Long commentId, User user) {
+        Comment comment = getComment(commentId);
+        comment.validateAuthor(user.getId());
         replyService.deleteRepliesByCommentId(commentId);
         commentRepository.deleteById(commentId);
     }
