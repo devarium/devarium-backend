@@ -1,6 +1,8 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.core.domain.project.Project;
+import io.devarium.core.domain.project.exception.ProjectErrorCode;
+import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.project.repository.ProjectRepository;
 import io.devarium.infrastructure.persistence.entity.ProjectEntity;
 import java.util.Optional;
@@ -15,9 +17,18 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public Project save(Project project) {
-        ProjectEntity entity = convertToEntity(project);
-        ProjectEntity savedEntity = projectJpaRepository.save(entity);
-        return convertToDomain(savedEntity);
+        if (project.getId() != null) {
+            ProjectEntity entity = projectJpaRepository.findById(project.getId())
+                .orElseThrow(() -> new ProjectException(
+                    ProjectErrorCode.PROJECT_NOT_FOUND,
+                    project.getId())
+                );
+            entity.update(project);
+            return projectJpaRepository.save(entity).toDomain();
+        }
+
+        ProjectEntity entity = ProjectEntity.fromDomain(project);
+        return projectJpaRepository.save(entity).toDomain();
     }
 
     @Override
@@ -27,30 +38,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public Optional<Project> findById(Long id) {
-        return projectJpaRepository.findById(id).map(this::convertToDomain);
-    }
-
-    private Project convertToDomain(ProjectEntity entity) {
-        return Project.builder()
-            .id(entity.getId())
-            .name(entity.getName())
-            .description(entity.getDescription())
-            .skills(entity.getSkills())
-            .createdAt(entity.getCreatedAt())
-            .build();
-    }
-
-    private ProjectEntity convertToEntity(Project domain) {
-        if (domain.getId() != null) {
-            ProjectEntity entity = projectJpaRepository.findById(domain.getId()).orElseThrow();
-            entity.update(domain);
-            return entity;
-        }
-
-        return ProjectEntity.builder()
-            .name(domain.getName())
-            .description(domain.getDescription())
-            .skills(domain.getSkills())
-            .build();
+        return projectJpaRepository.findById(id).map(ProjectEntity::toDomain);
     }
 }
