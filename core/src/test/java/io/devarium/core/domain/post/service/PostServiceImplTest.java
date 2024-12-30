@@ -54,14 +54,14 @@ public class PostServiceImplTest {
             Post expectedPost = Post.builder()
                 .title(TITLE)
                 .content(CONTENT)
-                .authorId(USER.getId())
+                .userId(USER.getId())
                 .build();
 
             Post savedPost = Post.builder()
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .authorId(USER.getId())
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
@@ -88,7 +88,7 @@ public class PostServiceImplTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .authorId(USER.getId())
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.findById(POST_ID)).willReturn(Optional.of(expectedPost));
@@ -132,14 +132,14 @@ public class PostServiceImplTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .authorId(USER.getId())
+                .userId(USER.getId())
                 .build();
 
             Post savedPost = Post.builder()
                 .id(POST_ID)
                 .title(updatedTitle)
                 .content(updatedContent)
-                .authorId(USER.getId())
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.findById(POST_ID)).willReturn(Optional.of(existingPost));

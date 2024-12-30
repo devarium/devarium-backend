@@ -22,7 +22,7 @@ public class PostServiceImpl implements PostService {
         Post post = Post.builder()
             .title(request.title())
             .content(request.content())
-            .authorId(user.getId())
+            .userId(user.getId())
             .build();
         return postRepository.save(post);
     }
