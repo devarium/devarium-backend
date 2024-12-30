@@ -41,6 +41,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post updatePost(Long postId, UpsertPost request, User user) {
         Post post = getPost(postId);
+        post.validateAuthor(user.getId());
         post.updateTitle(request.title());
         post.updateContent(request.content());
         return postRepository.save(post);
@@ -48,6 +49,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long postId, User user) {
+        Post post = getPost(postId);
+        post.validateAuthor(user.getId());
         commentService.deleteCommentsByPostId(postId);
         postRepository.deleteById(postId);
     }
