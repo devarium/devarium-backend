@@ -44,6 +44,27 @@ public class CommentEntity extends BaseEntity {
         this.user = user;
     }
 
+    public static CommentEntity fromDomain(
+        Comment comment,
+        PostEntity postEntity,
+        UserEntity userEntity
+    ) {
+        return CommentEntity.builder()
+            .content(comment.getContent())
+            .post(postEntity)
+            .user(userEntity)
+            .build();
+    }
+
+    public Comment toDomain() {
+        return Comment.builder()
+            .id(id)
+            .content(content)
+            .postId(post.getId())
+            .createdAt(getCreatedAt())
+            .build();
+    }
+
     public void update(Comment domain) {
         this.content = domain.getContent();
     }

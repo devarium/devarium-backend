@@ -53,6 +53,23 @@ public class ProjectEntity extends BaseEntity {
         this.skills = skills != null ? new HashSet<>(skills) : new HashSet<>();
     }
 
+    public static ProjectEntity fromDomain(Project project) {
+        return ProjectEntity.builder()
+            .name(project.getName())
+            .description(project.getDescription())
+            .skills(new HashSet<>(project.getSkills()))
+            .build();
+    }
+
+    public Project toDomain() {
+        return Project.builder()
+            .id(id)
+            .name(name)
+            .description(description)
+            .skills(new HashSet<>(skills))
+            .build();
+    }
+
     public void update(Project project) {
         this.name = project.getName();
         this.description = project.getDescription();

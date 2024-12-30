@@ -44,6 +44,29 @@ public class ReplyEntity extends BaseEntity {
         this.user = user;
     }
 
+    public static ReplyEntity fromDomain(
+        Reply reply,
+        CommentEntity commentEntity,
+        UserEntity userEntity
+    ) {
+        return ReplyEntity.builder()
+            .id(reply.getId())
+            .content(reply.getContent())
+            .comment(commentEntity)
+            .user(userEntity)
+            .build();
+    }
+
+    public Reply toDomain() {
+        return Reply.builder()
+            .id(id)
+            .content(content)
+            .commentId(comment.getId())
+            .userId(user.getId())
+            .createdAt(this.getCreatedAt())
+            .build();
+    }
+
     public void update(Reply domain) {
         this.content = domain.getContent();
     }

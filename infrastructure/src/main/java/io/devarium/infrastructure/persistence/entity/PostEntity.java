@@ -42,6 +42,24 @@ public class PostEntity extends BaseEntity {
         this.user = user;
     }
 
+    public static PostEntity fromDomain(Post post, UserEntity userEntity) {
+        return PostEntity.builder()
+            .title(post.getTitle())
+            .content(post.getContent())
+            .user(userEntity)
+            .build();
+    }
+
+    public Post toDomain() {
+        return Post.builder()
+            .id(id)
+            .title(title)
+            .content(content)
+            .userId(user.getId())
+            .createdAt(getCreatedAt())
+            .build();
+    }
+
     public void update(Post post) {
         this.title = post.getTitle();
         this.content = post.getContent();

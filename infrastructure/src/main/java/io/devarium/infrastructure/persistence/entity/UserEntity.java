@@ -75,17 +75,30 @@ public class UserEntity extends BaseEntity {
         this.provider = provider;
     }
 
+    public static UserEntity fromDomain(User user) {
+        return UserEntity.builder()
+            .email(user.getEmail())
+            .name(user.getName())
+            .bio(user.getBio())
+            .picture(user.getPicture())
+            .blogUrl(user.getBlogUrl())
+            .githubUrl(user.getGithubUrl())
+            .role(user.getRole())
+            .provider(user.getProvider())
+            .build();
+    }
+
     public User toDomain() {
         return User.builder()
-            .id(this.id)
-            .email(this.email)
-            .name(this.name)
-            .bio(this.bio)
-            .picture(this.picture)
-            .blogUrl(this.blogUrl)
-            .githubUrl(this.githubUrl)
-            .role(this.role)
-            .provider(this.provider)
+            .id(id)
+            .email(email)
+            .name(name)
+            .bio(bio)
+            .picture(picture)
+            .blogUrl(blogUrl)
+            .githubUrl(githubUrl)
+            .role(role)
+            .provider(provider)
             .build();
     }
 
