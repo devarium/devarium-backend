@@ -10,7 +10,7 @@ public interface UserService {
 
     User getUser(Long userId);
 
-    User getUserByEmail(String email);
+    User getOrCreateUser(OAuth2UserInfo userInfo);
 
     User updateUserInfo(OAuth2UserInfo userInfo, User user);
 
