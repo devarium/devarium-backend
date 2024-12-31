@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/${api.version}/users")
@@ -34,8 +36,8 @@ public class UserController {
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<SingleItemResponse<UserResponse>> updateMe(
+    @PutMapping("/profile")
+    public ResponseEntity<SingleItemResponse<UserResponse>> updateProfile(
         @Valid @RequestBody UpdateUserRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
@@ -43,6 +45,13 @@ public class UserController {
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @PutMapping("/profile/image")
+    public ResponseEntity<SingleItemResponse<UserResponse>> updateProfileImage(
+        @RequestPart MultipartFile image
+    ) {
+        return null;
     }
 
     @DeleteMapping("/me")
