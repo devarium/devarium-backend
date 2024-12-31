@@ -5,7 +5,6 @@ import io.devarium.core.domain.user.port.UpdateUser;
 public record UpdateUserRequest(
     String name,
     String bio,
-    String profileImageUrl,
     String blogUrl,
     String githubUrl
 ) implements UpdateUser {
