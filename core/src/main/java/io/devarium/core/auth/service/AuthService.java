@@ -7,6 +7,7 @@ import io.devarium.core.auth.Token;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,14 @@ public class AuthService {
 
     public Token loginWithGoogle(String code) {
         OAuth2UserInfo userInfo = oAuth2Client.getUserInfo(code);
-        User user = userService.getOrCreateUser(userInfo);
-        
+
+        User user;
+        try {
+            user = userService.getByEmail(userInfo.email());
+        } catch (UserException e) {
+            user = userService.createUser(userInfo);
+        }
+
         return tokenService.generateTokens(user.getEmail(), user.getAuthorities());
     }
 

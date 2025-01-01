@@ -33,8 +33,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getOrCreateUser(OAuth2UserInfo userInfo) {
-        return userRepository.findByEmail(userInfo.email()).orElseGet(() -> createUser(userInfo));
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, email));
     }
 
     @Override

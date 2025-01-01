@@ -26,9 +26,9 @@ public class UserServiceDecorator implements UserService {
     }
 
     @Override
-    @Transactional
-    public User getOrCreateUser(OAuth2UserInfo userInfo) {
-        return userService.getOrCreateUser(userInfo);
+    @Transactional(readOnly = true)
+    public User getByEmail(String email) {
+        return userService.getByEmail(email);
     }
 
     @Override
