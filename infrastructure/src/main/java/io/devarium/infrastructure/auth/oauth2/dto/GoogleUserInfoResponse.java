@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.auth.oauth2.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -11,7 +12,7 @@ public record GoogleUserInfoResponse(
     String name,
     String givenName,
     String familyName,
-    String profileImageUrl,
+    @JsonProperty("picture") String profileImageUrl,
     String locale
 ) {
 
