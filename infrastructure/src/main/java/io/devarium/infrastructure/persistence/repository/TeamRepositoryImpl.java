@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -51,5 +53,10 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public Optional<Team> findById(Long id) {
         return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
+    }
+
+    @Override
+    public Page<Team> findByMembers_Id(Long userId, Pageable pageable) {
+        return teamJpaRepository.findByMembers_Id(userId, pageable).map(TeamEntity::toDomain);
     }
 }

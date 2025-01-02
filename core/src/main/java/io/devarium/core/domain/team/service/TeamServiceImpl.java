@@ -12,6 +12,7 @@ import io.devarium.core.domain.user.User;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
@@ -39,8 +40,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Page<Team> getTeams(User user) {
-        return null;
+    public Page<Team> getTeams(Pageable pageable, User user) {
+        return teamRepository.findByMembers_Id(user.getId(), pageable);
     }
 
     @Override
