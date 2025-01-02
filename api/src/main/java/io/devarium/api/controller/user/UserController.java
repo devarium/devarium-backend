@@ -52,7 +52,7 @@ public class UserController {
         @RequestPart MultipartFile image,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        User user = userService.updateUserProfileImageUrl(image, emailPrincipal.getUser());
+        User user = userService.updateUserProfileImage(image, emailPrincipal.getUser());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));

@@ -15,7 +15,7 @@ public interface UserService {
 
     User updateUserProfile(UpdateUser request, User user);
 
-    User updateUserProfileImageUrl(MultipartFile image, User user);
+    User updateUserProfileImage(MultipartFile image, User user);
 
     void withdraw(User user);
 }
