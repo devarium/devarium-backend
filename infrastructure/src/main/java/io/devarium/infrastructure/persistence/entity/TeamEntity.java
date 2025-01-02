@@ -56,7 +56,6 @@ public class TeamEntity extends BaseEntity {
 
     @Builder
     private TeamEntity(
-        Long id,
         String name,
         String description,
         String picture,
@@ -64,7 +63,6 @@ public class TeamEntity extends BaseEntity {
         UserEntity leader,
         Set<UserEntity> members
     ) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.picture = picture;
@@ -104,6 +102,7 @@ public class TeamEntity extends BaseEntity {
         this.description = domain.getDescription();
         this.picture = domain.getPicture();
         this.githubUrl = domain.getGithubUrl();
+        this.deletedAt = domain.getDeletedAt();
     }
 
     public void updateLeader(UserEntity leader) {
