@@ -5,4 +5,6 @@ import io.devarium.core.domain.team.Team;
 public interface TeamRepository {
 
     Team save(Team team);
+
+    void deleteById(Long id);
 }

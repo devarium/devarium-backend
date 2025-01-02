@@ -35,4 +35,9 @@ public class TeamRepositoryImpl implements TeamRepository {
         TeamEntity entity = TeamEntity.fromDomain(team, leader, members);
         return teamJpaRepository.save(entity).toDomain();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        teamJpaRepository.findById(id);
+    }
 }
