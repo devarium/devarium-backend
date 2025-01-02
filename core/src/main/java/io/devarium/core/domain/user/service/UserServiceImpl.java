@@ -7,12 +7,18 @@ import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.repository.UserRepository;
+import io.devarium.core.storage.exception.StorageErrorCode;
+import io.devarium.core.storage.exception.StorageException;
+import io.devarium.core.storage.service.StorageService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final StorageService storageService;
 
     @Override
     public User createUser(OAuth2UserInfo userInfo) {
@@ -42,6 +48,22 @@ public class UserServiceImpl implements UserService {
     public User updateUserProfile(UpdateUser request, User user) {
         user.update(request.username(), request.bio(), request.blogUrl(), request.githubUrl());
         return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUserProfileImage(MultipartFile image, User user) {
+        try {
+            storageService.delete(user.getProfileImageUrl());
+            String newImageUrl = storageService.upload(
+                image.getBytes(),
+                image.getOriginalFilename(),
+                image.getContentType()
+            );
+            user.update(newImageUrl);
+            return userRepository.save(user);
+        } catch (IOException e) {
+            throw new StorageException(StorageErrorCode.FILE_UPLOAD_FAILED, e);
+        }
     }
 
     @Override
