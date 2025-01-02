@@ -30,8 +30,8 @@ public class UserEntity extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String username;
 
     private String bio;
 
@@ -46,7 +46,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
 
@@ -56,7 +56,7 @@ public class UserEntity extends BaseEntity {
     private UserEntity(
         Long id,
         String email,
-        String name,
+        String username,
         String bio,
         String profileImageUrl,
         String blogUrl,
@@ -66,7 +66,7 @@ public class UserEntity extends BaseEntity {
     ) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.username = username;
         this.bio = bio;
         this.profileImageUrl = profileImageUrl;
         this.blogUrl = blogUrl;
@@ -78,7 +78,7 @@ public class UserEntity extends BaseEntity {
     public static UserEntity fromDomain(User user) {
         return UserEntity.builder()
             .email(user.getEmail())
-            .name(user.getName())
+            .username(user.getUsername())
             .bio(user.getBio())
             .profileImageUrl(user.getProfileImageUrl())
             .blogUrl(user.getBlogUrl())
@@ -92,7 +92,7 @@ public class UserEntity extends BaseEntity {
         return User.builder()
             .id(id)
             .email(email)
-            .name(name)
+            .username(username)
             .bio(bio)
             .profileImageUrl(profileImageUrl)
             .blogUrl(blogUrl)
@@ -103,7 +103,7 @@ public class UserEntity extends BaseEntity {
     }
 
     public void update(User domain) {
-        this.name = domain.getName();
+        this.username = domain.getUsername();
         this.bio = domain.getBio();
         this.profileImageUrl = domain.getProfileImageUrl();
         this.blogUrl = domain.getBlogUrl();

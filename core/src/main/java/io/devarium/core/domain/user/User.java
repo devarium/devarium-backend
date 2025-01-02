@@ -16,7 +16,7 @@ public class User {
     private final UserRole role;
     private final OAuth2Provider provider;
 
-    private String name;
+    private String username;
     private String profileImageUrl;
     private String blogUrl;
     private String githubUrl;
@@ -27,7 +27,7 @@ public class User {
     public User(
         Long id,
         String email,
-        String name,
+        String username,
         String bio,
         String profileImageUrl,
         String blogUrl,
@@ -37,7 +37,7 @@ public class User {
     ) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.username = username;
         this.bio = bio;
         this.profileImageUrl = profileImageUrl;
         this.blogUrl = blogUrl;
@@ -46,12 +46,12 @@ public class User {
         this.provider = provider;
     }
 
-    public void update(String name, String profileImageUrl) {
-        this.name = name;
+    public void update(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public void update(String bio, String blogUrl, String githubUrl) {
+    public void update(String username, String bio, String blogUrl, String githubUrl) {
+        this.username = username;
         this.bio = bio;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
