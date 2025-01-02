@@ -49,9 +49,13 @@ public class UserController {
 
     @PutMapping("/profile/image")
     public ResponseEntity<SingleItemResponse<UserResponse>> updateProfileImage(
-        @RequestPart MultipartFile image
+        @RequestPart MultipartFile image,
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        return null;
+        User user = userService.updateUserProfileImageUrl(image, emailPrincipal.getUser());
+        UserResponse response = UserResponse.from(user);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @DeleteMapping("/me")
