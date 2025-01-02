@@ -65,6 +65,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void deleteTeam(Long teamId, User user) {
-        teamRepository.deleteById(teamId);
+        Team team = getTeam(teamId);
+        team.validateLeader(user.getId());
+        team.delete();
+        teamRepository.save(team);
     }
 }
