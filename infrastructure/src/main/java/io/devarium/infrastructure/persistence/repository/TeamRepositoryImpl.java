@@ -38,8 +38,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
-        teamJpaRepository.findById(id);
+    public void delete(Long id) {
+        TeamEntity entity = teamJpaRepository.findById(id)
+            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, id));
+        entity.getMembers().clear();
+        teamJpaRepository.delete(entity);
     }
 
     @Override

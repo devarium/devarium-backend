@@ -7,7 +7,7 @@ public interface TeamRepository {
 
     Team save(Team team);
 
-    void deleteById(Long id);
+    void delete(Long id);
 
     Optional<Team> findById(Long id);
 }
