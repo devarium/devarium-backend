@@ -16,13 +16,13 @@ public interface TeamService {
 
     Page<Team> getTeams(User user);
 
-    Team updateTeam(UpsertTeam request, User user);
+    Team updateTeam(Long teamId, UpsertTeam request, User user);
 
-    Team updateLeader(UpdateLeader request, User user);
+    Team updateLeader(Long teamId, UpdateLeader request, User user);
 
-    Team createMembers(CreateMembers request, User user);
+    Team createMembers(Long teamId, CreateMembers request, User user);
 
-    Team deleteMembers(DeleteMembers request, User user);
+    Team deleteMembers(Long teamId, DeleteMembers request, User user);
 
     void deleteTeam(Long teamId, User user);
 }

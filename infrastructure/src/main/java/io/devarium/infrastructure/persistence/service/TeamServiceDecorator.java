@@ -37,26 +37,26 @@ public class TeamServiceDecorator implements TeamService {
 
     @Override
     @Transactional
-    public Team updateTeam(UpsertTeam request, User user) {
-        return teamService.updateTeam(request, user);
+    public Team updateTeam(Long teamId, UpsertTeam request, User user) {
+        return teamService.updateTeam(teamId, request, user);
     }
 
     @Override
     @Transactional
-    public Team updateLeader(UpdateLeader request, User user) {
-        return teamService.updateLeader(request, user);
+    public Team updateLeader(Long teamId, UpdateLeader request, User user) {
+        return teamService.updateLeader(teamId, request, user);
     }
 
     @Override
     @Transactional
-    public Team createMembers(CreateMembers request, User user) {
-        return teamService.createMembers(request, user);
+    public Team createMembers(Long teamId, CreateMembers request, User user) {
+        return teamService.createMembers(teamId, request, user);
     }
 
     @Override
     @Transactional
-    public Team deleteMembers(DeleteMembers request, User user) {
-        return teamService.deleteMembers(request, user);
+    public Team deleteMembers(Long teamId, DeleteMembers request, User user) {
+        return teamService.deleteMembers(teamId, request, user);
     }
 
     @Override

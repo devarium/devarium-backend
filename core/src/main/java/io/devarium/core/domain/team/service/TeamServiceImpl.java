@@ -9,7 +9,7 @@ import io.devarium.core.domain.team.port.UpdateLeader;
 import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.core.domain.user.User;
-import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
@@ -20,7 +20,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team createTeam(UpsertTeam request, User user) {
-        List<Long> memberIds = List.of(user.getId());
+        Set<Long> memberIds = Set.of(user.getId());
         Team team = Team.builder()
             .name(request.name())
             .description(request.description())
@@ -44,23 +44,40 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team updateTeam(UpsertTeam request, User user) {
-        return null;
+    public Team updateTeam(Long teamId, UpsertTeam request, User user) {
+        Team team = getTeam(teamId);
+        team.validateLeader(user.getId());
+        team.update(
+            request.name(),
+            request.description(),
+            request.picture(),
+            request.githubUrl()
+        );
+        return teamRepository.save(team);
     }
 
     @Override
-    public Team updateLeader(UpdateLeader request, User user) {
-        return null;
+    public Team updateLeader(Long teamId, UpdateLeader request, User user) {
+        Team team = getTeam(teamId);
+        team.validateLeader(user.getId());
+        team.updateLeader(request.leaderId());
+        return teamRepository.save(team);
     }
 
     @Override
-    public Team createMembers(CreateMembers request, User user) {
-        return null;
+    public Team createMembers(Long teamId, CreateMembers request, User user) {
+        Team team = getTeam(teamId);
+        team.validateLeader(user.getId());
+        team.addMembers(request.memberIds());
+        return teamRepository.save(team);
     }
 
     @Override
-    public Team deleteMembers(DeleteMembers request, User user) {
-        return null;
+    public Team deleteMembers(Long teamId, DeleteMembers request, User user) {
+        Team team = getTeam(teamId);
+        team.validateLeader(user.getId());
+        team.removeMembers(request.memberIds());
+        return teamRepository.save(team);
     }
 
     @Override
