@@ -8,6 +8,7 @@ import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +40,10 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public void deleteById(Long id) {
         teamJpaRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Team> findById(Long id) {
+        return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
     }
 }

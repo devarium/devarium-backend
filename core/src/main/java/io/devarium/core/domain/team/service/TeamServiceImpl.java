@@ -1,6 +1,8 @@
 package io.devarium.core.domain.team.service;
 
 import io.devarium.core.domain.team.Team;
+import io.devarium.core.domain.team.exception.TeamErrorCode;
+import io.devarium.core.domain.team.exception.TeamException;
 import io.devarium.core.domain.team.port.CreateMembers;
 import io.devarium.core.domain.team.port.DeleteMembers;
 import io.devarium.core.domain.team.port.UpdateLeader;
@@ -28,6 +30,12 @@ public class TeamServiceImpl implements TeamService {
             .memberIds(memberIds)
             .build();
         return teamRepository.save(team);
+    }
+
+    @Override
+    public Team getTeam(Long teamId) {
+        return teamRepository.findById(teamId)
+            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, teamId));
     }
 
     @Override

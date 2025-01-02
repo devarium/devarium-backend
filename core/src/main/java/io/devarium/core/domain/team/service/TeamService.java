@@ -12,6 +12,8 @@ public interface TeamService {
 
     Team createTeam(UpsertTeam request, User user);
 
+    Team getTeam(Long teamId);
+
     Page<Team> getTeams(User user);
 
     Team updateTeam(UpsertTeam request, User user);
