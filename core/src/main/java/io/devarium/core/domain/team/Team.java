@@ -1,5 +1,7 @@
 package io.devarium.core.domain.team;
 
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
@@ -37,6 +39,12 @@ public class Team {
         this.leaderId = leaderId;
         this.memberIds = memberIds;
         this.deletedAt = deletedAt;
+    }
+
+    public void validateLeader(Long userId) {
+        if (!this.leaderId.equals(userId)) {
+            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, userId, this.id);
+        }
     }
 
     public void update(String name, String description, String picture, String githubUrl) {
