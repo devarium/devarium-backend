@@ -33,12 +33,6 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User updateUserInfo(OAuth2UserInfo userInfo, User user) {
-        return userService.updateUserInfo(userInfo, user);
-    }
-
-    @Override
-    @Transactional
     public User updateUserProfile(UpdateUser request, User user) {
         return userService.updateUserProfile(request, user);
     }

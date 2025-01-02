@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(OAuth2UserInfo userInfo) {
         User user = User.builder()
             .email(userInfo.email())
-            .name(userInfo.name())
+            .username(userInfo.name())
             .profileImageUrl(userInfo.profileImageUrl())
             .provider(userInfo.provider())
             .role(UserRole.USER)
@@ -39,14 +39,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserInfo(OAuth2UserInfo userInfo, User user) {
-        user.update(userInfo.name(), userInfo.profileImageUrl());
-        return userRepository.save(user);
-    }
-
-    @Override
     public User updateUserProfile(UpdateUser request, User user) {
-        user.update(request.bio(), request.blogUrl(), request.githubUrl());
+        user.update(request.username(), request.bio(), request.blogUrl(), request.githubUrl());
         return userRepository.save(user);
     }
 

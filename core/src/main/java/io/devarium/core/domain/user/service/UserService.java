@@ -12,8 +12,6 @@ public interface UserService {
 
     User getByEmail(String email);
 
-    User updateUserInfo(OAuth2UserInfo userInfo, User user);
-
     User updateUserProfile(UpdateUser request, User user);
 
     void withdraw(User user);
