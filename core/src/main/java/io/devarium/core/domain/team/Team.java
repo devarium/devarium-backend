@@ -3,7 +3,7 @@ package io.devarium.core.domain.team;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import java.time.Instant;
-import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import lombok.Getter;
 public class Team {
 
     private final Long id;
-    private final List<Long> memberIds;
+    private final Set<Long> memberIds;
 
     private String name;
     private String description;
@@ -28,7 +28,7 @@ public class Team {
         String picture,
         String githubUrl,
         Long leaderId,
-        List<Long> memberIds,
+        Set<Long> memberIds,
         Instant deletedAt
     ) {
         this.id = id;
@@ -54,8 +54,16 @@ public class Team {
         this.githubUrl = githubUrl;
     }
 
-    public void changeLeader(Long newLeaderId) {
+    public void updateLeader(Long newLeaderId) {
         this.leaderId = newLeaderId;
+    }
+
+    public void addMembers(Set<Long> memberIds) {
+        this.memberIds.addAll(memberIds);
+    }
+
+    public void removeMembers(Set<Long> memberIds) {
+        this.memberIds.removeAll(memberIds);
     }
 
     public void delete() {

@@ -13,8 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,7 +50,7 @@ public class TeamEntity extends BaseEntity {
         joinColumns = @JoinColumn(name = "team_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<UserEntity> members = new ArrayList<>();
+    private Set<UserEntity> members = new HashSet<>();
 
     private Instant deletedAt;
 
@@ -61,7 +62,7 @@ public class TeamEntity extends BaseEntity {
         String picture,
         String githubUrl,
         UserEntity leader,
-        List<UserEntity> members
+        Set<UserEntity> members
     ) {
         this.id = id;
         this.name = name;
@@ -72,7 +73,7 @@ public class TeamEntity extends BaseEntity {
         this.members = members;
     }
 
-    public static TeamEntity fromDomain(Team team, UserEntity leader, List<UserEntity> members) {
+    public static TeamEntity fromDomain(Team team, UserEntity leader, Set<UserEntity> members) {
         return TeamEntity.builder()
             .name(team.getName())
             .description(team.getDescription())
@@ -93,7 +94,7 @@ public class TeamEntity extends BaseEntity {
             .leaderId(leader.getId())
             .memberIds(members.stream()
                 .map(UserEntity::getId)
-                .toList())
+                .collect(Collectors.toSet()))
             .deletedAt(deletedAt)
             .build();
     }
@@ -105,15 +106,30 @@ public class TeamEntity extends BaseEntity {
         this.githubUrl = domain.getGithubUrl();
     }
 
-    public void changeLeader(UserEntity leader) {
+    public void updateLeader(UserEntity leader) {
         this.leader = leader;
     }
 
-    public void addMember(UserEntity user) {
-        this.members.add(user);
+    public void updateMembers(Set<UserEntity> members) {
+        this.members.clear();
+        this.members.addAll(members);
     }
 
-    public void removeMember(UserEntity user) {
-        this.members.remove(user);
+    // TODO : 상위 클래스에 두고 모든 엔티티가 일관적으로 동작하도록 수정
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TeamEntity team = (TeamEntity) o;
+        return id != null && id.equals(team.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
