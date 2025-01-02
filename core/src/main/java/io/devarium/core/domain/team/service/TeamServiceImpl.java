@@ -34,12 +34,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team getTeam(Long teamId) {
-        return teamRepository.findById(teamId)
-            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, teamId));
-    }
-
-    @Override
     public Page<Team> getTeams(Pageable pageable, User user) {
         return teamRepository.findByMembers_Id(user.getId(), pageable);
     }
@@ -87,5 +81,10 @@ public class TeamServiceImpl implements TeamService {
         team.validateLeader(user.getId());
         team.delete();
         teamRepository.save(team);
+    }
+
+    private Team getTeam(Long teamId) {
+        return teamRepository.findById(teamId)
+            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, teamId));
     }
 }

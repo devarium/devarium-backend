@@ -26,12 +26,6 @@ public class TeamServiceDecorator implements TeamService {
 
     @Override
     @Transactional(readOnly = true)
-    public Team getTeam(Long teamId) {
-        return teamService.getTeam(teamId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Page<Team> getTeams(Pageable pageable, User user) {
         return teamService.getTeams(pageable, user);
     }
