@@ -7,6 +7,7 @@ import io.devarium.core.domain.team.port.UpdateLeader;
 import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.core.domain.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
@@ -17,7 +18,16 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team createTeam(UpsertTeam request, User user) {
-        return null;
+        List<Long> memberIds = List.of(user.getId());
+        Team team = Team.builder()
+            .name(request.name())
+            .description(request.description())
+            .picture(request.picture())
+            .githubUrl(request.githubUrl())
+            .leaderId(user.getId())
+            .memberIds(memberIds)
+            .build();
+        return teamRepository.save(team);
     }
 
     @Override
