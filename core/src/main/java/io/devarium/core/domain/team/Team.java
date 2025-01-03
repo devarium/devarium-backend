@@ -11,6 +11,8 @@ import lombok.Getter;
 @Getter
 public class Team {
 
+    public static final int DEFAULT_PAGE_SIZE = 1;
+
     private final Long id;
     private final Set<Long> memberIds;
 
