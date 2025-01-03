@@ -2,8 +2,11 @@ package io.devarium.core.domain.team;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
+import io.devarium.core.domain.team.exception.TeamErrorCode;
+import io.devarium.core.domain.team.exception.TeamException;
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -44,6 +47,16 @@ public class Team {
     public void validateLeader(Long userId) {
         if (!this.leaderId.equals(userId)) {
             throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, userId, this.id);
+        }
+    }
+
+    public void validateMembers(Set<Long> userIds) {
+        Set<Long> nonMemberIds = userIds.stream()
+            .filter(userId -> !this.memberIds.contains(userId))
+            .collect(Collectors.toSet());
+
+        if (!nonMemberIds.isEmpty()) {
+            throw new TeamException(TeamErrorCode.NOT_TEAM_MEMBERS, nonMemberIds, this.id);
         }
     }
 
