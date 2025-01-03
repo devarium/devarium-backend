@@ -55,6 +55,7 @@ public class TeamServiceImpl implements TeamService {
     public Team updateLeader(Long teamId, UpdateLeader request, User user) {
         Team team = getTeam(teamId);
         team.validateLeader(user.getId());
+        team.validateMembers(Set.of(user.getId()));
         team.updateLeader(request.leaderId());
         return teamRepository.save(team);
     }
@@ -63,6 +64,7 @@ public class TeamServiceImpl implements TeamService {
     public Team createMembers(Long teamId, CreateMembers request, User user) {
         Team team = getTeam(teamId);
         team.validateLeader(user.getId());
+        team.validateMembers(request.memberIds());
         team.addMembers(request.memberIds());
         return teamRepository.save(team);
     }
