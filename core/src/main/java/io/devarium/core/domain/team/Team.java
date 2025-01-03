@@ -1,7 +1,5 @@
 package io.devarium.core.domain.team;
 
-import io.devarium.core.auth.exception.AuthErrorCode;
-import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
 import java.time.Instant;
@@ -46,7 +44,7 @@ public class Team {
 
     public void validateLeader(Long userId) {
         if (!this.leaderId.equals(userId)) {
-            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, userId, this.id);
+            throw new TeamException(TeamErrorCode.FORBIDDEN_ACCESS, userId, this.id);
         }
     }
 
