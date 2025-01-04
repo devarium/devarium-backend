@@ -7,12 +7,10 @@ import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.repository.UserRepository;
-import io.devarium.core.storage.exception.StorageErrorCode;
-import io.devarium.core.storage.exception.StorageException;
+import io.devarium.core.storage.Image;
+import io.devarium.core.storage.ImageType;
 import io.devarium.core.storage.service.StorageService;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -51,19 +49,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserProfileImage(MultipartFile image, User user) {
-        try {
-            storageService.delete(user.getProfileImageUrl());
-            String newImageUrl = storageService.upload(
-                image.getBytes(),
-                image.getOriginalFilename(),
-                image.getContentType()
-            );
-            user.update(newImageUrl);
-            return userRepository.save(user);
-        } catch (IOException e) {
-            throw new StorageException(StorageErrorCode.FILE_UPLOAD_FAILED, e);
-        }
+    public User updateUserProfileImage(Image image, User user) {
+        storageService.delete(user.getProfileImageUrl());
+        String newImageUrl = storageService.upload(image, ImageType.PROFILE);
+        user.update(newImageUrl);
+        return userRepository.save(user);
     }
 
     @Override
