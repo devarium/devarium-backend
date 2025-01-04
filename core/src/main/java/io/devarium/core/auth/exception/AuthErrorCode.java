@@ -24,10 +24,10 @@ public enum AuthErrorCode {
 
     FORBIDDEN_ACCESS(
         HttpStatus.FORBIDDEN,
-        "userId %d is not allowed to access resourceId %d"
+        "Not allowed to access the resource: %d"
     ),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "invalid token"),
-    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "unauthenticated user attempt");
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
+    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "Authentication required");
 
     private final HttpStatus status;
     private final String message;

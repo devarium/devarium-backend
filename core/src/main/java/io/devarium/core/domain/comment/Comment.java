@@ -29,7 +29,7 @@ public class Comment {
 
     public void validateAuthor(Long userId) {
         if (!this.userId.equals(userId)) {
-            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, userId, this.id);
+            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, id);
         }
     }
 
