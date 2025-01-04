@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 public enum AuthErrorCode {
     ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Access Token is null"),
     GITHUB_ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Github Access Token is null"),
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "User not found"),
 
     GOOGLE_TOKEN_REQUEST_FAILED(
         HttpStatus.BAD_REQUEST,
@@ -23,8 +22,10 @@ public enum AuthErrorCode {
     GOOGLE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Google server error occurred: %s"),
     GOOGLE_INVALID_CODE(HttpStatus.BAD_REQUEST, "Invalid authorization code"),
 
-    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN,
-        "userId %d is not allowed to access resourceId %d"),
+    FORBIDDEN_ACCESS(
+        HttpStatus.FORBIDDEN,
+        "userId %d is not allowed to access resourceId %d"
+    ),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "invalid token"),
     UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "unauthenticated user attempt");
 
