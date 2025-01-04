@@ -6,6 +6,7 @@ import io.devarium.api.controller.user.dto.UserResponse;
 import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +50,10 @@ public class UserController {
 
     @PutMapping("/profile/image")
     public ResponseEntity<SingleItemResponse<UserResponse>> updateProfileImage(
-        @RequestPart MultipartFile image,
+        @RequestPart MultipartFile file,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        User user = userService.updateUserProfileImage(image, emailPrincipal.getUser());
+        User user = userService.updateUserProfileImage(Image.from(file), emailPrincipal.getUser());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
