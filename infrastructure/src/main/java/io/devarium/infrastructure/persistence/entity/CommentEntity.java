@@ -61,6 +61,7 @@ public class CommentEntity extends BaseEntity {
             .id(id)
             .content(content)
             .postId(post.getId())
+            .userId(user.getId())
             .createdAt(getCreatedAt())
             .build();
     }

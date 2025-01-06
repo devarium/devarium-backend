@@ -1,5 +1,7 @@
 package io.devarium.core.domain.post;
 
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +24,12 @@ public class Post {
         this.content = content;
         this.userId = userId;
         this.createdAt = createdAt;
+    }
+
+    public void validateAuthor(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, id);
+        }
     }
 
     public void updateTitle(String title) {
