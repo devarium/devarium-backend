@@ -7,9 +7,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum AuthErrorCode {
-    ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Access Token is null"),
-    GITHUB_ACCESS_TOKEN_IS_NULL(HttpStatus.BAD_REQUEST, "Github Access Token is null"),
-
     GOOGLE_TOKEN_REQUEST_FAILED(
         HttpStatus.BAD_REQUEST,
         "Failed to request Google access token: %s"
@@ -20,8 +17,6 @@ public enum AuthErrorCode {
         "Failed to request Google user info: %s"
     ),
     GOOGLE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Google server error occurred: %s"),
-    GOOGLE_INVALID_CODE(HttpStatus.BAD_REQUEST, "Invalid authorization code"),
-
     FORBIDDEN_ACCESS(
         HttpStatus.FORBIDDEN,
         "Not allowed to access the resource: %d"
