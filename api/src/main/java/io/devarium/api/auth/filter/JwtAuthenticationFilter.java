@@ -2,7 +2,6 @@ package io.devarium.api.auth.filter;
 
 import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
-import io.devarium.infrastructure.auth.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,7 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+    //private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -37,14 +34,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (token != null && jwtUtil.isTokenValid(token)) {
                 String email = jwtUtil.extractEmail(token);
-                UserDetails userDetails =
-                    ((UserDetailsServiceImpl) userDetailsService).loadUserByEmail(email);
+/*                UserDetails userDetails =
+                    ((UserDetailsServiceImpl) userDetailsService).loadUserByEmail(email);*/
 
                 Authentication authentication =
                     new UsernamePasswordAuthenticationToken(
-                        userDetails,
+                        email,
+                        //userDetails,
                         null,
-                        userDetails.getAuthorities()
+                        jwtUtil.extractAuthorities(token) // JWT에서 추출한 권한 정보
                     );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
