@@ -29,9 +29,17 @@ public class ReplyServiceImplTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
     private static final Long COMMENT_ID = 2L;
-    private static final User USER = new User(10L, "testUser@email.com", "testUser", "bio",
-        "picture", "blogUrl", "githubUrl",
-        UserRole.USER, OAuth2Provider.GOOGLE);
+    private static final User USER = User.builder()
+        .id(10L)
+        .email("testUser@email.com")
+        .name("testUser")
+        .bio("bio")
+        .picture("picture")
+        .blogUrl("blogUrl")
+        .githubUrl("githubUrl")
+        .role(UserRole.USER)
+        .provider(OAuth2Provider.GOOGLE)
+        .build();
 
     @Mock
     private ReplyRepository replyRepository;
