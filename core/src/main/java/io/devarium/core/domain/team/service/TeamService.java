@@ -9,6 +9,8 @@ public interface TeamService {
 
     Team createTeam(UpsertTeam request, User user);
 
+    Team getTeam(Long teamId);
+
     Team updateTeam(Long teamId, UpsertTeam request, User user);
 
     Team updateLeader(Long teamId, UpdateLeader request, User user);

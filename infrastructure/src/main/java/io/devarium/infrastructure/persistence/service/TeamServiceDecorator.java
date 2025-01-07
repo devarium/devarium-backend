@@ -21,6 +21,12 @@ public class TeamServiceDecorator implements TeamService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Team getTeam(Long teamId) {
+        return teamService.getTeam(teamId);
+    }
+
+    @Override
     @Transactional
     public Team updateTeam(Long teamId, UpsertTeam request, User user) {
         return teamService.updateTeam(teamId, request, user);

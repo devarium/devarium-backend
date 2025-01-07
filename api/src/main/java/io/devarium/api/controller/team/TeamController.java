@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +39,14 @@ public class TeamController {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(SingleItemResponse.from(response));
+    }
+
+    @GetMapping("/{teamId}")
+    public ResponseEntity<SingleItemResponse<TeamResponse>> getTeam(@PathVariable Long teamId) {
+        Team team = teamService.getTeam(teamId);
+        TeamResponse response = TeamResponse.from(team);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @PutMapping("/{teamId}")
