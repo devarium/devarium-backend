@@ -1,6 +1,6 @@
-package io.devarium.api.controller.team.dto;
+package io.devarium.api.controller.member.dto;
 
-import io.devarium.core.domain.team.port.DeleteMembers;
+import io.devarium.core.domain.member.port.DeleteMembers;
 import java.util.Set;
 
 public record DeleteMembersRequest(

@@ -1,4 +1,4 @@
-package io.devarium.core.domain.team.port;
+package io.devarium.core.domain.member.port;
 
 import java.util.Set;
 
