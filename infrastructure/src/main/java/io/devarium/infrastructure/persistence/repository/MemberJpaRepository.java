@@ -9,10 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
 
-    void saveAll(Set<MemberEntity> members);
-
-    void deleteAll(Set<MemberEntity> members);
-
     Set<MemberEntity> findByIdIn(Set<Long> ids);
 
     Page<MemberEntity> findByTeamId(Long teamId, Pageable pageable);
