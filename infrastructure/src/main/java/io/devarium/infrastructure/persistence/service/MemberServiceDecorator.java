@@ -19,9 +19,8 @@ public class MemberServiceDecorator implements MemberService {
 
     @Override
     @Transactional
-    public Page<Member> createMembers(Pageable pageable, Long teamId, CreateMembers request,
-        User user) {
-        return memberService.createMembers(pageable, teamId, request, user);
+    public void createMembers(Long teamId, CreateMembers request, User user) {
+        memberService.createMembers(teamId, request, user);
     }
 
     @Override
@@ -38,15 +37,13 @@ public class MemberServiceDecorator implements MemberService {
 
     @Override
     @Transactional
-    public Page<Member> updateMembers(Pageable pageable, Long teamId, UpdateMembers request,
-        User user) {
-        return memberService.updateMembers(pageable, teamId, request, user);
+    public void updateMembers(Long teamId, UpdateMembers request, User user) {
+        memberService.updateMembers(teamId, request, user);
     }
 
     @Override
     @Transactional
-    public Page<Member> deleteMembers(Pageable pageable, Long teamId, DeleteMembers request,
-        User user) {
-        return memberService.deleteMembers(pageable, teamId, request, user);
+    public void deleteMembers(Long teamId, DeleteMembers request, User user) {
+        memberService.deleteMembers(teamId, request, user);
     }
 }

@@ -10,13 +10,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface MemberService {
 
-    Page<Member> createMembers(Pageable pageable, Long teamId, CreateMembers request, User user);
+    void createMembers(Long teamId, CreateMembers request, User user);
 
     Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user);
 
     Page<Member> getMembersByUser(Pageable pageable, User user);
 
-    Page<Member> updateMembers(Pageable pageable, Long teamId, UpdateMembers request, User user);
+    void updateMembers(Long teamId, UpdateMembers request, User user);
 
-    Page<Member> deleteMembers(Pageable pageable, Long teamId, DeleteMembers request, User user);
+    void deleteMembers(Long teamId, DeleteMembers request, User user);
 }

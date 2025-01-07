@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,26 +33,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/{teamId}/members")
-    public ResponseEntity<PagedListResponse<MemberResponse>> createMembers(
-        @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
+    public ResponseEntity<Void> createMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody CreateMembersRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Page<Member> members = memberService.createMembers(
-            pageable,
-            teamId,
-            request,
-            emailPrincipal.getUser()
-        );
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
-
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(PagedListResponse.from(response));
+        memberService.createMembers(teamId, request, emailPrincipal.getUser());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{teamId}/members")
@@ -91,44 +77,22 @@ public class MemberController {
     }
 
     @PutMapping("/{teamId}/members")
-    public ResponseEntity<PagedListResponse<MemberResponse>> updateMembers(
-        @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
+    public ResponseEntity<Void> updateMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateMembersRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Page<Member> members = memberService.updateMembers(
-            pageable,
-            teamId,
-            request,
-            emailPrincipal.getUser()
-        );
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
-
-        return ResponseEntity.ok(PagedListResponse.from(response));
+        memberService.updateMembers(teamId, request, emailPrincipal.getUser());
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{teamId}/members")
-    public ResponseEntity<PagedListResponse<MemberResponse>> deleteMembers(
-        @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
+    public ResponseEntity<Void> deleteMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody DeleteMembersRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Page<Member> members = memberService.deleteMembers(
-            pageable,
-            teamId,
-            request,
-            emailPrincipal.getUser()
-        );
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
-
-        return ResponseEntity.ok(PagedListResponse.from(response));
+        memberService.deleteMembers(teamId, request, emailPrincipal.getUser());
+        return ResponseEntity.noContent().build();
     }
 }

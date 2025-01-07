@@ -22,13 +22,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public Page<Member> createMembers(
-        Pageable pageable,
-        Long teamId,
-        CreateMembers request,
-        User user
-    ) {
-        getUserMembership(teamId, user.getId()).validateRole(MemberRole.ADMIN);
+    public void createMembers(Long teamId, CreateMembers request, User user) {
+        getUserMembership(teamId, user.getId())
+            .validateRole(MemberRole.ADMIN);
         Set<Member> members = request.userIdToRole()
             .entrySet().stream()
             .map(member -> Member.builder()
@@ -38,7 +34,6 @@ public class MemberServiceImpl implements MemberService {
                 .build())
             .collect(Collectors.toSet());
         memberRepository.saveAll(teamId, members);
-        return memberRepository.findByTeamId(teamId, pageable);
     }
 
     @Override
@@ -53,13 +48,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<Member> updateMembers(
-        Pageable pageable,
-        Long teamId,
-        UpdateMembers request,
-        User user
-    ) {
-        getUserMembership(teamId, user.getId()).validateRole(MemberRole.ADMIN);
+    public void updateMembers(Long teamId, UpdateMembers request, User user) {
+        getUserMembership(teamId, user.getId())
+            .validateRole(MemberRole.ADMIN);
         Set<Long> memberIds = new HashSet<>(request.memberIdToRole().keySet());
         Set<Member> members = memberRepository.findByIdIn(memberIds);
         members.forEach(member -> {
@@ -68,21 +59,15 @@ public class MemberServiceImpl implements MemberService {
             member.update(newRole);
         });
         memberRepository.saveAll(teamId, members);
-        return memberRepository.findByTeamId(teamId, pageable);
     }
 
     @Override
-    public Page<Member> deleteMembers(
-        Pageable pageable,
-        Long teamId,
-        DeleteMembers request,
-        User user
-    ) {
-        getUserMembership(teamId, user.getId()).validateRole(MemberRole.ADMIN);
+    public void deleteMembers(Long teamId, DeleteMembers request, User user) {
+        getUserMembership(teamId, user.getId())
+            .validateRole(MemberRole.ADMIN);
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
         members.forEach(member -> member.validateMember(teamId));
         memberRepository.deleteAll(members);
-        return memberRepository.findByTeamId(teamId, pageable);
     }
 
     private Member getUserMembership(Long teamId, Long userId) {
