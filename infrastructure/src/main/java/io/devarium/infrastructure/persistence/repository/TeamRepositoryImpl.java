@@ -8,11 +8,7 @@ import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -25,20 +21,16 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public Team save(Team team) {
         UserEntity leader = entityManager.getReference(UserEntity.class, team.getLeaderId());
-        Set<UserEntity> members = team.getMemberIds().stream()
-            .map(memberId -> entityManager.getReference(UserEntity.class, memberId))
-            .collect(Collectors.toSet());
 
         if (team.getId() != null) {
             TeamEntity entity = teamJpaRepository.findById(team.getId())
                 .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, team.getId()));
             entity.update(team);
             entity.updateLeader(leader);
-            entity.updateMembers(members);
             return teamJpaRepository.save(entity).toDomain();
         }
 
-        TeamEntity entity = TeamEntity.fromDomain(team, leader, members);
+        TeamEntity entity = TeamEntity.fromDomain(team, leader);
         return teamJpaRepository.save(entity).toDomain();
     }
 
@@ -46,17 +38,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     public void delete(Long id) {
         TeamEntity entity = teamJpaRepository.findById(id)
             .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, id));
-        entity.getMembers().clear();
         teamJpaRepository.delete(entity);
     }
 
     @Override
     public Optional<Team> findById(Long id) {
         return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
-    }
-
-    @Override
-    public Page<Team> findByMembers_Id(Long userId, Pageable pageable) {
-        return teamJpaRepository.findByMembers_Id(userId, pageable).map(TeamEntity::toDomain);
     }
 }

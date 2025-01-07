@@ -1,8 +1,6 @@
 package io.devarium.api.controller.team.dto;
 
 import io.devarium.core.domain.team.Team;
-import java.time.Instant;
-import java.util.Set;
 
 public record TeamResponse(
     Long id,
@@ -10,9 +8,7 @@ public record TeamResponse(
     String description,
     String picture,
     String githubUrl,
-    Long leaderId,
-    Set<Long> memberIds,
-    Instant deletedAt
+    Long leaderId
 ) {
 
     public static TeamResponse from(Team team) {
@@ -22,9 +18,7 @@ public record TeamResponse(
             team.getDescription(),
             team.getPicture(),
             team.getGithubUrl(),
-            team.getLeaderId(),
-            team.getMemberIds(),
-            team.getDeletedAt()
+            team.getLeaderId()
         );
     }
 }

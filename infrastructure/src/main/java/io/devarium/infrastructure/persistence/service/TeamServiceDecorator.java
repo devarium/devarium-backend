@@ -1,16 +1,12 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.port.CreateMembers;
-import io.devarium.core.domain.team.port.DeleteMembers;
 import io.devarium.core.domain.team.port.UpdateLeader;
 import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.team.service.TeamServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -25,12 +21,6 @@ public class TeamServiceDecorator implements TeamService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<Team> getTeams(Pageable pageable, User user) {
-        return teamService.getTeams(pageable, user);
-    }
-
-    @Override
     @Transactional
     public Team updateTeam(Long teamId, UpsertTeam request, User user) {
         return teamService.updateTeam(teamId, request, user);
@@ -40,18 +30,6 @@ public class TeamServiceDecorator implements TeamService {
     @Transactional
     public Team updateLeader(Long teamId, UpdateLeader request, User user) {
         return teamService.updateLeader(teamId, request, user);
-    }
-
-    @Override
-    @Transactional
-    public Team createMembers(Long teamId, CreateMembers request, User user) {
-        return teamService.createMembers(teamId, request, user);
-    }
-
-    @Override
-    @Transactional
-    public Team deleteMembers(Long teamId, DeleteMembers request, User user) {
-        return teamService.deleteMembers(teamId, request, user);
     }
 
     @Override
