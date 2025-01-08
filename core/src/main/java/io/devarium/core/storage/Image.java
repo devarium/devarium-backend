@@ -63,7 +63,11 @@ public class Image {
             throw new StorageException(StorageErrorCode.EMPTY_FILE);
         }
         if (content.length > MAX_FILE_SIZE) {
-            throw new StorageException(StorageErrorCode.INVALID_FILE_SIZE);
+            throw new StorageException(
+                StorageErrorCode.INVALID_FILE_SIZE,
+                content.length / 1024.0 / 1024.0,
+                MAX_FILE_SIZE / 1024.0 / 1024.0
+            );
         }
     }
 
