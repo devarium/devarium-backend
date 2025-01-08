@@ -11,8 +11,4 @@ public enum MemberRole {
     VIEWER(1);
 
     private final int level;
-
-    public Boolean hasAccess(MemberRole requiredRole) {
-        return this.level >= requiredRole.getLevel();
-    }
 }

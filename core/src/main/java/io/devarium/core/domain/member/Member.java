@@ -30,8 +30,8 @@ public class Member {
         }
     }
 
-    public void validateRole(MemberRole role) {
-        if (!Objects.equals(this.role, role)) {
+    public void validateRole(MemberRole requiredRole) {
+        if (this.role.getLevel() < requiredRole.getLevel()) {
             throw new MemberException(
                 MemberErrorCode.FORBIDDEN_ACCESS,
                 this.id,
