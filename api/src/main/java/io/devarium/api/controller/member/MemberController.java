@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,7 +87,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{teamId}/members")
+    @DeleteMapping("/{teamId}/members")
     public ResponseEntity<Void> deleteMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody DeleteMembersRequest request,
