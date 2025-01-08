@@ -62,6 +62,11 @@ public class User {
         this.deletedAt = Instant.now();
     }
 
+    // 소프트 딜리트 상태 확인 메서드
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(role); // UserRole은 이제 GrantedAuthority 구현체
     }
