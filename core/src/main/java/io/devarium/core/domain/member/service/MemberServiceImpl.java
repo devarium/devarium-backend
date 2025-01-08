@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService {
     public void createMembers(Long teamId, CreateMembers request, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
+
         Set<Member> members = request.userIdToRole()
             .entrySet().stream()
             .map(member -> Member.builder()
@@ -38,7 +39,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user) {
-        getUserMembership(teamId, user.getId());
+        getUserMembership(teamId, user.getId())
+            .validateRole(MemberRole.VIEWER);
+
         return memberRepository.findByTeamId(teamId, pageable);
     }
 
@@ -51,6 +54,7 @@ public class MemberServiceImpl implements MemberService {
     public void updateMembers(Long teamId, UpdateMembers request, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
+
         Set<Long> memberIds = new HashSet<>(request.memberIdToRole().keySet());
         Set<Member> members = memberRepository.findByIdIn(memberIds);
         members.forEach(member -> {
@@ -65,6 +69,7 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMembers(Long teamId, DeleteMembers request, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
+
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
         members.forEach(member -> member.validateMembership(teamId));
         memberRepository.deleteAll(members);
