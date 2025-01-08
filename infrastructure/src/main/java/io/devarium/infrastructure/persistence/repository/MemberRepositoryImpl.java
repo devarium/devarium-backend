@@ -23,6 +23,15 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final EntityManager entityManager;
     private final MemberJpaRepository memberJpaRepository;
 
+    @Override
+    public void save(Member member) {
+        UserEntity user = entityManager.getReference(UserEntity.class, member.getUserId());
+        TeamEntity team = entityManager.getReference(TeamEntity.class, member.getTeamId());
+
+        MemberEntity entity = MemberEntity.fromDomain(member, user, team);
+        memberJpaRepository.save(entity);
+    }
+
     // TODO : team, user 삭제여부 확인 (deletedAt)
     @Override
     public void saveAll(Long teamId, Set<Member> members) {
@@ -84,5 +93,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     public Optional<Member> findByUserIdAndTeamId(Long userId, Long teamId) {
         return memberJpaRepository.findByUserIdAndTeamId(userId, teamId)
             .map(MemberEntity::toDomain);
+    }
+
+    @Override
+    public long countByTeamId(Long teamId) {
+        return memberJpaRepository.countByTeamId(teamId);
     }
 }

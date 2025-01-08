@@ -7,6 +7,7 @@ import io.devarium.api.controller.team.dto.UpsertTeamRequest;
 import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,9 @@ public class TeamController {
         @Valid @RequestBody UpsertTeamRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Team team = teamService.createTeam(request, emailPrincipal.getUser());
+        User user = emailPrincipal.getUser();
+        Team team = teamService.createTeam(request, user);
+        teamService.initializeTeam(team.getId(), user.getId());
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity

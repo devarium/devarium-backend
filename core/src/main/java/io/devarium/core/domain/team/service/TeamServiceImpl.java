@@ -1,5 +1,6 @@
 package io.devarium.core.domain.team.service;
 
+import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
+    private final MemberService memberService;
 
     @Override
     public Team createTeam(UpsertTeam request, User user) {
@@ -24,6 +26,11 @@ public class TeamServiceImpl implements TeamService {
             .leaderId(user.getId())
             .build();
         return teamRepository.save(team);
+    }
+
+    @Override
+    public void initializeTeam(Long teamId, Long userId) {
+        memberService.createFirstMember(teamId, userId);
     }
 
     @Override

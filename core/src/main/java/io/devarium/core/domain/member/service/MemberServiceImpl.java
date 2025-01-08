@@ -38,6 +38,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void createFirstMember(Long teamId, Long userId) {
+        if (memberRepository.countByTeamId(teamId) != 0) {
+            throw new MemberException(MemberErrorCode.FIRST_MEMBER_ONLY);
+        }
+        Member member = Member.builder()
+            .userId(userId)
+            .teamId(teamId)
+            .role(MemberRole.SUPER_ADMIN)
+            .build();
+        memberRepository.save(member);
+    }
+
+    @Override
     public Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.VIEWER);

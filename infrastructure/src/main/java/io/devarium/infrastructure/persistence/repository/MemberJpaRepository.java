@@ -16,4 +16,6 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
     Page<MemberEntity> findByUserId(Long userId, Pageable pageable);
 
     Optional<MemberEntity> findByUserIdAndTeamId(Long userId, Long teamId);
+
+    long countByTeamId(Long teamId);
 }

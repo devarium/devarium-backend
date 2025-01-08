@@ -18,6 +18,10 @@ public enum MemberErrorCode {
     FORBIDDEN_ACCESS(
         HttpStatus.FORBIDDEN,
         "Member (ID: %d) - User (ID: %d) does not have permission to modify team (ID: %d)"
+    ),
+    FIRST_MEMBER_ONLY(
+        HttpStatus.FORBIDDEN,
+        "This can only be used when creating the first member of the team"
     );
 
     private final HttpStatus status;

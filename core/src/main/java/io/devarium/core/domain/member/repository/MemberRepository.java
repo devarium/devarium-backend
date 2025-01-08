@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface MemberRepository {
 
+    void save(Member member);
+
     void saveAll(Long teamId, Set<Member> members);
 
     void deleteAll(Set<Member> members);
@@ -21,4 +23,6 @@ public interface MemberRepository {
     Page<Member> findByUserId(Long userId, Pageable pageable);
 
     Optional<Member> findByUserIdAndTeamId(Long userId, Long teamId);
+
+    long countByTeamId(Long teamId);
 }
