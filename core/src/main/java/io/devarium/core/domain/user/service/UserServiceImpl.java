@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long userId) {
         return userRepository.findById(userId)
-            //TOdO: 소프트딜리트 고려 .filter(user -> !user.isDeleted())
+            //TODO: 소프트딜리트 고려 .filter(user -> !user.isDeleted())
             .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND, userId));
     }
 
