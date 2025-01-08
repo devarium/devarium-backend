@@ -36,7 +36,6 @@ public class TeamController {
     ) {
         User user = emailPrincipal.getUser();
         Team team = teamService.createTeam(request, user);
-        teamService.initializeTeam(team.getId(), user.getId());
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity

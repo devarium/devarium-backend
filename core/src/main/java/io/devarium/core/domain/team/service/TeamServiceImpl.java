@@ -25,12 +25,9 @@ public class TeamServiceImpl implements TeamService {
             .githubUrl(request.githubUrl())
             .leaderId(user.getId())
             .build();
-        return teamRepository.save(team);
-    }
-
-    @Override
-    public void initializeTeam(Long teamId, Long userId) {
-        memberService.createFirstMember(teamId, userId);
+        Team savedTeam = teamRepository.save(team);
+        memberService.createFirstMember(savedTeam.getId(), user.getId());
+        return savedTeam;
     }
 
     @Override
