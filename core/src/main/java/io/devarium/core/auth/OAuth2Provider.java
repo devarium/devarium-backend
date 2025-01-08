@@ -18,12 +18,11 @@ public enum OAuth2Provider {
             return OAuth2Provider.valueOf(registrationId.toUpperCase());
         } catch (IllegalArgumentException ignored) {
             // 2. provider 필드와 매핑
-            for (OAuth2Provider provider : values()) {
-                if (provider.getProvider().equalsIgnoreCase(registrationId)) {
-                    return provider;
-                }
-            }
+            return java.util.Arrays.stream(values())
+                .filter(provider -> provider.getProvider().equalsIgnoreCase(registrationId))
+                .findFirst()
+                .orElseThrow(
+                    () -> new IllegalArgumentException("Unknown provider: " + registrationId));
         }
-        throw new IllegalArgumentException("Unknown provider: " + registrationId);
     }
 }
