@@ -7,10 +7,13 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.repository.PostRepository;
+import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,17 @@ public class PostServiceImplTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
+    private static final User USER = User.builder()
+        .id(10L)
+        .email("testUser@email.com")
+        .name("testUser")
+        .bio("bio")
+        .picture("picture")
+        .blogUrl("blogUrl")
+        .githubUrl("githubUrl")
+        .role(UserRole.USER)
+        .provider(OAuth2Provider.GOOGLE)
+        .build();
 
     @Mock
     private PostRepository postRepository;
@@ -48,18 +62,20 @@ public class PostServiceImplTest {
             Post expectedPost = Post.builder()
                 .title(TITLE)
                 .content(CONTENT)
+                .userId(USER.getId())
                 .build();
 
             Post savedPost = Post.builder()
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post createdPost = postService.createPost(request);
+            Post createdPost = postService.createPost(request, USER);
 
             // then
             then(postRepository).should().save(refEq(expectedPost));
@@ -80,6 +96,7 @@ public class PostServiceImplTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.findById(POST_ID)).willReturn(Optional.of(expectedPost));
@@ -123,19 +140,21 @@ public class PostServiceImplTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
+                .userId(USER.getId())
                 .build();
 
             Post savedPost = Post.builder()
                 .id(POST_ID)
                 .title(updatedTitle)
                 .content(updatedContent)
+                .userId(USER.getId())
                 .build();
 
             given(postRepository.findById(POST_ID)).willReturn(Optional.of(existingPost));
             given(postRepository.save(any(Post.class))).willReturn(savedPost);
 
             // when
-            Post updatedPost = postService.updatePost(POST_ID, request);
+            Post updatedPost = postService.updatePost(POST_ID, request, USER);
 
             // then
             then(postRepository).should().findById(POST_ID);
@@ -153,7 +172,7 @@ public class PostServiceImplTest {
             given(postRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, request))
+            assertThatThrownBy(() -> postService.updatePost(NON_EXISTENT_ID, request, USER))
                 .isInstanceOf(PostException.class);
 
             then(postRepository).should().findById(NON_EXISTENT_ID);
@@ -167,7 +186,7 @@ public class PostServiceImplTest {
         @Test
         void givenPostId_whenDeletePost_thenPostIsDeleted() {
             // when
-            postService.deletePost(POST_ID);
+            postService.deletePost(POST_ID, USER);
 
             // then
             then(postRepository).should().deleteById(POST_ID);

@@ -32,11 +32,39 @@ public class ReplyEntity extends BaseEntity {
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentEntity comment;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Builder
-    private ReplyEntity(Long id, String content, CommentEntity comment) {
+    private ReplyEntity(Long id, String content, CommentEntity comment, UserEntity user) {
         this.id = id;
         this.content = content;
         this.comment = comment;
+        this.user = user;
+    }
+
+    public static ReplyEntity fromDomain(
+        Reply reply,
+        CommentEntity commentEntity,
+        UserEntity userEntity
+    ) {
+        return ReplyEntity.builder()
+            .id(reply.getId())
+            .content(reply.getContent())
+            .comment(commentEntity)
+            .user(userEntity)
+            .build();
+    }
+
+    public Reply toDomain() {
+        return Reply.builder()
+            .id(id)
+            .content(content)
+            .commentId(comment.getId())
+            .userId(user.getId())
+            .createdAt(this.getCreatedAt())
+            .build();
     }
 
     public void update(Reply domain) {
