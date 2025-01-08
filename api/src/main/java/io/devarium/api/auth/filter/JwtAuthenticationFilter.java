@@ -1,5 +1,6 @@
 package io.devarium.api.auth.filter;
 
+import io.devarium.api.auth.CustomUserDetailsService;
 import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    //private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -34,15 +36,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (token != null && jwtUtil.isTokenValid(token)) {
                 String email = jwtUtil.extractEmail(token);
-/*                UserDetails userDetails =
-                    ((UserDetailsServiceImpl) userDetailsService).loadUserByEmail(email);*/
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+                //TODO: 사용자 정보 로드 (소프트 딜리트 확인 포함)
+                /*if (userDetails instanceof CustomUserDetails customUserDetails) {
+                    if (customUserDetails.getUser().isDeleted()) {
+                        throw new IllegalStateException("User is soft deleted: " + email);
+                    }
+                }*/
 
                 Authentication authentication =
                     new UsernamePasswordAuthenticationToken(
-                        email,
-                        //userDetails,
+                        userDetails,
                         null,
-                        jwtUtil.extractAuthorities(token) // JWT에서 추출한 권한 정보
+                        jwtUtil.extractAuthorities(token)
+                        // TODO: 소프트딜리트를 고려하여 userDetails.getAuthorities()를 쓸건지
                     );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
