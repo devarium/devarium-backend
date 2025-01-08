@@ -24,7 +24,7 @@ public class Member {
         this.role = role;
     }
 
-    public void validateMember(Long teamId) {
+    public void validateMembership(Long teamId) {
         if (!Objects.equals(this.teamId, teamId)) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_IN_TEAM, this.userId, teamId);
         }

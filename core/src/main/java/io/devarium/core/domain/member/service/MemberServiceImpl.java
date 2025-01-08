@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
         Set<Long> memberIds = new HashSet<>(request.memberIdToRole().keySet());
         Set<Member> members = memberRepository.findByIdIn(memberIds);
         members.forEach(member -> {
-            member.validateMember(teamId);
+            member.validateMembership(teamId);
             MemberRole newRole = request.memberIdToRole().get(member.getId());
             member.update(newRole);
         });
@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
-        members.forEach(member -> member.validateMember(teamId));
+        members.forEach(member -> member.validateMembership(teamId));
         memberRepository.deleteAll(members);
     }
 
