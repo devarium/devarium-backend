@@ -3,6 +3,10 @@ package io.devarium.infrastructure.persistence.config;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
+import io.devarium.core.domain.feedback.answer.repository.FeedbackAnswerRepository;
+import io.devarium.core.domain.feedback.question.repository.FeedbackQuestionRepository;
+import io.devarium.core.domain.feedback.service.FeedbackService;
+import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
@@ -16,6 +20,7 @@ import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
+import io.devarium.infrastructure.persistence.service.FeedbackServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
@@ -55,5 +60,15 @@ public class ServiceConfig {
     @Bean
     public ProjectService projectService(ProjectRepository projectRepository) {
         return new ProjectServiceDecorator(new ProjectServiceImpl(projectRepository));
+    }
+
+    @Bean
+    public FeedbackService feedbackService(
+        FeedbackQuestionRepository feedbackQuestionRepository,
+        FeedbackAnswerRepository feedbackAnswerRepository
+    ) {
+        return new FeedbackServiceDecorator(
+            new FeedbackServiceImpl(feedbackQuestionRepository, feedbackAnswerRepository)
+        );
     }
 }
