@@ -5,6 +5,7 @@ import io.devarium.api.auth.CustomUserDetails;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
 import io.devarium.core.auth.service.TokenService;
+import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,6 +34,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         // TokenResponse 생성
         TokenResponse tokenResponse = TokenResponse.from(token);
+
+        response.setHeader(JwtConstants.AUTHORIZATION_HEADER,
+            JwtConstants.BEARER_PREFIX + token.accessToken());
+        response.setHeader(JwtConstants.REFRESH_HEADER, token.refreshToken());
 
         // JSON 직렬화 및 응답
         response.setContentType("application/json");
