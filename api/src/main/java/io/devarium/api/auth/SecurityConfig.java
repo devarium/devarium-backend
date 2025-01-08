@@ -1,9 +1,11 @@
 package io.devarium.api.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.devarium.api.auth.filter.JwtAuthenticationFilter;
 import io.devarium.api.auth.handler.JwtAccessDeniedHandler;
 import io.devarium.api.auth.handler.JwtAuthenticationEntryPoint;
 import io.devarium.api.auth.handler.OAuth2AuthenticationSuccessHandler;
+import io.devarium.core.auth.service.TokenService;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,22 +25,10 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtUtil jwtUtil;
-    //private final UserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
-
-/*
-    자체로그인 구현시 필요. OAuth만 활용시 필요없음
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    } -> 비밀번호 검증 필요없음.
-
-    @Bean
-    public AuthenticationManager authenticationManager(
-        AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager(); -> 커스텀인증요청 없으므로 필요없음.
-    }*/
+    private final ObjectMapper objectMapper;
+    private final TokenService tokenService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,7 +38,7 @@ public class SecurityConfig {
                     .requestMatchers(
                         "/",
                         "/login",
-                        "/api/v1/auth/google/callback/**",
+                        "/oauth2/**",
                         "/error",
                         "/favicon.ico"
                     ).permitAll()
@@ -72,7 +62,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 비활성화 (Stateless)
             )
             .addFilterBefore(
-                new JwtAuthenticationFilter(jwtUtil), // JWT 필터 추가
+                new JwtAuthenticationFilter(jwtUtil, customUserDetailsService), // JWT 필터 추가
                 UsernamePasswordAuthenticationFilter.class
             );
         return http.build();
@@ -80,6 +70,6 @@ public class SecurityConfig {
 
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtUtil);
+        return new OAuth2AuthenticationSuccessHandler(tokenService, objectMapper);
     }
 }
