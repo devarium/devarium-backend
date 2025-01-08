@@ -5,6 +5,8 @@ import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
+import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
@@ -74,6 +76,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectException.class)
     public ResponseEntity<ErrorResponse> handleProjectException(ProjectException e) {
         ProjectErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(FeedbackException.class)
+    public ResponseEntity<ErrorResponse> handleFeedbackException(FeedbackException e) {
+        FeedbackErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
