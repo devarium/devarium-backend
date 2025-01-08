@@ -27,6 +27,9 @@ public class FeedbackQuestionEntity extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private int orderNumber;
+
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
