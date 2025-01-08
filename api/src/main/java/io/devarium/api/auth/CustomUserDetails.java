@@ -8,22 +8,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public record CustomUserDetails(User user, Map<String, Object> attributes) implements UserDetails,
-    OAuth2User {
-
-    // 기본 생성자 (속성 없는 경우)
-    public CustomUserDetails(User user) {
-        this(user, Map.of());
-    }
+public record CustomUserDetails(User user) implements OAuth2User, UserDetails {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return user.toAttributes();
     }
 
     @Override
     public String getName() {
-        return user.getEmail(); // OAuth2 고유 식별자
+        return getEmail();
     }
 
     @Override
@@ -37,10 +31,9 @@ public record CustomUserDetails(User user, Map<String, Object> attributes) imple
         return null;
     }
 
-    @Deprecated
     @Override
     public String getUsername() {
-        return null;
+        return getEmail();
     }
 
     @Override
@@ -62,4 +55,17 @@ public record CustomUserDetails(User user, Map<String, Object> attributes) imple
     public boolean isEnabled() {
         return user.getDeletedAt() == null; // 삭제 여부로 활성화 상태 판단
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Long getId() {
+        return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
 }
