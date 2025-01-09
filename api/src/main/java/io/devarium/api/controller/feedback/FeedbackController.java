@@ -7,6 +7,7 @@ import io.devarium.api.controller.feedback.dto.CreateQuestionsRequest;
 import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
+import io.devarium.api.controller.feedback.dto.UpdateQuestionsRequest;
 import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
@@ -99,8 +100,16 @@ public class FeedbackController {
     @PutMapping("/questions")
     public ResponseEntity<ListResponse<QuestionResponse>> updateFeedbackQuestions(
         @PathVariable Long projectId,
+        @Valid @RequestBody UpdateQuestionsRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        return ResponseEntity.ok(ListResponse.from(null));
+        List<Question> questions = feedbackService.updateFeedbackQuestions(
+            projectId,
+            request,
+            emailPrincipal.getUser()
+        );
+        List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
+
+        return ResponseEntity.ok(ListResponse.from(responses));
     }
 }
