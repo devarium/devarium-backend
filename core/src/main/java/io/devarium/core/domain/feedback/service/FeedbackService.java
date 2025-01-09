@@ -1,5 +1,7 @@
 package io.devarium.core.domain.feedback.service;
 
+import io.devarium.core.domain.feedback.answer.Answer;
+import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestions;
 import io.devarium.core.domain.user.User;
@@ -12,4 +14,6 @@ public interface FeedbackService {
         CreateQuestions request,
         User user
     );
+
+    List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user);
 }
