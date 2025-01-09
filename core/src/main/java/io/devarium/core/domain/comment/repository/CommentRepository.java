@@ -16,4 +16,6 @@ public interface CommentRepository {
     Optional<Comment> findById(Long id);
 
     Page<Comment> findByPostId(Long postId, Pageable pageable);
+
+    boolean existsById(Long id);
 }

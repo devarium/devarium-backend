@@ -57,6 +57,11 @@ public class CommentRepositoryImpl implements CommentRepository {
         return commentJpaRepository.findByPostId(postId, pageable).map(this::convertToDomain);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return commentJpaRepository.existsById(id);
+    }
+
     private Comment convertToDomain(CommentEntity entity) {
         return Comment.builder()
             .id(entity.getId())
