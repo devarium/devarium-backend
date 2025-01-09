@@ -31,4 +31,10 @@ public class FeedbackServiceDecorator implements FeedbackService {
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
         return feedbackService.submitFeedbackAnswers(projectId, request, user);
     }
+
+    @Override
+    @Transactional
+    public List<Question> getFeedbackQuestions(Long projectId, User user) {
+        return feedbackService.getFeedbackQuestions(projectId, user);
+    }
 }
