@@ -5,6 +5,8 @@ import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.member.exception.MemberErrorCode;
+import io.devarium.core.domain.member.exception.MemberException;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
@@ -13,6 +15,8 @@ import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
+import io.devarium.core.domain.team.exception.TeamErrorCode;
+import io.devarium.core.domain.team.exception.TeamException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
@@ -88,6 +92,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FeedbackException.class)
     public ResponseEntity<ErrorResponse> handleFeedbackException(FeedbackException e) {
         FeedbackErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(TeamException.class)
+    public ResponseEntity<ErrorResponse> handlerTeamException(TeamException e) {
+        TeamErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<ErrorResponse> handlerMemberException(MemberException e) {
+        MemberErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
