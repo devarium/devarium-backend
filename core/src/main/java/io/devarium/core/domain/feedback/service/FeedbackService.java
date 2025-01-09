@@ -17,5 +17,5 @@ public interface FeedbackService {
 
     List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user);
 
-    List<Question> getFeedbackQuestions(Long projectId, User user);
+    List<Question> getFeedbackQuestions(Long projectId);
 }
