@@ -7,6 +7,7 @@ import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.user.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class FeedbackServiceDecorator implements FeedbackService {
@@ -14,6 +15,7 @@ public class FeedbackServiceDecorator implements FeedbackService {
     private final FeedbackServiceImpl feedbackService;
 
     @Override
+    @Transactional
     public List<Question> createFeedbackQuestions(
         Long projectId,
         CreateQuestions request,
