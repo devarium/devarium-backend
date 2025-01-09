@@ -60,7 +60,6 @@ public class TeamServiceImpl implements TeamService {
 
         UpdateMembers membersRequest = (UpdateMembers) request;
         Map<Long, MemberRole> members = membersRequest.memberIdToRole();
-        members.clear();
         members.put(team.getLeaderId(), MemberRole.SUPER_ADMIN);
         members.put(user.getId(), MemberRole.ADMIN);
         memberService.updateMembers(teamId, membersRequest, user);
