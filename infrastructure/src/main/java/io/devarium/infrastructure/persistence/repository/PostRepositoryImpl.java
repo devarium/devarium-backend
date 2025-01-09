@@ -45,6 +45,11 @@ public class PostRepositoryImpl implements PostRepository {
         return postJpaRepository.findAll(pageable).map(this::convertToDomain);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return postJpaRepository.existsById(id);
+    }
+
     private Post convertToDomain(PostEntity entity) {
         return Post.builder()
             .id(entity.getId())
