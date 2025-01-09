@@ -1,6 +1,7 @@
 package io.devarium.core.domain.feedback.service;
 
 import io.devarium.core.domain.feedback.Feedback;
+import io.devarium.core.domain.feedback.QuestionWithAnswers;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
@@ -82,6 +83,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public Feedback getFeedback(Long projectId, User user) {
-        return null;
+        Project project = projectService.getProject(projectId);
+        // TODO: 프로젝트 접근 권환 확인
+
+        List<Question> questions = questionRepository.findAllByProjectId(projectId);
+        List<Answer> answers = answerRepository.findAllByQuestionIdIn(
+            questions.stream().map(Question::getId).toList()
+        );
+        Map<Long, List<Answer>> questionIdToAnswers = answers.stream()
+            .collect(Collectors.groupingBy(Answer::getQuestionId));
+        List<QuestionWithAnswers> questionAnswers = questions.stream()
+            .map(q -> new QuestionWithAnswers(
+                q,
+                questionIdToAnswers.getOrDefault(q.getId(), List.of())
+            ))
+            .toList();
+
+        return Feedback.of(projectId, questionAnswers);
     }
 }
