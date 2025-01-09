@@ -8,8 +8,10 @@ import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitFeedbackAnswersRequest;
 import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.core.domain.feedback.question.FeedbackQuestion;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,14 @@ public class FeedbackController {
         @Valid @RequestBody CreateFeedbackQuestionsRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        // 피드백 질문들 생성
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+        List<FeedbackQuestion> questions = feedbackService.createFeedbackQuestions(
+            projectId,
+            request,
+            emailPrincipal.getUser()
+        );
+        List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ListResponse.from(responses));
     }
 
     @PostMapping("/answers")
