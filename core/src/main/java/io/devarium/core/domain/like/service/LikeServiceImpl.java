@@ -19,6 +19,7 @@ public class LikeServiceImpl implements LikeService {
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
 
+    @Override
     public void like(String type, Long typeId, User user) {
         EntityType entityType = EntityType.fromString(type);
 
@@ -44,6 +45,7 @@ public class LikeServiceImpl implements LikeService {
         likeRepository.save(like);
     }
 
+    @Override
     public void unlike(String type, Long typeId, User user) {
         EntityType entityType = EntityType.fromString(type);
         likeRepository.deleteByEntityTypeAndEntityIdAndUser(entityType, typeId, user);
