@@ -19,9 +19,17 @@ public enum MemberErrorCode {
         HttpStatus.FORBIDDEN,
         "Member (ID: %d) - User (ID: %d) does not have permission to modify team (ID: %d)"
     ),
+    UPDATE_LEADER_ONLY(
+        HttpStatus.FORBIDDEN,
+        "The SUPER_ADMIN role of member (ID: %d) can only be changed using updateLeader"
+    ),
+    MEMBER_ROLE_HIERARCHY_VIOLATION(
+        HttpStatus.FORBIDDEN,
+        "You do not have permission to modify the roles of members with a higher permission level"
+    ),
     FIRST_MEMBER_ONLY(
         HttpStatus.FORBIDDEN,
-        "This can only be used when creating the first member of the team"
+        "User (ID: %d) can only be used when creating the first member of the team (ID: %d) as a leader"
     );
 
     private final HttpStatus status;

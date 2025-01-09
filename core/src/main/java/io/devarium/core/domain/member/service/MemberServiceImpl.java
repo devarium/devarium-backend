@@ -28,11 +28,21 @@ public class MemberServiceImpl implements MemberService {
 
         Set<Member> members = request.userIdToRole()
             .entrySet().stream()
-            .map(member -> Member.builder()
-                .userId(member.getKey())
-                .teamId(teamId)
-                .role(member.getValue())
-                .build())
+            .map(member -> {
+                if (member.getValue() == MemberRole.SUPER_ADMIN) {
+                    throw new MemberException(
+                        MemberErrorCode.FIRST_MEMBER_ONLY,
+                        member.getKey(),
+                        teamId
+                    );
+                }
+                return Member.builder()
+                    .userId(member.getKey())
+                    .teamId(teamId)
+                    .role(member.getValue())
+                    .isLeader(false)
+                    .build();
+            })
             .collect(Collectors.toSet());
         memberRepository.saveAll(teamId, members);
     }
@@ -40,12 +50,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void createFirstMember(Long teamId, Long userId) {
         if (memberRepository.countByTeamId(teamId) != 0) {
-            throw new MemberException(MemberErrorCode.FIRST_MEMBER_ONLY);
+            throw new MemberException(MemberErrorCode.FIRST_MEMBER_ONLY, userId, teamId);
         }
         Member member = Member.builder()
             .userId(userId)
             .teamId(teamId)
             .role(MemberRole.SUPER_ADMIN)
+            .isLeader(true)
             .build();
         memberRepository.save(member);
     }
@@ -65,17 +76,42 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMembers(Long teamId, UpdateMembers request, User user) {
-        getUserMembership(teamId, user.getId())
-            .validateRole(MemberRole.ADMIN);
+        Member userMember = getUserMembership(teamId, user.getId());
+        userMember.validateRole(MemberRole.ADMIN);
 
         Set<Long> memberIds = new HashSet<>(request.memberIdToRole().keySet());
         Set<Member> members = memberRepository.findByIdIn(memberIds);
         members.forEach(member -> {
             member.validateMembership(teamId);
+            MemberRole oldRole = member.getRole();
+            if (userMember.getRole().getLevel() <= oldRole.getLevel()) {
+                throw new MemberException(MemberErrorCode.MEMBER_ROLE_HIERARCHY_VIOLATION);
+            }
+
             MemberRole newRole = request.memberIdToRole().get(member.getId());
+            if (newRole == MemberRole.SUPER_ADMIN) {
+                throw new MemberException(MemberErrorCode.UPDATE_LEADER_ONLY, member.getId());
+            }
             member.update(newRole);
         });
         memberRepository.saveAll(teamId, members);
+    }
+
+    @Override
+    public void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId) {
+        Member oldLeader = getUserMembership(teamId, oldLeaderId);
+        if (!oldLeader.isLeader()) {
+            throw new MemberException(
+                MemberErrorCode.FORBIDDEN_ACCESS,
+                oldLeader.getId(),
+                oldLeader.getUserId(),
+                teamId
+            );
+        }
+        oldLeader.update(MemberRole.ADMIN);
+        Member newLeader = getUserMembership(teamId, newLeaderId);
+        newLeader.update(MemberRole.SUPER_ADMIN);
+        memberRepository.saveAll(teamId, Set.of(oldLeader, newLeader));
     }
 
     @Override

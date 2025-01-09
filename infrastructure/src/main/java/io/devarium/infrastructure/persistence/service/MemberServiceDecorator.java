@@ -47,6 +47,11 @@ public class MemberServiceDecorator implements MemberService {
     }
 
     @Override
+    public void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId) {
+        memberService.updateLeader(teamId, oldLeaderId, newLeaderId);
+    }
+
+    @Override
     @Transactional
     public void deleteMembers(Long teamId, DeleteMembers request, User user) {
         memberService.deleteMembers(teamId, request, user);

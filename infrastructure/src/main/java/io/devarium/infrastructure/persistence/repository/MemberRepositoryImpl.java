@@ -33,6 +33,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     // TODO : team, user 삭제여부 확인 (deletedAt)
+    // TODO : team, user 삭제 시 연관 members 삭제
     @Override
     public void saveAll(Long teamId, Set<Member> members) {
         TeamEntity team = entityManager.getReference(TeamEntity.class, teamId);
@@ -44,7 +45,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                             MemberErrorCode.MEMBER_NOT_FOUND,
                             member.getId()
                         ));
-                    entity.update(member.getRole());
+                    entity.update(member.getRole(), member.isLeader());
                     return entity;
                 }
                 UserEntity user = entityManager.getReference(UserEntity.class, member.getUserId());
@@ -54,7 +55,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         memberJpaRepository.saveAll(entities);
     }
 
-    // TODO : team, user 삭제 시 연관 members 삭제
     @Override
     public void deleteAll(Set<Member> members) {
         Set<MemberEntity> entities = members.stream()

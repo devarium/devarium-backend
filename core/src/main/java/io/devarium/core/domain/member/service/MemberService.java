@@ -20,5 +20,7 @@ public interface MemberService {
 
     void updateMembers(Long teamId, UpdateMembers request, User user);
 
+    void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId);
+
     void deleteMembers(Long teamId, DeleteMembers request, User user);
 }
