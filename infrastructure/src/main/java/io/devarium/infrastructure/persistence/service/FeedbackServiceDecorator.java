@@ -33,7 +33,7 @@ public class FeedbackServiceDecorator implements FeedbackService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Question> getFeedbackQuestions(Long projectId) {
         return feedbackService.getFeedbackQuestions(projectId);
     }
