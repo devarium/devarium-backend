@@ -91,6 +91,7 @@ public class FeedbackController {
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         // 제출된 답변 요약 조회
+        // TODO: 객관식 점수 평균 및 주관식 AI 요약 기능
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 }
