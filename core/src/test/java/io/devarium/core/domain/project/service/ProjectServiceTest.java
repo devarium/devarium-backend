@@ -29,6 +29,7 @@ class ProjectServiceTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
+
     private static final Set<Skill> SKILLS = Set.of(Skill.JAVA, Skill.SPRING_BOOT);
 
     @Mock
@@ -69,7 +70,7 @@ class ProjectServiceTest {
             given(projectRepository.save(any(Project.class))).willReturn(savedProject);
 
             // when
-            Project createdProject = projectService.createProject(request);
+            Project createdProject = projectService.createProject(request, null);
 
             // then
             then(projectRepository).should().save(refEq(expectedProject));
@@ -97,7 +98,7 @@ class ProjectServiceTest {
             given(projectRepository.findById(PROJECT_ID)).willReturn(Optional.of(expectedProject));
 
             // when
-            Project foundProject = projectService.getProject(PROJECT_ID);
+            Project foundProject = projectService.getProject(PROJECT_ID, null);
 
             // then
             then(projectRepository).should().findById(PROJECT_ID);
@@ -115,7 +116,7 @@ class ProjectServiceTest {
                 .willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> projectService.getProject(NON_EXISTENT_ID))
+            assertThatThrownBy(() -> projectService.getProject(NON_EXISTENT_ID, null))
                 .isInstanceOf(ProjectException.class)
                 .hasMessage(ProjectErrorCode.PROJECT_NOT_FOUND.getMessage(NON_EXISTENT_ID));
 
@@ -156,7 +157,7 @@ class ProjectServiceTest {
             given(projectRepository.save(any(Project.class))).willReturn(savedProject);
 
             // when
-            Project updatedProject = projectService.updateProject(PROJECT_ID, request);
+            Project updatedProject = projectService.updateProject(PROJECT_ID, request, null);
 
             // then
             then(projectRepository).should().findById(PROJECT_ID);
@@ -175,7 +176,7 @@ class ProjectServiceTest {
             given(projectRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> projectService.updateProject(NON_EXISTENT_ID, request))
+            assertThatThrownBy(() -> projectService.updateProject(NON_EXISTENT_ID, request, null))
                 .isInstanceOf(ProjectException.class)
                 .hasMessage(ProjectErrorCode.PROJECT_NOT_FOUND.getMessage(NON_EXISTENT_ID));
 
@@ -190,7 +191,7 @@ class ProjectServiceTest {
         @Test
         void givenProjectId_whenDeleteProject_thenProjectIsDeleted() {
             // when
-            projectService.deleteProject(PROJECT_ID);
+            projectService.deleteProject(PROJECT_ID, null);
 
             // then
             then(projectRepository).should().deleteById(PROJECT_ID);
