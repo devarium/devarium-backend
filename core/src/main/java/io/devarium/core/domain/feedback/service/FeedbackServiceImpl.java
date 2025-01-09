@@ -78,4 +78,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     public List<Question> getFeedbackQuestions(Long projectId) {
         return questionRepository.findAllByProjectId(projectId);
     }
+
+    @Override
+    public List<Answer> getFeedbackAnswers(Long projectId, User user) {
+        return null;
+    }
 }
