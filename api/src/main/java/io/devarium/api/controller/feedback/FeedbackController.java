@@ -8,6 +8,7 @@ import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
 import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.service.FeedbackService;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/${api.version}/projects/{projectId}/feedbacks")
+@RequestMapping("/api/${api.version}/projects/{projectId}/feedback")
 @RestController
 public class FeedbackController {
 
@@ -68,7 +69,10 @@ public class FeedbackController {
         @PathVariable Long projectId,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+        Feedback feedback = feedbackService.getFeedback(projectId, emailPrincipal.getUser());
+        FeedbackResponse response = FeedbackResponse.from(feedback);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @GetMapping("/questions")
@@ -81,12 +85,12 @@ public class FeedbackController {
         return ResponseEntity.ok(ListResponse.from(responses));
     }
 
-    @GetMapping("/answers")
-    public ResponseEntity<ListResponse<AnswerResponse>> getFeedbackAnswers(
+    @GetMapping("/summary")
+    public ResponseEntity<ListResponse<AnswerResponse>> getFeedbackSummary(
         @PathVariable Long projectId,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        // 제출된 답변들 조회
+        // 제출된 답변 요약 조회
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 }
