@@ -9,6 +9,7 @@ import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestions;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestions;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
@@ -77,11 +78,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Question> getFeedbackQuestions(Long projectId) {
-        return questionRepository.findAllByProjectId(projectId);
-    }
-
-    @Override
     public Feedback getFeedback(Long projectId, User user) {
         Project project = projectService.getProject(projectId);
         // TODO: 프로젝트 접근 권환 확인
@@ -100,5 +96,19 @@ public class FeedbackServiceImpl implements FeedbackService {
             .toList();
 
         return Feedback.of(projectId, questionAnswers);
+    }
+
+    @Override
+    public List<Question> getFeedbackQuestions(Long projectId) {
+        return questionRepository.findAllByProjectId(projectId);
+    }
+
+    @Override
+    public List<Question> updateFeedbackQuestions(
+        Long projectId,
+        UpdateQuestions request,
+        User user
+    ) {
+        return null;
     }
 }

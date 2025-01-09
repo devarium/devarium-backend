@@ -5,6 +5,7 @@ import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestions;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestions;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.user.User;
@@ -35,13 +36,23 @@ public class FeedbackServiceDecorator implements FeedbackService {
 
     @Override
     @Transactional(readOnly = true)
+    public Feedback getFeedback(Long projectId, User user) {
+        return feedbackService.getFeedback(projectId, user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Question> getFeedbackQuestions(Long projectId) {
         return feedbackService.getFeedbackQuestions(projectId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Feedback getFeedback(Long projectId, User user) {
-        return feedbackService.getFeedback(projectId, user);
+    @Transactional
+    public List<Question> updateFeedbackQuestions(
+        Long projectId,
+        UpdateQuestions request,
+        User user
+    ) {
+        return feedbackService.updateFeedbackQuestions(projectId, request, user);
     }
 }
