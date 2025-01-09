@@ -4,6 +4,7 @@ import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.port.UpsertProject;
 import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.project.service.ProjectServiceImpl;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,25 +15,25 @@ public class ProjectServiceDecorator implements ProjectService {
 
     @Override
     @Transactional
-    public Project createProject(UpsertProject request) {
-        return projectService.createProject(request);
+    public Project createProject(UpsertProject request, User user) {
+        return projectService.createProject(request, user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Project getProject(Long projectId) {
-        return projectService.getProject(projectId);
+    public Project getProject(Long projectId, User user) {
+        return projectService.getProject(projectId, user);
     }
 
     @Override
     @Transactional
-    public Project updateProject(Long projectId, UpsertProject request) {
-        return projectService.updateProject(projectId, request);
+    public Project updateProject(Long projectId, UpsertProject request, User user) {
+        return projectService.updateProject(projectId, request, user);
     }
 
     @Override
     @Transactional
-    public void deleteProject(Long projectId) {
-        projectService.deleteProject(projectId);
+    public void deleteProject(Long projectId, User user) {
+        projectService.deleteProject(projectId, user);
     }
 }
