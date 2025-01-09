@@ -9,6 +9,7 @@ public class FeedbackQuestion {
     private final Long id;
     private final int orderNumber;
     private final QuestionType type;
+    private final Long projectId;
 
     private String content;
     private boolean required;
@@ -19,12 +20,14 @@ public class FeedbackQuestion {
         int orderNumber,
         String content,
         QuestionType type,
-        boolean required
+        boolean required,
+        Long projectId
     ) {
         this.id = id;
         this.orderNumber = orderNumber;
         this.content = content;
         this.type = type;
         this.required = required;
+        this.projectId = projectId;
     }
 }
