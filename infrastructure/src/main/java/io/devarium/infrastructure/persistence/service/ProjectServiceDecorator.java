@@ -21,8 +21,8 @@ public class ProjectServiceDecorator implements ProjectService {
 
     @Override
     @Transactional(readOnly = true)
-    public Project getProject(Long projectId, User user) {
-        return projectService.getProject(projectId, user);
+    public Project getProject(Long projectId) {
+        return projectService.getProject(projectId);
     }
 
     @Override

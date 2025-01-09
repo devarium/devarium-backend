@@ -42,10 +42,9 @@ public class ProjectController {
 
     @GetMapping("/{projectId}")
     public ResponseEntity<SingleItemResponse<ProjectResponse>> getProject(
-        @PathVariable Long projectId,
-        @AuthenticationPrincipal EmailPrincipal principal
+        @PathVariable Long projectId
     ) {
-        Project project = projectService.getProject(projectId, principal.getUser());
+        Project project = projectService.getProject(projectId);
         ProjectResponse response = ProjectResponse.from(project);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));

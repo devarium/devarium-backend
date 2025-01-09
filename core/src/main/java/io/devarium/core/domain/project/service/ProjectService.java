@@ -8,7 +8,7 @@ public interface ProjectService {
 
     Project createProject(UpsertProject request, User user);
 
-    Project getProject(Long projectId, User user);
+    Project getProject(Long projectId);
 
     Project updateProject(Long projectId, UpsertProject request, User user);
 

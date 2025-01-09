@@ -98,7 +98,7 @@ class ProjectServiceTest {
             given(projectRepository.findById(PROJECT_ID)).willReturn(Optional.of(expectedProject));
 
             // when
-            Project foundProject = projectService.getProject(PROJECT_ID, null);
+            Project foundProject = projectService.getProject(PROJECT_ID);
 
             // then
             then(projectRepository).should().findById(PROJECT_ID);
@@ -116,7 +116,7 @@ class ProjectServiceTest {
                 .willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> projectService.getProject(NON_EXISTENT_ID, null))
+            assertThatThrownBy(() -> projectService.getProject(NON_EXISTENT_ID))
                 .isInstanceOf(ProjectException.class)
                 .hasMessage(ProjectErrorCode.PROJECT_NOT_FOUND.getMessage(NON_EXISTENT_ID));
 
