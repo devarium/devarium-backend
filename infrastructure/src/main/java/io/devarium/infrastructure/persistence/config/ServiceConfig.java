@@ -3,6 +3,9 @@ package io.devarium.infrastructure.persistence.config;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
+import io.devarium.core.domain.like.repository.LikeRepository;
+import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.like.service.LikeServiceImpl;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
@@ -16,6 +19,7 @@ import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
+import io.devarium.infrastructure.persistence.service.LikeServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
@@ -55,5 +59,17 @@ public class ServiceConfig {
     @Bean
     public ProjectService projectService(ProjectRepository projectRepository) {
         return new ProjectServiceDecorator(new ProjectServiceImpl(projectRepository));
+    }
+
+    @Bean
+    public LikeService likeService(
+        LikeRepository likeRepository,
+        PostRepository postRepository,
+        CommentRepository commentRepository,
+        ReplyRepository replyRepository
+    ) {
+        return new LikeServiceDecorator(
+            new LikeServiceImpl(likeRepository, postRepository, commentRepository,
+                replyRepository));
     }
 }
