@@ -1,5 +1,6 @@
 package io.devarium.core.domain.feedback.service;
 
+import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
@@ -77,5 +78,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<Question> getFeedbackQuestions(Long projectId) {
         return questionRepository.findAllByProjectId(projectId);
+    }
+
+    @Override
+    public Feedback getFeedback(Long projectId, User user) {
+        return null;
     }
 }
