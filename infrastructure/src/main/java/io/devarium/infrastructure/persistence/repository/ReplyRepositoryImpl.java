@@ -67,4 +67,9 @@ public class ReplyRepositoryImpl implements ReplyRepository {
     public Page<Reply> findByCommentId(Long commentId, Pageable pageable) {
         return replyJpaRepository.findByCommentId(commentId, pageable).map(ReplyEntity::toDomain);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        return replyJpaRepository.existsById(id);
+    }
 }
