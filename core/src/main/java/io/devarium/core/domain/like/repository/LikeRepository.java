@@ -11,4 +11,6 @@ public interface LikeRepository {
     boolean existsByEntityTypeAndEntityIdAndUser(EntityType entityType, Long typeId, User user);
 
     void deleteByEntityTypeAndEntityIdAndUser(EntityType entityType, Long typeId, User user);
+
+    Long countByEntityTypeAndEntityId(EntityType entityType, Long typeId);
 }

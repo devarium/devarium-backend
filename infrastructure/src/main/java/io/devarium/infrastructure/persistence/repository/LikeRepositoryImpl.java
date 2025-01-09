@@ -52,4 +52,13 @@ public class LikeRepositoryImpl implements LikeRepository {
             .where(like.entityType.eq(entityType), like.entityId.eq(typeId), like.user.id.eq(user.getId()))
             .execute();
     }
+
+    @Override
+    public Long countByEntityTypeAndEntityId(EntityType entityType, Long typeId) {
+        QLikeEntity like = QLikeEntity.likeEntity;
+        return queryFactory.select(like.count())
+            .from(like)
+            .where(like.entityType.eq(entityType), like.entityId.eq(typeId))
+            .fetchOne();
+    }
 }

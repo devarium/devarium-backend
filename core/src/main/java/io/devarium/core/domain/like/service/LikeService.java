@@ -7,4 +7,6 @@ public interface LikeService {
     void like(String type, Long typeId, User user);
 
     void unlike(String type, Long typeId, User user);
+
+    Long countLikes(String type, Long typeId);
 }

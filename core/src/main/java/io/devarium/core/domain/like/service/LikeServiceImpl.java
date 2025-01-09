@@ -50,4 +50,10 @@ public class LikeServiceImpl implements LikeService {
         EntityType entityType = EntityType.fromString(type);
         likeRepository.deleteByEntityTypeAndEntityIdAndUser(entityType, typeId, user);
     }
+
+    @Override
+    public Long countLikes(String type, Long typeId) {
+        EntityType entityType = EntityType.fromString(type);
+        return likeRepository.countByEntityTypeAndEntityId(entityType, typeId);
+    }
 }

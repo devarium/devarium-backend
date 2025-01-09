@@ -22,4 +22,9 @@ public class LikeServiceDecorator implements LikeService {
     public void unlike(String type, Long typeId, User user) {
         likeService.unlike(type, typeId, user);
     }
+
+    @Override
+    public Long countLikes(String type, Long typeId) {
+        return likeService.countLikes(type, typeId);
+    }
 }
