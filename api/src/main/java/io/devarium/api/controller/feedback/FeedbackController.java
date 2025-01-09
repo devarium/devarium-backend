@@ -8,6 +8,7 @@ import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
 import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import jakarta.validation.Valid;
@@ -52,8 +53,14 @@ public class FeedbackController {
         @Valid @RequestBody SubmitAnswersRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        // 피드백 답변 제출
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+        List<Answer> answers = feedbackService.submitFeedbackAnswers(
+            projectId,
+            request,
+            emailPrincipal.getUser()
+        );
+        List<AnswerResponse> responses = answers.stream().map(AnswerResponse::from).toList();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ListResponse.from(responses));
     }
 
     @GetMapping
