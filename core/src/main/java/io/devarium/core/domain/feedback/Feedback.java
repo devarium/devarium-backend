@@ -1,9 +1,9 @@
 package io.devarium.core.domain.feedback;
 
-import io.devarium.core.domain.feedback.answer.FeedbackAnswer;
+import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
-import io.devarium.core.domain.feedback.question.FeedbackQuestion;
+import io.devarium.core.domain.feedback.question.Question;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +15,16 @@ import lombok.Getter;
 public class Feedback {
 
     private final Long projectId;
-    private final Map<FeedbackQuestion, FeedbackAnswer> questionAnswers =
-        new TreeMap<>(Comparator.comparing(FeedbackQuestion::getOrderNumber));
+    private final Map<Question, Answer> questionAnswers =
+        new TreeMap<>(Comparator.comparing(Question::getOrderNumber));
 
     @Builder
-    public Feedback(Long projectId, List<FeedbackQuestion> questions) {
+    public Feedback(Long projectId, List<Question> questions) {
         this.projectId = projectId;
         questions.forEach(q -> questionAnswers.put(q, null));
     }
 
-    public void addAnswer(FeedbackQuestion question, FeedbackAnswer answer) {
+    public void addAnswer(Question question, Answer answer) {
         if (!questionAnswers.containsKey(question)) {
             throw new FeedbackException(FeedbackErrorCode.QUESTION_NOT_FOUND);
         }

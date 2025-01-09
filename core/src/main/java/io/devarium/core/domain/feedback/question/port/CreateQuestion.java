@@ -2,7 +2,7 @@ package io.devarium.core.domain.feedback.question.port;
 
 import io.devarium.core.domain.feedback.question.QuestionType;
 
-public interface CreateFeedbackQuestion {
+public interface CreateQuestion {
 
     String content();
 

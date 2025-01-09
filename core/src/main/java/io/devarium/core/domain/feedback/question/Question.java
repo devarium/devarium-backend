@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class FeedbackQuestion {
+public class Question {
 
     private final Long id;
     private final int orderNumber;
@@ -15,7 +15,7 @@ public class FeedbackQuestion {
     private boolean required;
 
     @Builder
-    public FeedbackQuestion(
+    public Question(
         Long id,
         int orderNumber,
         String content,

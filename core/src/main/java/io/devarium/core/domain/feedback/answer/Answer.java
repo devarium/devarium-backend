@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class FeedbackAnswer {
+public class Answer {
 
     private final Long id;
     private final Rating rating;
@@ -16,7 +16,7 @@ public class FeedbackAnswer {
     private Instant answeredAt;
 
     @Builder
-    public FeedbackAnswer(
+    public Answer(
         Long id,
         String content,
         Rating rating,

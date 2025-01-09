@@ -1,6 +1,6 @@
 package io.devarium.api.controller.feedback.dto;
 
-import io.devarium.core.domain.feedback.question.FeedbackQuestion;
+import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.QuestionType;
 
 public record QuestionResponse(
@@ -12,7 +12,7 @@ public record QuestionResponse(
     Long projectId
 ) {
 
-    public static QuestionResponse from(FeedbackQuestion question) {
+    public static QuestionResponse from(Question question) {
         return new QuestionResponse(
             question.getId(),
             question.getOrderNumber(),

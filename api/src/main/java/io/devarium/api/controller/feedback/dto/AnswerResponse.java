@@ -1,6 +1,6 @@
 package io.devarium.api.controller.feedback.dto;
 
-import io.devarium.core.domain.feedback.answer.FeedbackAnswer;
+import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.Rating;
 import java.time.Instant;
 
@@ -13,7 +13,7 @@ public record AnswerResponse(
     Instant answeredAt
 ) {
 
-    public static AnswerResponse from(FeedbackAnswer answer) {
+    public static AnswerResponse from(Answer answer) {
         return new AnswerResponse(
             answer.getId(),
             answer.getContent(),

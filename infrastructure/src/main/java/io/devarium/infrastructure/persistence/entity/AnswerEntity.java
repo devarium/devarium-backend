@@ -16,10 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "feedback_answers")
+@Table(name = "answers")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FeedbackAnswerEntity extends BaseEntity {
+public class AnswerEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +31,8 @@ public class FeedbackAnswerEntity extends BaseEntity {
     private Rating rating;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "feedback_question_id", nullable = false)
-    private FeedbackQuestionEntity feedbackQuestion;
+    @JoinColumn(name = "question_id", nullable = false)
+    private QuestionEntity question;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

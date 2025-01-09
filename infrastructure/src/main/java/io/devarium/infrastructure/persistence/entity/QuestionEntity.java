@@ -17,10 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "feedback_questions")
+@Table(name = "questions")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FeedbackQuestionEntity extends BaseEntity {
+public class QuestionEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

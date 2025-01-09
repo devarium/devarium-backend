@@ -3,12 +3,12 @@ package io.devarium.api.controller.feedback;
 import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.feedback.dto.AnswerResponse;
-import io.devarium.api.controller.feedback.dto.CreateFeedbackQuestionsRequest;
+import io.devarium.api.controller.feedback.dto.CreateQuestionsRequest;
 import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
-import io.devarium.api.controller.feedback.dto.SubmitFeedbackAnswersRequest;
+import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
 import io.devarium.core.auth.EmailPrincipal;
-import io.devarium.core.domain.feedback.question.FeedbackQuestion;
+import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -33,10 +33,10 @@ public class FeedbackController {
     @PostMapping("/questions")
     public ResponseEntity<ListResponse<QuestionResponse>> createFeedbackQuestions(
         @PathVariable Long projectId,
-        @Valid @RequestBody CreateFeedbackQuestionsRequest request,
+        @Valid @RequestBody CreateQuestionsRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        List<FeedbackQuestion> questions = feedbackService.createFeedbackQuestions(
+        List<Question> questions = feedbackService.createFeedbackQuestions(
             projectId,
             request,
             emailPrincipal.getUser()
@@ -49,7 +49,7 @@ public class FeedbackController {
     @PostMapping("/answers")
     public ResponseEntity<ListResponse<AnswerResponse>> submitFeedbackAnswers(
         @PathVariable Long projectId,
-        @Valid @RequestBody SubmitFeedbackAnswersRequest request,
+        @Valid @RequestBody SubmitAnswersRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         // 피드백 답변 제출

@@ -1,9 +1,9 @@
 package io.devarium.core.domain.feedback.service;
 
-import io.devarium.core.domain.feedback.answer.repository.FeedbackAnswerRepository;
-import io.devarium.core.domain.feedback.question.FeedbackQuestion;
-import io.devarium.core.domain.feedback.question.port.CreateFeedbackQuestions;
-import io.devarium.core.domain.feedback.question.repository.FeedbackQuestionRepository;
+import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
+import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.port.CreateQuestions;
+import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.user.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
 
-    private final FeedbackQuestionRepository feedbackQuestionRepository;
-    private final FeedbackAnswerRepository feedbackAnswerRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
     @Override
-    public List<FeedbackQuestion> createFeedbackQuestions(
+    public List<Question> createFeedbackQuestions(
         Long projectId,
-        CreateFeedbackQuestions request,
+        CreateQuestions request,
         User user
     ) {
         return null;
