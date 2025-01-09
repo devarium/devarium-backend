@@ -30,7 +30,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         CreateQuestions request,
         User user
     ) {
-        Project project = projectService.getProject(projectId, user);
+        Project project = projectService.getProject(projectId);
         // TODO: 프로젝트 관련 권한 검증
 
         List<Question> questions = request.questions().stream()
@@ -48,7 +48,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
-        Project project = projectService.getProject(projectId, user);
+        Project project = projectService.getProject(projectId);
         // TODO: 리뷰 요청 중인 프로젝트인지 검증 필요
 
         Map<Long, Question> questionMap = questionRepository.findAllByProjectId(projectId).stream()
@@ -77,10 +77,5 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<Question> getFeedbackQuestions(Long projectId) {
         return questionRepository.findAllByProjectId(projectId);
-    }
-
-    @Override
-    public List<Answer> getFeedbackAnswers(Long projectId, User user) {
-        return null;
     }
 }
