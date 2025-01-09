@@ -73,11 +73,12 @@ public class FeedbackController {
 
     @GetMapping("/questions")
     public ResponseEntity<ListResponse<QuestionResponse>> getFeedbackQuestions(
-        @PathVariable Long projectId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @PathVariable Long projectId
     ) {
-        // 피드백 질문들 조회
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+        List<Question> questions = feedbackService.getFeedbackQuestions(projectId);
+        List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
+
+        return ResponseEntity.ok(ListResponse.from(responses));
     }
 
     @GetMapping("/answers")
