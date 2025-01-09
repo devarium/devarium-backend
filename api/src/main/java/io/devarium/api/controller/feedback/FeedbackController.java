@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,5 +94,13 @@ public class FeedbackController {
         // 제출된 답변 요약 조회
         // TODO: 객관식 점수 평균 및 주관식 AI 요약 기능
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+    }
+
+    @PutMapping("/questions")
+    public ResponseEntity<ListResponse<QuestionResponse>> updateFeedbackQuestions(
+        @PathVariable Long projectId,
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+    ) {
+        return ResponseEntity.ok(ListResponse.from(null));
     }
 }
