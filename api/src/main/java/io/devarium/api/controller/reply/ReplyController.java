@@ -3,6 +3,7 @@ package io.devarium.api.controller.reply;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
+import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +30,9 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Reply reply = replyService.createReply(request);
+        Reply reply = replyService.createReply(request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity
@@ -52,9 +52,9 @@ public class ReplyController {
     public ResponseEntity<SingleItemResponse<ReplyResponse>> updateReply(
         @PathVariable Long replyId,
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        Reply reply = replyService.updateReply(replyId, request);
+        Reply reply = replyService.updateReply(replyId, request, emailPrincipal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -63,9 +63,9 @@ public class ReplyController {
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
         @PathVariable Long replyId,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        replyService.deleteReply(replyId);
+        replyService.deleteReply(replyId, emailPrincipal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

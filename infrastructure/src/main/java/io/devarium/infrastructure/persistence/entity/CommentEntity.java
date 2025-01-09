@@ -32,11 +32,38 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Builder
-    private CommentEntity(Long id, String content, PostEntity post) {
+    private CommentEntity(Long id, String content, PostEntity post, UserEntity user) {
         this.id = id;
         this.content = content;
         this.post = post;
+        this.user = user;
+    }
+
+    public static CommentEntity fromDomain(
+        Comment comment,
+        PostEntity postEntity,
+        UserEntity userEntity
+    ) {
+        return CommentEntity.builder()
+            .content(comment.getContent())
+            .post(postEntity)
+            .user(userEntity)
+            .build();
+    }
+
+    public Comment toDomain() {
+        return Comment.builder()
+            .id(id)
+            .content(content)
+            .postId(post.getId())
+            .userId(user.getId())
+            .createdAt(getCreatedAt())
+            .build();
     }
 
     public void update(Comment domain) {

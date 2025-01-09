@@ -1,15 +1,13 @@
 package io.devarium.infrastructure.persistence.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
 import io.devarium.core.domain.comment.repository.CommentRepository;
-import io.devarium.core.domain.post.exception.PostErrorCode;
-import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
-import io.devarium.infrastructure.persistence.entity.QCommentEntity;
+import io.devarium.infrastructure.persistence.entity.UserEntity;
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,71 +18,45 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CommentRepositoryImpl implements CommentRepository {
 
+    private final EntityManager entityManager;
     private final CommentJpaRepository commentJpaRepository;
-    private final PostJpaRepository postJpaRepository;
-    private final JPAQueryFactory queryFactory;
 
     @Override
     public Comment save(Comment comment) {
-        CommentEntity entity = convertToEntity(comment);
-        CommentEntity savedEntity = commentJpaRepository.save(entity);
-        return convertToDomain(savedEntity);
+        if (comment.getId() != null) {
+            CommentEntity entity = commentJpaRepository.findById(comment.getId())
+                .orElseThrow(() -> new CommentException(
+                    CommentErrorCode.COMMENT_NOT_FOUND,
+                    comment.getId())
+                );
+            entity.update(comment);
+            return commentJpaRepository.save(entity).toDomain();
+        }
+
+        PostEntity post = entityManager.getReference(PostEntity.class, comment.getPostId());
+        UserEntity user = entityManager.getReference(UserEntity.class, comment.getUserId());
+
+        CommentEntity entity = CommentEntity.fromDomain(comment, post, user);
+        return commentJpaRepository.save(entity).toDomain();
     }
 
     @Override
     public void deleteById(Long id) {
-        QCommentEntity comment = QCommentEntity.commentEntity;
-        queryFactory.delete(comment)
-            .where(comment.id.eq(id))
-            .execute();
+        commentJpaRepository.deleteById(id);
     }
 
     @Override
     public void deleteByPostId(Long postId) {
-        QCommentEntity comment = QCommentEntity.commentEntity;
-        queryFactory.delete(comment)
-            .where(comment.post.id.eq(postId))
-            .execute();
+        commentJpaRepository.deleteByPostId(postId);
     }
 
     @Override
     public Optional<Comment> findById(Long id) {
-        return commentJpaRepository.findById(id).map(this::convertToDomain);
+        return commentJpaRepository.findById(id).map(CommentEntity::toDomain);
     }
 
     @Override
     public Page<Comment> findByPostId(Long postId, Pageable pageable) {
-        return commentJpaRepository.findByPostId(postId, pageable).map(this::convertToDomain);
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        return commentJpaRepository.existsById(id);
-    }
-
-    private Comment convertToDomain(CommentEntity entity) {
-        return Comment.builder()
-            .id(entity.getId())
-            .content(entity.getContent())
-            .createdAt(entity.getCreatedAt())
-            .postId(entity.getPost().getId())
-            .build();
-    }
-
-    private CommentEntity convertToEntity(Comment domain) {
-        if (domain.getId() != null) {
-            CommentEntity entity = commentJpaRepository.findById(domain.getId())
-                .orElseThrow(
-                    () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, domain.getId()));
-            entity.update(domain);
-            return entity;
-        }
-
-        PostEntity post = postJpaRepository.findById(domain.getPostId())
-            .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, domain.getPostId()));
-        return CommentEntity.builder()
-            .content(domain.getContent())
-            .post(post)
-            .build();
+        return commentJpaRepository.findByPostId(postId, pageable).map(CommentEntity::toDomain);
     }
 }
