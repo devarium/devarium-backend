@@ -25,20 +25,18 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void save(Member member) {
-        UserEntity user = entityManager.getReference(UserEntity.class, member.getUserId());
-        TeamEntity team = entityManager.getReference(TeamEntity.class, member.getTeamId());
-
+        UserEntity user = checkUserDeleted(member.getUserId());
+        TeamEntity team = checkTeamDeleted(member.getTeamId());
         MemberEntity entity = MemberEntity.fromDomain(member, user, team);
         memberJpaRepository.save(entity);
     }
 
-    // TODO : team, user 삭제여부 확인 (deletedAt)
-    // TODO : team, user 삭제 시 연관 members 삭제
     @Override
     public void saveAll(Long teamId, Set<Member> members) {
-        TeamEntity team = entityManager.getReference(TeamEntity.class, teamId);
+        TeamEntity team = checkTeamDeleted(teamId);
         Set<MemberEntity> entities = members.stream()
             .map(member -> {
+                UserEntity user = checkUserDeleted(member.getUserId());
                 if (member.getId() != null) {
                     MemberEntity entity = memberJpaRepository.findById(member.getId())
                         .orElseThrow(() -> new MemberException(
@@ -48,7 +46,6 @@ public class MemberRepositoryImpl implements MemberRepository {
                     entity.update(member.getRole(), member.isLeader());
                     return entity;
                 }
-                UserEntity user = entityManager.getReference(UserEntity.class, member.getUserId());
                 return MemberEntity.fromDomain(member, user, team);
             })
             .collect(Collectors.toSet());
@@ -58,18 +55,17 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void deleteAll(Set<Member> members) {
         Set<MemberEntity> entities = members.stream()
-            .map(member -> memberJpaRepository.findById(member.getId())
-                .orElseThrow(() -> new MemberException(
-                    MemberErrorCode.MEMBER_NOT_FOUND,
-                    member.getId()
-                )))
+            .map(member -> {
+                checkUserDeleted(member.getUserId());
+                checkTeamDeleted(member.getTeamId());
+                return memberJpaRepository.findById(member.getId())
+                    .orElseThrow(() -> new MemberException(
+                        MemberErrorCode.MEMBER_NOT_FOUND,
+                        member.getId()
+                    ));
+            })
             .collect(Collectors.toSet());
         memberJpaRepository.deleteAll(entities);
-    }
-
-    @Override
-    public Optional<Member> findById(Long id) {
-        return memberJpaRepository.findById(id).map(MemberEntity::toDomain);
     }
 
     @Override
@@ -81,11 +77,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Page<Member> findByTeamId(Long teamId, Pageable pageable) {
+        checkTeamDeleted(teamId);
         return memberJpaRepository.findByTeamId(teamId, pageable).map(MemberEntity::toDomain);
     }
 
     @Override
     public Page<Member> findByUserId(Long userId, Pageable pageable) {
+        checkUserDeleted(userId);
         return memberJpaRepository.findByUserId(userId, pageable).map(MemberEntity::toDomain);
     }
 
@@ -97,6 +95,23 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public long countByTeamId(Long teamId) {
+        checkTeamDeleted(teamId);
         return memberJpaRepository.countByTeamId(teamId);
+    }
+
+    private UserEntity checkUserDeleted(Long userId) {
+        UserEntity user = entityManager.getReference(UserEntity.class, userId);
+        if (user != null && user.getDeletedAt() != null) {
+            throw new MemberException(MemberErrorCode.USER_DELETED, user.getId());
+        }
+        return user;
+    }
+
+    private TeamEntity checkTeamDeleted(Long teamId) {
+        TeamEntity team = entityManager.getReference(TeamEntity.class, teamId);
+        if (team != null && team.getDeletedAt() != null) {
+            throw new MemberException(MemberErrorCode.TEAM_DELETED, team.getId());
+        }
+        return team;
     }
 }

@@ -30,6 +30,14 @@ public enum MemberErrorCode {
     FIRST_MEMBER_ONLY(
         HttpStatus.FORBIDDEN,
         "User (ID: %d) can only be used when creating the first member of the team (ID: %d) as a leader"
+    ),
+    USER_DELETED(
+        HttpStatus.NOT_FOUND,
+        "User (ID: %d) is deleted"
+    ),
+    TEAM_DELETED(
+        HttpStatus.NOT_FOUND,
+        "Team (ID: %d) is deleted"
     );
 
     private final HttpStatus status;
