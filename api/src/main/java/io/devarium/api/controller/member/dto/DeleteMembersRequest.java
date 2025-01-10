@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 public record DeleteMembersRequest(
-    @NotEmpty Set<Long> memberIds
+    @NotEmpty(message = "'memberIds' must not be empty") Set<Long> memberIds
 ) implements DeleteMembers {
 
 }
