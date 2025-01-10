@@ -2,9 +2,10 @@ package io.devarium.api.controller.team;
 
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
+import io.devarium.api.controller.team.dto.CreateTeamRequest;
 import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
-import io.devarium.api.controller.team.dto.UpsertTeamRequest;
+import io.devarium.api.controller.team.dto.UpdateTeamRequest;
 import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.service.TeamService;
@@ -35,7 +36,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<TeamResponse>> createTeam(
-        @Valid @RequestBody UpsertTeamRequest request,
+        @Valid @RequestBody CreateTeamRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         User user = emailPrincipal.getUser();
@@ -69,7 +70,7 @@ public class TeamController {
     @PutMapping("/{teamId}")
     public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeam(
         @PathVariable Long teamId,
-        @Valid @RequestBody UpsertTeamRequest request,
+        @Valid @RequestBody UpdateTeamRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         Team team = teamService.updateTeam(teamId, request, emailPrincipal.getUser());
