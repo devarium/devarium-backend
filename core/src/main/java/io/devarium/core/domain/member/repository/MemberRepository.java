@@ -22,5 +22,5 @@ public interface MemberRepository {
 
     Optional<Member> findByUserIdAndTeamId(Long userId, Long teamId);
 
-    long countByTeamId(Long teamId);
+    boolean existsByTeamId(Long teamId);
 }

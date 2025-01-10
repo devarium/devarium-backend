@@ -94,9 +94,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public long countByTeamId(Long teamId) {
+    public boolean existsByTeamId(Long teamId) {
         checkTeamDeleted(teamId);
-        return memberJpaRepository.countByTeamId(teamId);
+        return memberJpaRepository.existsByTeamId(teamId);
     }
 
     private UserEntity checkUserDeleted(Long userId) {

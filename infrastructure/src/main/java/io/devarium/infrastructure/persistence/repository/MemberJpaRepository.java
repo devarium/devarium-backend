@@ -17,5 +17,5 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
 
     Optional<MemberEntity> findByUserIdAndTeamId(Long userId, Long teamId);
 
-    long countByTeamId(Long teamId);
+    boolean existsByTeamId(Long teamId);
 }
