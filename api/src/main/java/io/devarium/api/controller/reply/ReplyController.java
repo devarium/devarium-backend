@@ -1,9 +1,9 @@
 package io.devarium.api.controller.reply;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -30,9 +30,9 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Reply reply = replyService.createReply(request, emailPrincipal.getUser());
+        Reply reply = replyService.createReply(request, principal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity
@@ -52,9 +52,9 @@ public class ReplyController {
     public ResponseEntity<SingleItemResponse<ReplyResponse>> updateReply(
         @PathVariable Long replyId,
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Reply reply = replyService.updateReply(replyId, request, emailPrincipal.getUser());
+        Reply reply = replyService.updateReply(replyId, request, principal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -63,9 +63,9 @@ public class ReplyController {
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
         @PathVariable Long replyId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        replyService.deleteReply(replyId, emailPrincipal.getUser());
+        replyService.deleteReply(replyId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

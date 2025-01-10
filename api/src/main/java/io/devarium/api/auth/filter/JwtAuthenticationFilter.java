@@ -2,7 +2,6 @@ package io.devarium.api.auth.filter;
 
 import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
-import io.devarium.infrastructure.auth.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -37,8 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (token != null && jwtUtil.isTokenValid(token)) {
                 String email = jwtUtil.extractEmail(token);
-                UserDetails userDetails =
-                    ((UserDetailsServiceImpl) userDetailsService).loadUserByEmail(email);
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+                //TODO: 사용자 정보 로드 (소프트 딜리트 확인 포함)
+                /*if (userDetails instanceof CustomUserDetails customUserDetails) {
+                    if (customUserDetails.getUser().isDeleted()) {
+                        throw new IllegalStateException("User is soft deleted: " + email);
+                    }
+                }*/
 
                 Authentication authentication =
                     new UsernamePasswordAuthenticationToken(

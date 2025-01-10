@@ -4,6 +4,7 @@ import io.devarium.core.auth.OAuth2Provider;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,7 +62,22 @@ public class User {
         this.deletedAt = Instant.now();
     }
 
+    // 소프트 딜리트 상태 확인 메서드
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(role); // UserRole은 이제 GrantedAuthority 구현체
+    }
+
+    // OAuth2User의 구현체인 CustomUserDetails에서 메서드를 오버라이딩할때 필요
+    public Map<String, Object> toAttributes() {
+        return Map.of(
+            "email", email,
+            "name", name,
+            "picture", picture,
+            "provider", provider
+        );
     }
 }

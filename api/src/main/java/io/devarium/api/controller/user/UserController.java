@@ -1,9 +1,9 @@
 package io.devarium.api.controller.user;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.user.dto.UpdateUserRequest;
 import io.devarium.api.controller.user.dto.UserResponse;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.service.UserService;
 import jakarta.validation.Valid;
@@ -26,9 +26,9 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<SingleItemResponse<UserResponse>> getMe(
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        User user = userService.getUser(emailPrincipal.getId());
+        User user = userService.getUser(principal.getId());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -37,9 +37,9 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<SingleItemResponse<UserResponse>> updateMe(
         @Valid @RequestBody UpdateUserRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        User user = userService.updateUserProfile(request, emailPrincipal.getUser());
+        User user = userService.updateUserProfile(request, principal.getUser());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -47,9 +47,9 @@ public class UserController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> withdraw(
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        userService.withdraw(emailPrincipal.getUser());
+        userService.withdraw(principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

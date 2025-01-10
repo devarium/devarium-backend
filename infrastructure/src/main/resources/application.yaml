@@ -23,11 +23,3 @@ jwt:
   secret: ${JWT_SECRET}
   accessTokenExpiration: ${JWT_ACCESS_TOKEN_EXPIRATION} # 3600000 1시간 (밀리초 단위)
   refreshTokenExpiration: ${JWT_REFRESH_TOKEN_EXPIRATION} # 86400000 1일 (밀리초 단위)
-
-oauth2:
-  google:
-    token-endpoint: ${spring.security.oauth2.client.provider.google.token-uri}
-    user-info-endpoint: ${spring.security.oauth2.client.provider.google.user-info-uri}
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-    redirect-uri: ${api.base-url}/api/${api.version}/auth/google/callback
