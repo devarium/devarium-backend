@@ -1,10 +1,10 @@
 package io.devarium.api.controller.comment;
 
+import io.devarium.api.auth.CustomUserDetails;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.reply.Reply;
@@ -38,9 +38,9 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
         @Valid @RequestBody UpsertCommentRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserDetails principal
     ) {
-        Comment comment = commentService.createComment(request, emailPrincipal.getUser());
+        Comment comment = commentService.createComment(request, principal.getUser());
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity
@@ -73,10 +73,10 @@ public class CommentController {
     public ResponseEntity<SingleItemResponse<CommentResponse>> updateComment(
         @PathVariable Long commentId,
         @Valid @RequestBody UpsertCommentRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserDetails principal
     ) {
         Comment comment = commentService.updateComment(commentId, request,
-            emailPrincipal.getUser());
+            principal.getUser());
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -85,9 +85,9 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
         @PathVariable Long commentId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserDetails principal
     ) {
-        commentService.deleteComment(commentId, emailPrincipal.getUser());
+        commentService.deleteComment(commentId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }
