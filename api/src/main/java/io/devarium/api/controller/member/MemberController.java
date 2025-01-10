@@ -32,7 +32,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/{teamId}/members")
+    @PostMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> createMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody CreateMembersRequest request,
@@ -42,7 +42,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{teamId}/members")
+    @GetMapping("/teams/{teamId}/members")
     public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByTeam(
         @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
         @PathVariable Long teamId,
@@ -69,7 +69,7 @@ public class MemberController {
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
-    @PutMapping("/{teamId}/members")
+    @PutMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> updateMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateMembersRequest request,
@@ -79,7 +79,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{teamId}/members")
+    @DeleteMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> deleteMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody DeleteMembersRequest request,
