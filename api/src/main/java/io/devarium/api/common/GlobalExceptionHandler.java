@@ -5,6 +5,8 @@ import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.like.exception.LikeErrorCode;
+import io.devarium.core.domain.like.exception.LikeException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
@@ -103,5 +105,17 @@ public class GlobalExceptionHandler {
                 combinedErrorMessage
             )
         );
+    }
+
+    @ExceptionHandler(LikeException.class)
+    public ResponseEntity<ErrorResponse> handleLikeException(LikeException e) {
+        LikeErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
     }
 }
