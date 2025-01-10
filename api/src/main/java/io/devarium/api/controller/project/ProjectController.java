@@ -1,5 +1,6 @@
 package io.devarium.api.controller.project;
 
+import io.devarium.api.auth.CustomUserDetails;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.project.dto.ProjectResponse;
 import io.devarium.api.controller.project.dto.UpsertProjectRequest;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +29,10 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<ProjectResponse>> createProject(
-        @Valid @RequestBody UpsertProjectRequest request
+        @Valid @RequestBody UpsertProjectRequest request,
+        @AuthenticationPrincipal CustomUserDetails principal
     ) {
-        Project project = projectService.createProject(request);
+        Project project = projectService.createProject(request, principal.getUser());
         ProjectResponse response = ProjectResponse.from(project);
 
         return ResponseEntity
@@ -50,17 +53,21 @@ public class ProjectController {
     @PutMapping("/{projectId}")
     public ResponseEntity<SingleItemResponse<ProjectResponse>> updateProject(
         @PathVariable Long projectId,
-        @Valid @RequestBody UpsertProjectRequest request
+        @Valid @RequestBody UpsertProjectRequest request,
+        @AuthenticationPrincipal CustomUserDetails principal
     ) {
-        Project project = projectService.updateProject(projectId, request);
+        Project project = projectService.updateProject(projectId, request, principal.getUser());
         ProjectResponse response = ProjectResponse.from(project);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
-        projectService.deleteProject(projectId);
+    public ResponseEntity<Void> deleteProject(
+        @PathVariable Long projectId,
+        @AuthenticationPrincipal CustomUserDetails principal
+    ) {
+        projectService.deleteProject(projectId, principal.getUser());
 
         return ResponseEntity.noContent().build();
     }

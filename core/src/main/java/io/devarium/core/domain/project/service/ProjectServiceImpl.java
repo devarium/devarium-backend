@@ -5,6 +5,7 @@ import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.project.port.UpsertProject;
 import io.devarium.core.domain.project.repository.ProjectRepository;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
 
     @Override
-    public Project createProject(UpsertProject request) {
+    public Project createProject(UpsertProject request, User user) {
         Project project = Project.builder()
             .name(request.name())
             .description(request.description())
@@ -29,8 +30,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Long projectId, UpsertProject request) {
+    public Project updateProject(Long projectId, UpsertProject request, User user) {
         Project project = getProject(projectId);
+
+        // TODO: 프로젝트 접근 권환 확인 필요
+
         project.updateName(request.name());
         project.updateDescription(request.description());
         project.updateSkills(request.skills());
@@ -38,7 +42,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(Long projectId) {
+    public void deleteProject(Long projectId, User user) {
+        // TODO: 프로젝트 접근 권환 확인 필요
         projectRepository.deleteById(projectId);
     }
 }
