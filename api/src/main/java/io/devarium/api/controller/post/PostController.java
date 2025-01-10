@@ -1,6 +1,6 @@
 package io.devarium.api.controller.post;
 
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.post.dto.PostResponse;
@@ -38,7 +38,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<PostResponse>> createPost(
         @Valid @RequestBody UpsertPostRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Post post = postService.createPost(request, principal.getUser());
         PostResponse response = PostResponse.from(post);
@@ -80,7 +80,7 @@ public class PostController {
     public ResponseEntity<SingleItemResponse<PostResponse>> updatePost(
         @PathVariable Long postId,
         @Valid @RequestBody UpsertPostRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Post post = postService.updatePost(postId, request, principal.getUser());
         PostResponse response = PostResponse.from(post);
@@ -91,7 +91,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
         @PathVariable Long postId,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         postService.deletePost(postId, principal.getUser());
         return ResponseEntity.noContent().build();

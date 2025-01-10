@@ -1,7 +1,7 @@
 package io.devarium.api.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
 import io.devarium.core.auth.service.TokenService;
@@ -24,7 +24,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException {
-        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
+        CustomUserPrincipal userPrincipal = (CustomUserPrincipal) authentication.getPrincipal();
 
         String email = userPrincipal.getEmail();
         Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();

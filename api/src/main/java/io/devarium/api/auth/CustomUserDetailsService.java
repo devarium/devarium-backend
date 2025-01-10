@@ -23,6 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found or is deleted: " + email);
         }*/
         // User 객체를 UserDetails로 변환하여 반환
-        return new CustomUserDetails(user);
+        return new CustomUserPrincipal(user);
     }
 }

@@ -1,6 +1,6 @@
 package io.devarium.api.controller.reply;
 
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
@@ -30,7 +30,7 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.createReply(request, principal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
@@ -52,7 +52,7 @@ public class ReplyController {
     public ResponseEntity<SingleItemResponse<ReplyResponse>> updateReply(
         @PathVariable Long replyId,
         @Valid @RequestBody UpsertReplyRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.updateReply(replyId, request, principal.getUser());
         ReplyResponse response = ReplyResponse.from(reply);
@@ -63,7 +63,7 @@ public class ReplyController {
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
         @PathVariable Long replyId,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         replyService.deleteReply(replyId, principal.getUser());
         return ResponseEntity.noContent().build();

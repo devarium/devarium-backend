@@ -1,6 +1,6 @@
 package io.devarium.api.controller.user;
 
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.user.dto.UpdateUserRequest;
 import io.devarium.api.controller.user.dto.UserResponse;
@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<SingleItemResponse<UserResponse>> getMe(
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         User user = userService.getUser(principal.getId());
         UserResponse response = UserResponse.from(user);
@@ -37,7 +37,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<SingleItemResponse<UserResponse>> updateMe(
         @Valid @RequestBody UpdateUserRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         User user = userService.updateUserProfile(request, principal.getUser());
         UserResponse response = UserResponse.from(user);
@@ -47,7 +47,7 @@ public class UserController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> withdraw(
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         userService.withdraw(principal.getUser());
         return ResponseEntity.noContent().build();

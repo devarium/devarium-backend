@@ -1,6 +1,6 @@
 package io.devarium.api.controller.auth;
 
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
@@ -39,7 +39,7 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null
-            && authentication.getPrincipal() instanceof CustomUserDetails principal) {
+            && authentication.getPrincipal() instanceof CustomUserPrincipal principal) {
             String email = principal.getEmail();
             authService.logout(email);
             SecurityContextHolder.clearContext();

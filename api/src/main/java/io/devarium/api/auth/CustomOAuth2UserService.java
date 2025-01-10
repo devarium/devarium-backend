@@ -53,6 +53,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             : userService.createUser(userInfo);
 
         // 최종적으로 CustomUserDetails 객체 생성 및 반환
-        return new CustomUserDetails(user);
+        return new CustomUserPrincipal(user);
     }
 }

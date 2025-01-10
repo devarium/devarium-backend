@@ -1,6 +1,6 @@
 package io.devarium.api.controller.comment;
 
-import io.devarium.api.auth.CustomUserDetails;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.comment.dto.CommentResponse;
@@ -38,7 +38,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
         @Valid @RequestBody UpsertCommentRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Comment comment = commentService.createComment(request, principal.getUser());
         CommentResponse response = CommentResponse.from(comment);
@@ -73,7 +73,7 @@ public class CommentController {
     public ResponseEntity<SingleItemResponse<CommentResponse>> updateComment(
         @PathVariable Long commentId,
         @Valid @RequestBody UpsertCommentRequest request,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Comment comment = commentService.updateComment(commentId, request,
             principal.getUser());
@@ -85,7 +85,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
         @PathVariable Long commentId,
-        @AuthenticationPrincipal CustomUserDetails principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         commentService.deleteComment(commentId, principal.getUser());
         return ResponseEntity.noContent().build();
