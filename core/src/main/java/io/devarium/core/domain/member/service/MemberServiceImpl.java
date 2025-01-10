@@ -26,24 +26,27 @@ public class MemberServiceImpl implements MemberService {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
 
-        Set<Member> members = request.userIdToRole()
-            .entrySet().stream()
+        Set<Member> members = request.members().stream()
             .map(member -> {
-                if (member.getValue() == MemberRole.SUPER_ADMIN) {
+                Long userId = member.userId();
+                MemberRole role = member.role();
+
+                if (role == MemberRole.SUPER_ADMIN) {
                     throw new MemberException(
                         MemberErrorCode.FIRST_MEMBER_ONLY,
-                        member.getKey(),
+                        userId,
                         teamId
                     );
                 }
                 return Member.builder()
-                    .userId(member.getKey())
+                    .userId(userId)
                     .teamId(teamId)
-                    .role(member.getValue())
+                    .role(role)
                     .isLeader(false)
                     .build();
             })
             .collect(Collectors.toSet());
+
         memberRepository.saveAll(teamId, members);
     }
 
