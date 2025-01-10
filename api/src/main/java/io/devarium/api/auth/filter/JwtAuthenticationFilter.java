@@ -1,6 +1,5 @@
 package io.devarium.api.auth.filter;
 
-import io.devarium.api.auth.CustomUserDetailsService;
 import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(
