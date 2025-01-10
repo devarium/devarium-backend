@@ -2,6 +2,7 @@ package io.devarium.core.auth;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
+import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +21,7 @@ public enum OAuth2Provider {
             return OAuth2Provider.valueOf(registrationId.toUpperCase());
         } catch (IllegalArgumentException ignored) {
             // 2. provider 필드와 매핑
-            return java.util.Arrays.stream(values())
+            return Arrays.stream(values())
                 .filter(provider -> provider.getProvider().equalsIgnoreCase(registrationId))
                 .findFirst()
                 .orElseThrow(
