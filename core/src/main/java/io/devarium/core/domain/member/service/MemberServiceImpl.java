@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void createFirstMember(Long teamId, Long userId) {
+    public void createLeader(Long teamId, Long userId) {
         if (memberRepository.countByTeamId(teamId) != 0) {
             throw new MemberException(MemberErrorCode.FIRST_MEMBER_ONLY, userId, teamId);
         }

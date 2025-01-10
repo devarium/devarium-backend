@@ -12,7 +12,7 @@ public interface MemberService {
 
     void createMembers(Long teamId, CreateMembers request, User user);
 
-    void createFirstMember(Long teamId, Long userId);
+    void createLeader(Long teamId, Long userId);
 
     Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user);
 

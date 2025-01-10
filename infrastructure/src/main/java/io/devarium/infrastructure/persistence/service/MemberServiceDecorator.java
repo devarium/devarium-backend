@@ -24,8 +24,8 @@ public class MemberServiceDecorator implements MemberService {
     }
 
     @Override
-    public void createFirstMember(Long teamId, Long userId) {
-        memberService.createFirstMember(teamId, userId);
+    public void createLeader(Long teamId, Long userId) {
+        memberService.createLeader(teamId, userId);
     }
 
     @Override

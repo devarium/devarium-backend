@@ -28,7 +28,7 @@ public class TeamServiceImpl implements TeamService {
             .leaderId(user.getId())
             .build();
         Team savedTeam = teamRepository.save(team);
-        memberService.createFirstMember(savedTeam.getId(), user.getId());
+        memberService.createLeader(savedTeam.getId(), user.getId());
         return savedTeam;
     }
 
