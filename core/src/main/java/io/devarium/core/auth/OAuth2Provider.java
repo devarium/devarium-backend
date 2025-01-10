@@ -1,5 +1,7 @@
 package io.devarium.core.auth;
 
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +24,7 @@ public enum OAuth2Provider {
                 .filter(provider -> provider.getProvider().equalsIgnoreCase(registrationId))
                 .findFirst()
                 .orElseThrow(
-                    () -> new IllegalArgumentException("Unknown provider: " + registrationId));
+                    () -> new CustomAuthException(AuthErrorCode.UNKNOWN_PROVIDER, registrationId));
         }
     }
 }

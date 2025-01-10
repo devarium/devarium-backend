@@ -25,7 +25,8 @@ public enum AuthErrorCode {
 
     FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "forbidden access"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "invalid token"),
-    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "unauthenticated user attempt");
+    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, "unauthenticated user attempt"),
+    UNKNOWN_PROVIDER(HttpStatus.NOT_FOUND, "Unknown provider: %s");
 
     private final HttpStatus status;
     private final String message;
