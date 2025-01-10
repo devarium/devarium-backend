@@ -36,7 +36,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             throw new OAuth2AuthenticationException("Email not found in OAuth2 user info");
         }
 
-        OAuth2UserInfo userInfo = new OAuth2UserInfo(id, email, name, picture, provider);
+        OAuth2UserInfo userInfo = OAuth2UserInfo.of(id, email, name, picture, provider);
 
         // 동일 이메일로 등록된 다른 Provider 확인
         User existingUser = userService.getUserByEmail(email);
