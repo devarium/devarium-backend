@@ -7,11 +7,11 @@ import lombok.Getter;
 public class Question {
 
     private final Long id;
-    private final int orderNumber;
-    private final QuestionType type;
     private final Long projectId;
 
+    private int orderNumber;
     private String content;
+    private QuestionType type;
     private boolean required;
 
     @Builder
@@ -29,5 +29,12 @@ public class Question {
         this.type = type;
         this.required = required;
         this.projectId = projectId;
+    }
+
+    public void update(int orderNumber, String content, QuestionType type, Boolean required) {
+        this.orderNumber = orderNumber;
+        this.content = content;
+        this.type = type;
+        this.required = required;
     }
 }
