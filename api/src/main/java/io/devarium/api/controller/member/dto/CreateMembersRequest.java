@@ -14,7 +14,6 @@ public record CreateMembersRequest(
 
     public record CreateMemberRequest(
         @NotNull(message = "'userId' must not be null") Long userId,
-
         @NotBlank(message = "'role' must not be blank") MemberRole role
     ) implements CreateMember {
 
