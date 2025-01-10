@@ -35,14 +35,14 @@ public class LikeServiceImpl implements LikeService {
 
         if (likeRepository.existsByEntityTypeAndEntityIdAndUser(entityType, typeId, user)) {
             unlike(type, typeId, user);
+        } else {
+            Like like = Like.builder()
+                .entityType(entityType)
+                .entityId(typeId)
+                .userId(user.getId())
+                .build();
+            likeRepository.save(like);
         }
-
-        Like like = Like.builder()
-            .entityType(entityType)
-            .entityId(typeId)
-            .userId(user.getId())
-            .build();
-        likeRepository.save(like);
     }
 
     @Override
