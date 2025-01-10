@@ -48,8 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
-                        jwtUtil.extractAuthorities(token)
-                        // TODO: 소프트딜리트를 고려하여 userDetails.getAuthorities()를 쓸건지
+                        userDetails.getAuthorities()
                     );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
