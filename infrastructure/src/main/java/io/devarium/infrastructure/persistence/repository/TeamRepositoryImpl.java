@@ -9,6 +9,8 @@ import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -44,5 +46,10 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public Optional<Team> findById(Long id) {
         return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
+    }
+
+    @Override
+    public Page<Team> findAllByUserId(Long userId, Pageable pageable) {
+        return teamJpaRepository.findAllByUserId(userId, pageable).map(TeamEntity::toDomain);
     }
 }

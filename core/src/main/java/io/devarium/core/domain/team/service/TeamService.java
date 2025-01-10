@@ -4,12 +4,16 @@ import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.port.UpdateLeader;
 import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TeamService {
 
     Team createTeam(UpsertTeam request, User user);
 
     Team getTeam(Long teamId);
+
+    Page<Team> getTeams(Pageable pageable, User user);
 
     Team updateTeam(Long teamId, UpsertTeam request, User user);
 

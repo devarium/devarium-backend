@@ -9,6 +9,8 @@ import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
@@ -34,6 +36,11 @@ public class TeamServiceImpl implements TeamService {
     public Team getTeam(Long teamId) {
         return teamRepository.findById(teamId)
             .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, teamId));
+    }
+
+    @Override
+    public Page<Team> getTeams(Pageable pageable, User user) {
+        return teamRepository.findAllByUserId(user.getId(), pageable);
     }
 
     @Override

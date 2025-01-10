@@ -1,5 +1,6 @@
 package io.devarium.api.controller.team;
 
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
@@ -10,6 +11,9 @@ import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,6 +53,17 @@ public class TeamController {
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<PagedListResponse<TeamResponse>> getTeams(
+        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE) Pageable pageable,
+        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+    ) {
+        Page<Team> teams = teamService.getTeams(pageable, emailPrincipal.getUser());
+        Page<TeamResponse> response = teams.map(TeamResponse::from);
+
+        return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
     @PutMapping("/{teamId}")
