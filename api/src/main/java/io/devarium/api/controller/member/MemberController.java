@@ -1,6 +1,5 @@
 package io.devarium.api.controller.member;
 
-import io.devarium.api.common.PageTypeConverter;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.controller.member.dto.CreateMembersRequest;
 import io.devarium.api.controller.member.dto.DeleteMembersRequest;
@@ -54,10 +53,7 @@ public class MemberController {
             teamId,
             emailPrincipal.getUser()
         );
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
+        Page<MemberResponse> response = members.map(MemberResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
@@ -68,11 +64,7 @@ public class MemberController {
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
         Page<Member> members = memberService.getMembersByUser(pageable, emailPrincipal.getUser());
-
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
+        Page<MemberResponse> response = members.map(MemberResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
