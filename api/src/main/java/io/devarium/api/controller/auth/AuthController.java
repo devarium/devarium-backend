@@ -4,10 +4,11 @@ import io.devarium.api.auth.CustomUserDetails;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.auth.service.AuthService;
 import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<Void> logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null
@@ -44,7 +45,8 @@ public class AuthController {
             SecurityContextHolder.clearContext();
             return ResponseEntity.noContent().build();
         }
+        //TODO: 블랙리스트 구현시 로직이 달라질 수 있음. 블랙리스트 구현
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthenticated user");
+        throw new CustomAuthException(AuthErrorCode.UNAUTHENTICATED_USER);
     }
 }
