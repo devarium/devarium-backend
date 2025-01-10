@@ -4,6 +4,7 @@ import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.port.UpsertPost;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
+import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ public class PostServiceDecorator implements PostService {
 
     @Override
     @Transactional
-    public Post createPost(UpsertPost request) {
-        return postService.createPost(request);
+    public Post createPost(UpsertPost request, User user) {
+        return postService.createPost(request, user);
     }
 
     @Override
@@ -34,13 +35,13 @@ public class PostServiceDecorator implements PostService {
 
     @Override
     @Transactional
-    public Post updatePost(Long postId, UpsertPost request) {
-        return postService.updatePost(postId, request);
+    public Post updatePost(Long postId, UpsertPost request, User user) {
+        return postService.updatePost(postId, request, user);
     }
 
     @Override
     @Transactional
-    public void deletePost(Long postId) {
-        postService.deletePost(postId);
+    public void deletePost(Long postId, User user) {
+        postService.deletePost(postId, user);
     }
 }

@@ -7,10 +7,13 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.reply.port.UpsertReply;
 import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,17 @@ public class ReplyServiceImplTest {
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String CONTENT = "content";
     private static final Long COMMENT_ID = 2L;
+    private static final User USER = User.builder()
+        .id(10L)
+        .email("testUser@email.com")
+        .name("testUser")
+        .bio("bio")
+        .picture("picture")
+        .blogUrl("blogUrl")
+        .githubUrl("githubUrl")
+        .role(UserRole.USER)
+        .provider(OAuth2Provider.GOOGLE)
+        .build();
 
     @Mock
     private ReplyRepository replyRepository;
@@ -57,7 +71,7 @@ public class ReplyServiceImplTest {
             given(replyRepository.save(any(Reply.class))).willReturn(savedReply);
 
             // when
-            Reply createdReply = replyService.createReply(request);
+            Reply createdReply = replyService.createReply(request, USER);
 
             // then
             then(replyRepository).should().save(refEq(expectedReply));
@@ -129,7 +143,7 @@ public class ReplyServiceImplTest {
             given(replyRepository.save(any(Reply.class))).willReturn(savedReply);
 
             // when
-            Reply updatedReply = replyService.updateReply(REPLY_ID, request);
+            Reply updatedReply = replyService.updateReply(REPLY_ID, request, USER);
 
             // then
             then(replyRepository).should().findById(REPLY_ID);
@@ -147,7 +161,7 @@ public class ReplyServiceImplTest {
             given(replyRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> replyService.updateReply(NON_EXISTENT_ID, request))
+            assertThatThrownBy(() -> replyService.updateReply(NON_EXISTENT_ID, request, USER))
                 .isInstanceOf(ReplyException.class);
 
             then(replyRepository).should().findById(NON_EXISTENT_ID);
@@ -161,7 +175,7 @@ public class ReplyServiceImplTest {
         @Test
         void givenReplyId_whenDeleteReply_thenReplyIsDeleted() {
             // when
-            replyService.deleteReply(REPLY_ID);
+            replyService.deleteReply(REPLY_ID, USER);
 
             // then
             then(replyRepository).should().deleteById(REPLY_ID);
