@@ -3,11 +3,10 @@ package io.devarium.api.controller.feedback;
 import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.feedback.dto.AnswerResponse;
-import io.devarium.api.controller.feedback.dto.CreateQuestionsRequest;
 import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
-import io.devarium.api.controller.feedback.dto.UpdateQuestionsRequest;
+import io.devarium.api.controller.feedback.dto.SyncQuestionsRequest;
 import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
@@ -33,22 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
-
-    @PostMapping("/questions")
-    public ResponseEntity<ListResponse<QuestionResponse>> createFeedbackQuestions(
-        @PathVariable Long projectId,
-        @Valid @RequestBody CreateQuestionsRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
-    ) {
-        List<Question> questions = feedbackService.createFeedbackQuestions(
-            projectId,
-            request,
-            emailPrincipal.getUser()
-        );
-        List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(ListResponse.from(responses));
-    }
 
     @PostMapping("/answers")
     public ResponseEntity<ListResponse<AnswerResponse>> submitFeedbackAnswers(
@@ -98,12 +81,12 @@ public class FeedbackController {
     }
 
     @PutMapping("/questions")
-    public ResponseEntity<ListResponse<QuestionResponse>> updateFeedbackQuestions(
+    public ResponseEntity<ListResponse<QuestionResponse>> syncFeedbackQuestions(
         @PathVariable Long projectId,
-        @Valid @RequestBody UpdateQuestionsRequest request,
+        @Valid @RequestBody SyncQuestionsRequest request,
         @AuthenticationPrincipal EmailPrincipal emailPrincipal
     ) {
-        List<Question> questions = feedbackService.updateFeedbackQuestions(
+        List<Question> questions = feedbackService.syncFeedbackQuestions(
             projectId,
             request,
             emailPrincipal.getUser()
