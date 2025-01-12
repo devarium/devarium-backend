@@ -8,10 +8,10 @@ public class Question {
 
     private final Long id;
     private final Long projectId;
+    private final QuestionType type;
 
     private int orderNumber;
     private String content;
-    private QuestionType type;
     private boolean required;
 
     @Builder
@@ -31,10 +31,9 @@ public class Question {
         this.projectId = projectId;
     }
 
-    public void update(int orderNumber, String content, QuestionType type, Boolean required) {
+    public void update(int orderNumber, String content, Boolean required) {
         this.orderNumber = orderNumber;
         this.content = content;
-        this.type = type;
         this.required = required;
     }
 }
