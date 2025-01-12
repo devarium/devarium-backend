@@ -13,10 +13,10 @@ public record CreateQuestionsRequest(
 ) implements CreateQuestions {
 
     public record CreateQuestionRequest(
+        @PositiveOrZero(message = "'orderNumber' must be greater than or equal to 0") int orderNumber,
         @NotBlank(message = "'content' must not be blank") String content,
         @NotNull(message = "'type' must not be null") QuestionType type,
-        @NotNull(message = "'required' must not be null") Boolean required,
-        @PositiveOrZero(message = "'orderNumber' must be greater than or equal to 0") int orderNumber
+        @NotNull(message = "'required' must not be null") Boolean required
     ) implements CreateQuestion {
 
     }
