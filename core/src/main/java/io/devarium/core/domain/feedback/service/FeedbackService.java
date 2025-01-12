@@ -4,18 +4,11 @@ import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
-import io.devarium.core.domain.feedback.question.port.CreateQuestions;
-import io.devarium.core.domain.feedback.question.port.UpdateQuestions;
+import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.user.User;
 import java.util.List;
 
 public interface FeedbackService {
-
-    List<Question> createFeedbackQuestions(
-        Long projectId,
-        CreateQuestions request,
-        User user
-    );
 
     List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user);
 
@@ -23,5 +16,5 @@ public interface FeedbackService {
 
     List<Question> getFeedbackQuestions(Long projectId);
 
-    List<Question> updateFeedbackQuestions(Long projectId, UpdateQuestions request, User user);
+    List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user);
 }
