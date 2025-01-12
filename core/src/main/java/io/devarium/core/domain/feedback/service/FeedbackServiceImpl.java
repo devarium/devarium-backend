@@ -8,6 +8,7 @@ import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.port.SyncQuestion;
 import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.project.Project;
@@ -15,7 +16,9 @@ import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.user.User;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
@@ -86,6 +89,75 @@ public class FeedbackServiceImpl implements FeedbackService {
         SyncQuestions request,
         User user
     ) {
-        return null;
+        Project project = projectService.getProject(projectId);
+        // TODO: 프로젝트 접근 권환 확인
+
+        // 기존 질문 조회
+        List<Question> existingQuestions = questionRepository.findAllByProjectId(projectId);
+        Map<Long, Question> questionById = existingQuestions.stream()
+            .collect(Collectors.toMap(Question::getId, q -> q));
+
+        // 요청에 포함된 질문 ID 집합
+        Set<Long> requestQuestionIds = request.questions().stream()
+            .map(SyncQuestion::questionId)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+
+        // 삭제될 질문들 처리 (요청에 없는 기존 질문)
+        Set<Long> deleteQuestionIds = existingQuestions.stream()
+            .map(Question::getId)
+            .filter(id -> !requestQuestionIds.contains(id))
+            .collect(Collectors.toSet());
+
+        if (!deleteQuestionIds.isEmpty()) {
+            answerRepository.deleteAllByQuestionIdIn(deleteQuestionIds);
+            questionRepository.deleteAllById(deleteQuestionIds);
+        }
+
+        // type이 변경된 질문의 답변 삭제
+        Set<Long> typeChangedQuestionIds = request.questions().stream()
+            .filter(q -> {
+                Question existingQuestion = questionById.get(q.questionId());
+                return existingQuestion != null &&
+                    !existingQuestion.getType().equals(q.type());
+            })
+            .map(SyncQuestion::questionId)
+            .collect(Collectors.toSet());
+
+        if (!typeChangedQuestionIds.isEmpty()) {
+            answerRepository.deleteAllByQuestionIdIn(typeChangedQuestionIds);
+        }
+
+        // 질문 생성/수정
+        List<Question> questions = request.questions().stream()
+            .map(q -> {
+                if (q.questionId() == null) {
+                    return Question.builder()
+                        .orderNumber(q.orderNumber())
+                        .content(q.content())
+                        .type(q.type())
+                        .required(q.required())
+                        .projectId(projectId)
+                        .build();
+                } else {
+                    Question question = Optional.ofNullable(questionById.get(q.questionId()))
+                        .orElseThrow(() ->
+                            new FeedbackException(
+                                FeedbackErrorCode.QUESTION_NOT_FOUND,
+                                q.questionId()
+                            )
+                        );
+                    question.update(
+                        q.orderNumber(),
+                        q.content(),
+                        q.type(),
+                        q.required()
+                    );
+                    return question;
+                }
+            })
+            .toList();
+
+        return questionRepository.saveAll(questions);
     }
 }
