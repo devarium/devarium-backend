@@ -1,5 +1,7 @@
 package io.devarium.core.domain.reply;
 
+import io.devarium.core.auth.exception.AuthErrorCode;
+import io.devarium.core.auth.exception.CustomAuthException;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +25,12 @@ public class Reply {
         this.commentId = commentId;
         this.userId = userId;
         this.createdAt = createdAt;
+    }
+
+    public void validateAuthor(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new CustomAuthException(AuthErrorCode.FORBIDDEN_ACCESS, id);
+        }
     }
 
     public void updateContent(String content) {

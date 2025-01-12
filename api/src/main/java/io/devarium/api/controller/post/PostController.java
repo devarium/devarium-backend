@@ -1,5 +1,6 @@
 package io.devarium.api.controller.post;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.post.dto.PostResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +37,10 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<PostResponse>> createPost(
-        @Valid @RequestBody UpsertPostRequest request
-        // TODO: @AuthenticationPrincipal UserDetails userDetails
+        @Valid @RequestBody UpsertPostRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Post post = postService.createPost(request);
+        Post post = postService.createPost(request, principal.getUser());
         PostResponse response = PostResponse.from(post);
 
         return ResponseEntity
@@ -77,17 +79,21 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<SingleItemResponse<PostResponse>> updatePost(
         @PathVariable Long postId,
-        @Valid @RequestBody UpsertPostRequest request
+        @Valid @RequestBody UpsertPostRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Post post = postService.updatePost(postId, request);
+        Post post = postService.updatePost(postId, request, principal.getUser());
         PostResponse response = PostResponse.from(post);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<Void> deletePost(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        postService.deletePost(postId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

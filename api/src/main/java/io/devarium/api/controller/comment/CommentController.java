@@ -1,5 +1,6 @@
 package io.devarium.api.controller.comment;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.comment.dto.CommentResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +37,10 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
-        @Valid @RequestBody UpsertCommentRequest request
-        // @AuthenticationPrincipal UserDetails userDetails
+        @Valid @RequestBody UpsertCommentRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Comment comment = commentService.createComment(request);
+        Comment comment = commentService.createComment(request, principal.getUser());
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity
@@ -70,10 +72,11 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<SingleItemResponse<CommentResponse>> updateComment(
         @PathVariable Long commentId,
-        @Valid @RequestBody UpsertCommentRequest request
-        // @AuthenticationPrincipal UserDetails userDetails
+        @Valid @RequestBody UpsertCommentRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Comment comment = commentService.updateComment(commentId, request);
+        Comment comment = commentService.updateComment(commentId, request,
+            principal.getUser());
         CommentResponse response = CommentResponse.from(comment);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -81,10 +84,10 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-        @PathVariable Long commentId
-        // @AuthenticationPrincipal UserDetails userDetails
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(commentId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }
