@@ -18,7 +18,7 @@ public class StorageException extends RuntimeException {
     }
 
     public StorageException(StorageErrorCode errorCode, Object... args) {
-        super(errorCode.getMessage().formatted(args));
+        super(errorCode.getMessage(args));
         this.errorCode = errorCode;
     }
 

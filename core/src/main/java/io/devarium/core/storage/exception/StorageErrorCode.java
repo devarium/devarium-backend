@@ -19,4 +19,8 @@ public enum StorageErrorCode {
 
     private final HttpStatus status;
     private final String message;
+
+    public String getMessage(Object... args) {
+        return String.format(message, args);
+    }
 }
