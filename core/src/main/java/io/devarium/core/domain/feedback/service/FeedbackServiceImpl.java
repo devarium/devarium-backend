@@ -34,7 +34,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         User user
     ) {
         Project project = projectService.getProject(projectId);
-        // TODO: 프로젝트 관련 권한 검증
+        // TODO: 프로젝트 접근 권환 확인
 
         List<Question> questions = request.questions().stream()
             .map(q -> Question.builder()
@@ -109,6 +109,32 @@ public class FeedbackServiceImpl implements FeedbackService {
         UpdateQuestions request,
         User user
     ) {
-        return null;
+        Project project = projectService.getProject(projectId);
+        // TODO: 프로젝트 접근 권환 확인
+
+        Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId)
+            .stream()
+            .collect(Collectors.toMap(Question::getId, q -> q));
+
+        List<Question> updatedQuestions = request.questions().stream()
+            .map(updateQuestion -> {
+                Question question = Optional.ofNullable(
+                    questionById.get(updateQuestion.questionId())
+                ).orElseThrow(() -> new FeedbackException(
+                    FeedbackErrorCode.QUESTION_NOT_FOUND,
+                    updateQuestion.questionId())
+                );
+
+                question.update(
+                    updateQuestion.orderNumber(),
+                    updateQuestion.content(),
+                    updateQuestion.required()
+                );
+
+                return question;
+            })
+            .toList();
+
+        return questionRepository.saveAll(updatedQuestions);
     }
 }
