@@ -13,7 +13,7 @@ public record SyncQuestionsRequest(
 ) implements SyncQuestions {
 
     public record SyncQuestionRequest(
-        @NotNull(message = "'questionId' must not be null") Long questionId,
+        Long questionId,
         @Positive(message = "'orderNumber' must be greater than 0") int orderNumber,
         @NotBlank(message = "'content' must not be blank") String content,
         @NotNull(message = "'type' must not be null") QuestionType type,
