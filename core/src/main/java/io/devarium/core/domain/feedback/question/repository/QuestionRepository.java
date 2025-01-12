@@ -13,5 +13,5 @@ public interface QuestionRepository {
 
     List<Question> findAllByProjectId(Long projectId);
 
-    void deleteAllById(Set<Long> questionIds);
+    void deleteAllById(Set<Long> ids);
 }
