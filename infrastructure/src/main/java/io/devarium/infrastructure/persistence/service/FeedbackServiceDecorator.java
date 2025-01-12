@@ -4,8 +4,7 @@ import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
-import io.devarium.core.domain.feedback.question.port.CreateQuestions;
-import io.devarium.core.domain.feedback.question.port.UpdateQuestions;
+import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.user.User;
@@ -17,16 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class FeedbackServiceDecorator implements FeedbackService {
 
     private final FeedbackServiceImpl feedbackService;
-
-    @Override
-    @Transactional
-    public List<Question> createFeedbackQuestions(
-        Long projectId,
-        CreateQuestions request,
-        User user
-    ) {
-        return feedbackService.createFeedbackQuestions(projectId, request, user);
-    }
 
     @Override
     @Transactional
@@ -48,11 +37,7 @@ public class FeedbackServiceDecorator implements FeedbackService {
 
     @Override
     @Transactional
-    public List<Question> updateFeedbackQuestions(
-        Long projectId,
-        UpdateQuestions request,
-        User user
-    ) {
-        return feedbackService.updateFeedbackQuestions(projectId, request, user);
+    public List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user) {
+        return feedbackService.syncFeedbackQuestions(projectId, request, user);
     }
 }

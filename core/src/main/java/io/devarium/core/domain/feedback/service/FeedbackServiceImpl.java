@@ -8,8 +8,7 @@ import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.question.Question;
-import io.devarium.core.domain.feedback.question.port.CreateQuestions;
-import io.devarium.core.domain.feedback.question.port.UpdateQuestions;
+import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
@@ -26,28 +25,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final ProjectService projectService;
-
-    @Override
-    public List<Question> createFeedbackQuestions(
-        Long projectId,
-        CreateQuestions request,
-        User user
-    ) {
-        Project project = projectService.getProject(projectId);
-        // TODO: 프로젝트 접근 권환 확인
-
-        List<Question> questions = request.questions().stream()
-            .map(q -> Question.builder()
-                .orderNumber(q.orderNumber())
-                .content(q.content())
-                .type(q.type())
-                .required(q.required())
-                .projectId(projectId)
-                .build())
-            .toList();
-
-        return questionRepository.saveAll(questions);
-    }
 
     @Override
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
@@ -104,37 +81,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Question> updateFeedbackQuestions(
+    public List<Question> syncFeedbackQuestions(
         Long projectId,
-        UpdateQuestions request,
+        SyncQuestions request,
         User user
     ) {
-        Project project = projectService.getProject(projectId);
-        // TODO: 프로젝트 접근 권환 확인
-
-        Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId)
-            .stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
-
-        List<Question> questions = request.questions().stream()
-            .map(updateQuestion -> {
-                Question question = Optional.ofNullable(
-                    questionById.get(updateQuestion.questionId())
-                ).orElseThrow(() -> new FeedbackException(
-                    FeedbackErrorCode.QUESTION_NOT_FOUND,
-                    updateQuestion.questionId())
-                );
-
-                question.update(
-                    updateQuestion.orderNumber(),
-                    updateQuestion.content(),
-                    updateQuestion.required()
-                );
-
-                return question;
-            })
-            .toList();
-
-        return questionRepository.saveAll(questions);
+        return null;
     }
 }
