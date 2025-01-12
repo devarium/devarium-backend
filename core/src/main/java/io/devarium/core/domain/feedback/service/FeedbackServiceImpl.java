@@ -54,12 +54,12 @@ public class FeedbackServiceImpl implements FeedbackService {
         Project project = projectService.getProject(projectId);
         // TODO: 리뷰 요청 중인 프로젝트인지 검증 필요
 
-        Map<Long, Question> questionMap = questionRepository.findAllByProjectId(projectId).stream()
+        Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId).stream()
             .collect(Collectors.toMap(Question::getId, q -> q));
 
         List<Answer> answers = request.answers().stream()
             .map(a -> {
-                Question question = Optional.ofNullable(questionMap.get(a.questionId()))
+                Question question = Optional.ofNullable(questionById.get(a.questionId()))
                     .orElseThrow(() -> new FeedbackException(
                         FeedbackErrorCode.QUESTION_NOT_FOUND,
                         a.questionId()
@@ -86,12 +86,12 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<Answer> answers = answerRepository.findAllByQuestionIdIn(
             questions.stream().map(Question::getId).toList()
         );
-        Map<Long, List<Answer>> questionIdToAnswers = answers.stream()
+        Map<Long, List<Answer>> answersByQuestionId = answers.stream()
             .collect(Collectors.groupingBy(Answer::getQuestionId));
         List<QuestionWithAnswers> questionAnswers = questions.stream()
             .map(q -> new QuestionWithAnswers(
                 q,
-                questionIdToAnswers.getOrDefault(q.getId(), List.of())
+                answersByQuestionId.getOrDefault(q.getId(), List.of())
             ))
             .toList();
 
@@ -116,7 +116,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             .stream()
             .collect(Collectors.toMap(Question::getId, q -> q));
 
-        List<Question> updatedQuestions = request.questions().stream()
+        List<Question> questions = request.questions().stream()
             .map(updateQuestion -> {
                 Question question = Optional.ofNullable(
                     questionById.get(updateQuestion.questionId())
@@ -135,6 +135,6 @@ public class FeedbackServiceImpl implements FeedbackService {
             })
             .toList();
 
-        return questionRepository.saveAll(updatedQuestions);
+        return questionRepository.saveAll(questions);
     }
 }
