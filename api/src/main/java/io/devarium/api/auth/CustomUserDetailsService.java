@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // UserService를 통해 사용자 정보를 조회
-        User user = userService.getUserByEmail(email);
+        User user = userService.getByEmail(email);
         //TODO: 소프트 딜리트 상태 확인 로직
         /*if (user == null || user.isDeleted()) { // 소프트 딜리트 상태 확인
             throw new UsernameNotFoundException("User not found or is deleted: " + email);
