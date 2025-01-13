@@ -75,8 +75,8 @@ public class User {
     public Map<String, Object> toAttributes() {
         return Map.of(
             "email", email,
-            "name", name,
-            "picture", picture,
+            "name", username,
+            "picture", profileImageUrl,
             "provider", provider
         );
     }
