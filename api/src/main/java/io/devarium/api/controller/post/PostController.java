@@ -1,10 +1,10 @@
 package io.devarium.api.controller.post;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.post.dto.PostResponse;
 import io.devarium.api.controller.post.dto.UpsertPostRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.post.Post;
@@ -38,9 +38,9 @@ public class PostController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<PostResponse>> createPost(
         @Valid @RequestBody UpsertPostRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Post post = postService.createPost(request, emailPrincipal.getUser());
+        Post post = postService.createPost(request, principal.getUser());
         PostResponse response = PostResponse.from(post);
 
         return ResponseEntity
@@ -80,9 +80,9 @@ public class PostController {
     public ResponseEntity<SingleItemResponse<PostResponse>> updatePost(
         @PathVariable Long postId,
         @Valid @RequestBody UpsertPostRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Post post = postService.updatePost(postId, request, emailPrincipal.getUser());
+        Post post = postService.updatePost(postId, request, principal.getUser());
         PostResponse response = PostResponse.from(post);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -91,9 +91,9 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
         @PathVariable Long postId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        postService.deletePost(postId, emailPrincipal.getUser());
+        postService.deletePost(postId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

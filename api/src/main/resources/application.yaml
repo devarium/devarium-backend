@@ -13,7 +13,6 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: ${api.base-url}/api/${api.version}/auth/google/callback
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/auth
