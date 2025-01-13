@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: infrastructure
+  datasource:
+    url: jdbc:mysql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DEV_DB_NAME}
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+jwt:
+  secret: ${JWT_SECRET}
+  accessTokenExpiration: ${JWT_ACCESS_TOKEN_EXPIRATION} # 3600000 1시간 (밀리초 단위)
+  refreshTokenExpiration: ${JWT_REFRESH_TOKEN_EXPIRATION} # 86400000 1일 (밀리초 단위)
