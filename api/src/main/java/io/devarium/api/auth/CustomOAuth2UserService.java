@@ -39,7 +39,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserInfo userInfo = OAuth2UserInfo.of(id, email, name, picture, provider);
 
         // 동일 이메일로 등록된 다른 Provider 확인
-        User existingUser = userService.getUserByEmail(email);
+        User existingUser = userService.getByEmail(email);
         if (existingUser != null && !existingUser.getProvider().equals(provider)) {
             throw new OAuth2AuthenticationException(
                 "This email is already registered with a different provider: "
