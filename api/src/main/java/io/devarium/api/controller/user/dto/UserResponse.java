@@ -6,9 +6,9 @@ import java.time.Instant;
 public record UserResponse(
     Long id,
     String email,
-    String name,
+    String username,
     String bio,
-    String picture,
+    String profileImageUrl,
     String blogUrl,
     String githubUrl,
     String role,
@@ -20,9 +20,9 @@ public record UserResponse(
         return new UserResponse(
             user.getId(),
             user.getEmail(),
-            user.getName(),
+            user.getUsername(),
             user.getBio(),
-            user.getPicture(),
+            user.getProfileImageUrl(),
             user.getBlogUrl(),
             user.getGithubUrl(),
             user.getRole().getAuthority(),

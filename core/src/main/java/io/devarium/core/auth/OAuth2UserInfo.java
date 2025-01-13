@@ -4,7 +4,7 @@ public record OAuth2UserInfo(
     String id,
     String email,
     String name,
-    String picture,
+    String profileImageUrl,
     OAuth2Provider provider
 ) {
 
@@ -12,9 +12,9 @@ public record OAuth2UserInfo(
         String id,
         String email,
         String name,
-        String picture,
+        String profileImageUrl,
         OAuth2Provider provider
     ) {
-        return new OAuth2UserInfo(id, email, name, picture, provider);
+        return new OAuth2UserInfo(id, email, name, profileImageUrl, provider);
     }
 }

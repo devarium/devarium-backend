@@ -15,6 +15,7 @@ import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
+import io.devarium.core.storage.service.StorageService;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
@@ -27,10 +28,7 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfig {
 
     @Bean
-    public PostService postService(
-        PostRepository postRepository,
-        CommentService commentService
-    ) {
+    public PostService postService(PostRepository postRepository, CommentService commentService) {
         return new PostServiceDecorator(new PostServiceImpl(postRepository, commentService));
     }
 
@@ -48,8 +46,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public UserService userService(UserRepository userRepository) {
-        return new UserServiceDecorator(new UserServiceImpl(userRepository));
+    public UserService userService(UserRepository userRepository, StorageService storageService) {
+        return new UserServiceDecorator(new UserServiceImpl(userRepository, storageService));
     }
 
     @Bean
