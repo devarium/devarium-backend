@@ -51,7 +51,7 @@ public class UserController {
     @PutMapping("/profile/image")
     public ResponseEntity<SingleItemResponse<UserResponse>> updateProfileImage(
         @RequestPart MultipartFile file,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal emailPrincipal
     ) {
         User user = userService.updateUserProfileImage(Image.from(file), emailPrincipal.getUser());
         UserResponse response = UserResponse.from(user);
