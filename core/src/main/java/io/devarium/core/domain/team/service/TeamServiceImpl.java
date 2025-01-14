@@ -1,7 +1,5 @@
 package io.devarium.core.domain.team.service;
 
-import io.devarium.core.domain.member.MemberRole;
-import io.devarium.core.domain.member.port.UpdateMembers;
 import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
@@ -10,8 +8,9 @@ import io.devarium.core.domain.team.port.UpdateLeader;
 import io.devarium.core.domain.team.port.UpsertTeam;
 import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.core.domain.user.User;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
@@ -29,7 +28,7 @@ public class TeamServiceImpl implements TeamService {
             .leaderId(user.getId())
             .build();
         Team savedTeam = teamRepository.save(team);
-        memberService.createFirstMember(savedTeam.getId(), user.getId());
+        memberService.createLeader(savedTeam.getId(), user.getId());
         return savedTeam;
     }
 
@@ -37,6 +36,11 @@ public class TeamServiceImpl implements TeamService {
     public Team getTeam(Long teamId) {
         return teamRepository.findById(teamId)
             .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, teamId));
+    }
+
+    @Override
+    public Page<Team> getTeams(Pageable pageable, User user) {
+        return teamRepository.findAllByUserId(user.getId(), pageable);
     }
 
     @Override
@@ -58,11 +62,7 @@ public class TeamServiceImpl implements TeamService {
         team.validateLeader(user.getId());
         team.updateLeader(request.leaderId());
 
-        UpdateMembers membersRequest = (UpdateMembers) request;
-        Map<Long, MemberRole> members = membersRequest.memberIdToRole();
-        members.put(team.getLeaderId(), MemberRole.SUPER_ADMIN);
-        members.put(user.getId(), MemberRole.ADMIN);
-        memberService.updateMembers(teamId, membersRequest, user);
+        memberService.updateLeader(teamId, user.getId(), team.getLeaderId());
         return teamRepository.save(team);
     }
 

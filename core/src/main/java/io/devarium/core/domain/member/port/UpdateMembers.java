@@ -1,9 +1,8 @@
 package io.devarium.core.domain.member.port;
 
-import io.devarium.core.domain.member.MemberRole;
-import java.util.Map;
+import java.util.Set;
 
 public interface UpdateMembers {
 
-    Map<Long, MemberRole> memberIdToRole();
+    Set<? extends UpdateMember> members();
 }

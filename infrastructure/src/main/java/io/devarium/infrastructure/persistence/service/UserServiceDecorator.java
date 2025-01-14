@@ -5,6 +5,7 @@ import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
+import io.devarium.core.storage.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,20 +28,20 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
-    }
-
-    @Override
-    @Transactional
-    public User updateUserInfo(OAuth2UserInfo userInfo, User user) {
-        return userService.updateUserInfo(userInfo, user);
+    public User getByEmail(String email) {
+        return userService.getByEmail(email);
     }
 
     @Override
     @Transactional
     public User updateUserProfile(UpdateUser request, User user) {
         return userService.updateUserProfile(request, user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUserProfileImage(Image image, User user) {
+        return userService.updateUserProfileImage(image, user);
     }
 
     @Override

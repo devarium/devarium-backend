@@ -1,9 +1,9 @@
 package io.devarium.api.controller.project;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.project.dto.ProjectResponse;
 import io.devarium.api.controller.project.dto.UpsertProjectRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
 import jakarta.validation.Valid;
@@ -30,7 +30,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<ProjectResponse>> createProject(
         @Valid @RequestBody UpsertProjectRequest request,
-        @AuthenticationPrincipal EmailPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Project project = projectService.createProject(request, principal.getUser());
         ProjectResponse response = ProjectResponse.from(project);
@@ -54,7 +54,7 @@ public class ProjectController {
     public ResponseEntity<SingleItemResponse<ProjectResponse>> updateProject(
         @PathVariable Long projectId,
         @Valid @RequestBody UpsertProjectRequest request,
-        @AuthenticationPrincipal EmailPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Project project = projectService.updateProject(projectId, request, principal.getUser());
         ProjectResponse response = ProjectResponse.from(project);
@@ -65,7 +65,7 @@ public class ProjectController {
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(
         @PathVariable Long projectId,
-        @AuthenticationPrincipal EmailPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         projectService.deleteProject(projectId, principal.getUser());
 

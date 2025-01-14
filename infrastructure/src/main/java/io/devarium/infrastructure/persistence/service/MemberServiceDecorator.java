@@ -24,8 +24,8 @@ public class MemberServiceDecorator implements MemberService {
     }
 
     @Override
-    public void createFirstMember(Long teamId, Long userId) {
-        memberService.createFirstMember(teamId, userId);
+    public void createLeader(Long teamId, Long userId) {
+        memberService.createLeader(teamId, userId);
     }
 
     @Override
@@ -44,6 +44,11 @@ public class MemberServiceDecorator implements MemberService {
     @Transactional
     public void updateMembers(Long teamId, UpdateMembers request, User user) {
         memberService.updateMembers(teamId, request, user);
+    }
+
+    @Override
+    public void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId) {
+        memberService.updateLeader(teamId, oldLeaderId, newLeaderId);
     }
 
     @Override

@@ -3,6 +3,7 @@ package io.devarium.core.domain.user.service;
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.port.UpdateUser;
+import io.devarium.core.storage.Image;
 
 public interface UserService {
 
@@ -10,11 +11,11 @@ public interface UserService {
 
     User getUser(Long userId);
 
-    User getUserByEmail(String email);
-
-    User updateUserInfo(OAuth2UserInfo userInfo, User user);
+    User getByEmail(String email);
 
     User updateUserProfile(UpdateUser request, User user);
+
+    User updateUserProfileImage(Image image, User user);
 
     void withdraw(User user);
 }

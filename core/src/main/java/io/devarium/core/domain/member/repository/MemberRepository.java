@@ -14,8 +14,6 @@ public interface MemberRepository {
 
     void deleteAll(Set<Member> members);
 
-    Optional<Member> findById(Long id);
-
     Set<Member> findByIdIn(Set<Long> ids);
 
     Page<Member> findByTeamId(Long teamId, Pageable pageable);
@@ -24,5 +22,5 @@ public interface MemberRepository {
 
     Optional<Member> findByUserIdAndTeamId(Long userId, Long teamId);
 
-    long countByTeamId(Long teamId);
+    boolean existsByTeamId(Long teamId);
 }

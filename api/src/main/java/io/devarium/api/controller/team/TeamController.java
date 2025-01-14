@@ -1,15 +1,19 @@
 package io.devarium.api.controller.team;
 
+import io.devarium.api.auth.CustomUserPrincipal;
+import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
+import io.devarium.api.controller.team.dto.CreateTeamRequest;
 import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
-import io.devarium.api.controller.team.dto.UpsertTeamRequest;
-import io.devarium.core.auth.EmailPrincipal;
+import io.devarium.api.controller.team.dto.UpdateTeamRequest;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.service.TeamService;
-import io.devarium.core.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,11 +35,10 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<TeamResponse>> createTeam(
-        @Valid @RequestBody UpsertTeamRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @Valid @RequestBody CreateTeamRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        User user = emailPrincipal.getUser();
-        Team team = teamService.createTeam(request, user);
+        Team team = teamService.createTeam(request, principal.getUser());
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity
@@ -51,13 +54,24 @@ public class TeamController {
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
+    @GetMapping
+    public ResponseEntity<PagedListResponse<TeamResponse>> getTeams(
+        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE) Pageable pageable,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Page<Team> teams = teamService.getTeams(pageable, principal.getUser());
+        Page<TeamResponse> response = teams.map(TeamResponse::from);
+
+        return ResponseEntity.ok(PagedListResponse.from(response));
+    }
+
     @PutMapping("/{teamId}")
     public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeam(
         @PathVariable Long teamId,
-        @Valid @RequestBody UpsertTeamRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @Valid @RequestBody UpdateTeamRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.updateTeam(teamId, request, emailPrincipal.getUser());
+        Team team = teamService.updateTeam(teamId, request, principal.getUser());
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -67,9 +81,9 @@ public class TeamController {
     public ResponseEntity<SingleItemResponse<TeamResponse>> updateLeader(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateLeaderRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.updateLeader(teamId, request, emailPrincipal.getUser());
+        Team team = teamService.updateLeader(teamId, request, principal.getUser());
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -78,9 +92,9 @@ public class TeamController {
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> deleteTeam(
         @PathVariable Long teamId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        teamService.deleteTeam(teamId, emailPrincipal.getUser());
+        teamService.deleteTeam(teamId, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }

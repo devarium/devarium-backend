@@ -1,12 +1,11 @@
 package io.devarium.api.controller.member;
 
-import io.devarium.api.common.PageTypeConverter;
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.controller.member.dto.CreateMembersRequest;
 import io.devarium.api.controller.member.dto.DeleteMembersRequest;
 import io.devarium.api.controller.member.dto.MemberResponse;
 import io.devarium.api.controller.member.dto.UpdateMembersRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.member.Member;
 import io.devarium.core.domain.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -33,31 +32,28 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/{teamId}/members")
+    @PostMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> createMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody CreateMembersRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        memberService.createMembers(teamId, request, emailPrincipal.getUser());
+        memberService.createMembers(teamId, request, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{teamId}/members")
+    @GetMapping("/teams/{teamId}/members")
     public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByTeam(
         @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
         @PathVariable Long teamId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Page<Member> members = memberService.getMembersByTeamId(
             pageable,
             teamId,
-            emailPrincipal.getUser()
+            principal.getUser()
         );
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
+        Page<MemberResponse> response = members.map(MemberResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
@@ -65,35 +61,31 @@ public class MemberController {
     @GetMapping("/members")
     public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByUser(
         @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Page<Member> members = memberService.getMembersByUser(pageable, emailPrincipal.getUser());
-
-        Page<MemberResponse> response = PageTypeConverter.convert(
-            members,
-            MemberResponse::from
-        );
+        Page<Member> members = memberService.getMembersByUser(pageable, principal.getUser());
+        Page<MemberResponse> response = members.map(MemberResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
-    @PutMapping("/{teamId}/members")
+    @PutMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> updateMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateMembersRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        memberService.updateMembers(teamId, request, emailPrincipal.getUser());
+        memberService.updateMembers(teamId, request, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{teamId}/members")
+    @DeleteMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> deleteMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody DeleteMembersRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        memberService.deleteMembers(teamId, request, emailPrincipal.getUser());
+        memberService.deleteMembers(teamId, request, principal.getUser());
         return ResponseEntity.noContent().build();
     }
 }
