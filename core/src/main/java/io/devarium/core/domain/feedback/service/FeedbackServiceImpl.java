@@ -11,6 +11,8 @@ import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.SyncQuestion;
 import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
+import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.user.User;
@@ -29,11 +31,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final ProjectService projectService;
+    private final MemberService memberService;
 
     @Override
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
         Project project = projectService.getProject(projectId);
-        // TODO: 리뷰 요청 중인 프로젝트인지 검증 필요
+        project.validateStatusInReview();
 
         Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId).stream()
             .collect(Collectors.toMap(Question::getId, q -> q));
@@ -61,7 +64,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Feedback getFeedback(Long projectId, User user) {
         Project project = projectService.getProject(projectId);
-        // TODO: 프로젝트 접근 권환 확인
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
 
         List<Question> questions = questionRepository.findAllByProjectId(projectId);
         List<Answer> answers = answerRepository.findAllByQuestionIdIn(
@@ -91,7 +95,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         User user
     ) {
         Project project = projectService.getProject(projectId);
-        // TODO: 프로젝트 접근 권환 확인
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
 
         // 기존 질문 조회
         List<Question> questions = questionRepository.findAllByProjectId(projectId);
