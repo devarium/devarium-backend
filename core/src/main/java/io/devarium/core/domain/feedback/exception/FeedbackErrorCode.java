@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum FeedbackErrorCode {
+    ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "Answer not found with id: %d"),
     QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "Question not found with id: %d");
 
     private final HttpStatus status;
