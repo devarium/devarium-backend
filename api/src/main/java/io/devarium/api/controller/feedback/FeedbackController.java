@@ -1,5 +1,6 @@
 package io.devarium.api.controller.feedback;
 
+import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.feedback.dto.AnswerResponse;
@@ -7,7 +8,6 @@ import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.QuestionResponse;
 import io.devarium.api.controller.feedback.dto.SubmitAnswersRequest;
 import io.devarium.api.controller.feedback.dto.SyncQuestionsRequest;
-import io.devarium.core.auth.EmailPrincipal;
 import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.question.Question;
@@ -37,12 +37,12 @@ public class FeedbackController {
     public ResponseEntity<ListResponse<AnswerResponse>> submitFeedbackAnswers(
         @PathVariable Long projectId,
         @Valid @RequestBody SubmitAnswersRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<Answer> answers = feedbackService.submitFeedbackAnswers(
             projectId,
             request,
-            emailPrincipal.getUser()
+            principal.getUser()
         );
         List<AnswerResponse> responses = answers.stream().map(AnswerResponse::from).toList();
 
@@ -52,9 +52,9 @@ public class FeedbackController {
     @GetMapping
     public ResponseEntity<SingleItemResponse<FeedbackResponse>> getFeedback(
         @PathVariable Long projectId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Feedback feedback = feedbackService.getFeedback(projectId, emailPrincipal.getUser());
+        Feedback feedback = feedbackService.getFeedback(projectId, principal.getUser());
         FeedbackResponse response = FeedbackResponse.from(feedback);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -73,7 +73,7 @@ public class FeedbackController {
     @GetMapping("/summary")
     public ResponseEntity<ListResponse<AnswerResponse>> getFeedbackSummary(
         @PathVariable Long projectId,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         // 제출된 답변 요약 조회
         // TODO: 객관식 점수 평균 및 주관식 AI 요약 기능
@@ -84,12 +84,12 @@ public class FeedbackController {
     public ResponseEntity<ListResponse<QuestionResponse>> syncFeedbackQuestions(
         @PathVariable Long projectId,
         @Valid @RequestBody SyncQuestionsRequest request,
-        @AuthenticationPrincipal EmailPrincipal emailPrincipal
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<Question> questions = feedbackService.syncFeedbackQuestions(
             projectId,
             request,
-            emailPrincipal.getUser()
+            principal.getUser()
         );
         List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
 
