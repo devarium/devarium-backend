@@ -59,4 +59,10 @@ public class Project {
         this.skills.clear();
         this.skills.addAll(skills);
     }
+
+    public void validateStatusInReview() {
+        if (status != ProjectStatus.IN_REVIEW) {
+            throw new RuntimeException();
+        }
+    }
 }
