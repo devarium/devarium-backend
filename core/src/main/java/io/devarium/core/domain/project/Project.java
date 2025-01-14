@@ -12,6 +12,7 @@ import lombok.Getter;
 public class Project {
 
     private final Long id;
+    private final Long teamId;
     private final Instant createdAt;
     private final Set<Skill> skills;
 
@@ -25,6 +26,7 @@ public class Project {
         String name,
         String description,
         ProjectStatus status,
+        Long teamId,
         Instant createdAt,
         Set<Skill> skills
     ) {
@@ -32,6 +34,7 @@ public class Project {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.teamId = teamId;
         this.createdAt = createdAt;
         this.skills = skills != null ? new HashSet<>(skills) : new HashSet<>();
     }

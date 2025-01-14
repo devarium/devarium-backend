@@ -71,11 +71,12 @@ public class ProjectEntity extends BaseEntity {
         this.team = team;
     }
 
-    public static ProjectEntity fromDomain(Project project) {
+    public static ProjectEntity fromDomain(Project project, TeamEntity team) {
         return ProjectEntity.builder()
             .name(project.getName())
             .description(project.getDescription())
             .status(project.getStatus())
+            .team(team)
             .skills(new HashSet<>(project.getSkills()))
             .build();
     }
@@ -86,6 +87,7 @@ public class ProjectEntity extends BaseEntity {
             .name(name)
             .description(description)
             .status(status)
+            .teamId(team.getId())
             .skills(new HashSet<>(skills))
             .build();
     }
