@@ -68,6 +68,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member getUserMembership(Long teamId, Long userId) {
+        return memberRepository.findByUserIdAndTeamId(userId, teamId)
+            .orElseThrow(() -> new MemberException(
+                MemberErrorCode.MEMBER_NOT_IN_TEAM,
+                userId,
+                teamId
+            ));
+    }
+
+    @Override
     public Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.VIEWER);
@@ -121,15 +131,6 @@ public class MemberServiceImpl implements MemberService {
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
         members.forEach(member -> member.validateMembership(teamId));
         memberRepository.deleteAll(members);
-    }
-
-    private Member getUserMembership(Long teamId, Long userId) {
-        return memberRepository.findByUserIdAndTeamId(userId, teamId)
-            .orElseThrow(() -> new MemberException(
-                MemberErrorCode.MEMBER_NOT_IN_TEAM,
-                userId,
-                teamId
-            ));
     }
 
     private void updateMemberRole(
