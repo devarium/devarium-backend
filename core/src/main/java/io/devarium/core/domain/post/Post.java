@@ -43,11 +43,6 @@ public class Post implements Likeable {
     }
 
     @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
     public EntityType getType() {
         return EntityType.POST;
     }

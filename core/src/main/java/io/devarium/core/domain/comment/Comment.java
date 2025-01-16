@@ -40,11 +40,6 @@ public class Comment implements Likeable {
     }
 
     @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
     public EntityType getType() {
         return EntityType.COMMENT;
     }
