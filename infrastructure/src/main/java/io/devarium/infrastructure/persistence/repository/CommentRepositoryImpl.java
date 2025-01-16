@@ -59,9 +59,4 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Page<Comment> findByPostId(Long postId, Pageable pageable) {
         return commentJpaRepository.findByPostId(postId, pageable).map(CommentEntity::toDomain);
     }
-
-    @Override
-    public boolean existsById(Long id) {
-        return commentJpaRepository.existsById(id);
-    }
 }

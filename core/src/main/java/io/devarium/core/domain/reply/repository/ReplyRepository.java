@@ -18,6 +18,4 @@ public interface ReplyRepository {
     Optional<Reply> findById(Long id);
 
     Page<Reply> findByCommentId(Long commentId, Pageable pageable);
-
-    boolean existsById(Long id);
 }

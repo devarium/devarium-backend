@@ -49,9 +49,4 @@ public class PostRepositoryImpl implements PostRepository {
     public Page<Post> findAll(Pageable pageable) {
         return postJpaRepository.findAll(pageable).map(PostEntity::toDomain);
     }
-
-    @Override
-    public boolean existsById(Long id) {
-        return postJpaRepository.existsById(id);
-    }
 }

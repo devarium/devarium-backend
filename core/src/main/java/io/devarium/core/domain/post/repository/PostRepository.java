@@ -14,6 +14,4 @@ public interface PostRepository {
     Optional<Post> findById(Long id);
 
     Page<Post> findAll(Pageable pageable);
-
-    boolean existsById(Long id);
 }
