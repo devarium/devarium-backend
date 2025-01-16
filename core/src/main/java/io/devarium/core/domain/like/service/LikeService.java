@@ -10,4 +10,6 @@ public interface LikeService {
     void unlike(Likeable likeable, User user);
 
     Long getLikeCount(Likeable likeable);
+
+    boolean hasUserLiked(Likeable likeable, User user);
 }

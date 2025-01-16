@@ -13,7 +13,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void like(Likeable likeable, User user) {
-        if (likeRepository.existsByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user)) {
+        if (hasUserLiked(likeable, user)) {
             unlike(likeable, user);
         } else {
             Like like = Like.builder()
@@ -33,5 +33,10 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Long getLikeCount(Likeable likeable) {
         return likeRepository.countByTargetTypeAndTargetId(likeable.getType(), likeable.getId());
+    }
+
+    @Override
+    public boolean hasUserLiked(Likeable likeable, User user) {
+        return likeRepository.existsByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user);
     }
 }

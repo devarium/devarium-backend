@@ -29,4 +29,10 @@ public class LikeServiceDecorator implements LikeService {
     public Long getLikeCount(Likeable likeable) {
         return likeService.getLikeCount(likeable);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean hasUserLiked(Likeable likeable, User user) {
+        return likeService.hasUserLiked(likeable, user);
+    }
 }
