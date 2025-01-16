@@ -1,8 +1,8 @@
 package io.devarium.core.domain.feedback.port;
 
-import io.devarium.core.domain.feedback.QuestionWithAnswers;
+import java.util.List;
 
 public interface TextSummarizer {
 
-    String summarizeAnswers(QuestionWithAnswers questionWithAnswers);
+    String summarizeTexts(List<String> texts);
 }
