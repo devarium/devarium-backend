@@ -7,6 +7,7 @@ import io.devarium.api.controller.post.dto.PostResponse;
 import io.devarium.api.controller.post.dto.UpsertPostRequest;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
+import io.devarium.core.domain.like.service.LikeService;
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.service.PostService;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ public class PostController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<PostResponse>> createPost(
@@ -95,5 +97,31 @@ public class PostController {
     ) {
         postService.deletePost(postId, principal.getUser());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<Void> likePost(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Post post = postService.getPost(postId);
+        likeService.like(post, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<Void> unlikePost(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Post post = postService.getPost(postId);
+        likeService.unlike(post, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}/likes")
+    public ResponseEntity<Long> getPostLikeCount(@PathVariable Long postId) {
+        Post post = postService.getPost(postId);
+        return ResponseEntity.ok(likeService.getLikeCount(post));
     }
 }
