@@ -5,6 +5,8 @@ import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
+import io.devarium.core.domain.member.exception.MemberErrorCode;
+import io.devarium.core.domain.member.exception.MemberException;
 import io.devarium.core.domain.like.exception.LikeErrorCode;
 import io.devarium.core.domain.like.exception.LikeException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
@@ -13,6 +15,11 @@ import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
+import io.devarium.core.storage.exception.StorageException;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
+import io.devarium.core.domain.team.exception.TeamErrorCode;
+import io.devarium.core.domain.team.exception.TeamException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
@@ -85,6 +92,66 @@ public class GlobalExceptionHandler {
             );
     }
 
+    @ExceptionHandler(TeamException.class)
+    public ResponseEntity<ErrorResponse> handlerTeamException(TeamException e) {
+        TeamErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<ErrorResponse> handlerMemberException(MemberException e) {
+        MemberErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ErrorResponse> handleStorageException(StorageException e) {
+        StorageErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorResponse> handleUserException(UserException e) {
+        UserErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(LikeException.class)
+    public ResponseEntity<ErrorResponse> handleLikeException(LikeException e) {
+        LikeErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException e
@@ -105,17 +172,5 @@ public class GlobalExceptionHandler {
                 combinedErrorMessage
             )
         );
-    }
-
-    @ExceptionHandler(LikeException.class)
-    public ResponseEntity<ErrorResponse> handleLikeException(LikeException e) {
-        LikeErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(ErrorResponse.of(
-                errorCode.getStatus().name(),
-                errorCode.getStatus().value(),
-                e.getMessage())
-            );
     }
 }

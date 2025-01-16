@@ -30,13 +30,13 @@ public class UserEntity extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String username;
 
     private String bio;
 
     @Column(nullable = false)
-    private String picture;
+    private String profileImageUrl;
 
     private String blogUrl;
 
@@ -46,7 +46,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
 
@@ -56,9 +56,9 @@ public class UserEntity extends BaseEntity {
     private UserEntity(
         Long id,
         String email,
-        String name,
+        String username,
         String bio,
-        String picture,
+        String profileImageUrl,
         String blogUrl,
         String githubUrl,
         UserRole role,
@@ -66,9 +66,9 @@ public class UserEntity extends BaseEntity {
     ) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.username = username;
         this.bio = bio;
-        this.picture = picture;
+        this.profileImageUrl = profileImageUrl;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
         this.role = role;
@@ -78,9 +78,9 @@ public class UserEntity extends BaseEntity {
     public static UserEntity fromDomain(User user) {
         return UserEntity.builder()
             .email(user.getEmail())
-            .name(user.getName())
+            .username(user.getUsername())
             .bio(user.getBio())
-            .picture(user.getPicture())
+            .profileImageUrl(user.getProfileImageUrl())
             .blogUrl(user.getBlogUrl())
             .githubUrl(user.getGithubUrl())
             .role(user.getRole())
@@ -92,9 +92,9 @@ public class UserEntity extends BaseEntity {
         return User.builder()
             .id(id)
             .email(email)
-            .name(name)
+            .username(username)
             .bio(bio)
-            .picture(picture)
+            .profileImageUrl(profileImageUrl)
             .blogUrl(blogUrl)
             .githubUrl(githubUrl)
             .role(role)
@@ -103,9 +103,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void update(User domain) {
-        this.name = domain.getName();
+        this.username = domain.getUsername();
         this.bio = domain.getBio();
-        this.picture = domain.getPicture();
+        this.profileImageUrl = domain.getProfileImageUrl();
         this.blogUrl = domain.getBlogUrl();
         this.githubUrl = domain.getGithubUrl();
         this.deletedAt = domain.getDeletedAt();

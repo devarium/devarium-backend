@@ -7,12 +7,15 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.project.port.UpsertProject;
 import io.devarium.core.domain.project.repository.ProjectRepository;
 import io.devarium.core.domain.skill.Skill;
+import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Nested;
@@ -30,6 +33,17 @@ class ProjectServiceTest {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final Set<Skill> SKILLS = Set.of(Skill.JAVA, Skill.SPRING_BOOT);
+    private static final User USER = User.builder()
+        .id(10L)
+        .email("testUser@email.com")
+        .username("testUser")
+        .bio("bio")
+        .profileImageUrl("picture")
+        .blogUrl("blogUrl")
+        .githubUrl("githubUrl")
+        .role(UserRole.USER)
+        .provider(OAuth2Provider.GOOGLE)
+        .build();
 
     @Mock
     private ProjectRepository projectRepository;
@@ -69,7 +83,7 @@ class ProjectServiceTest {
             given(projectRepository.save(any(Project.class))).willReturn(savedProject);
 
             // when
-            Project createdProject = projectService.createProject(request);
+            Project createdProject = projectService.createProject(request, USER);
 
             // then
             then(projectRepository).should().save(refEq(expectedProject));
@@ -156,7 +170,7 @@ class ProjectServiceTest {
             given(projectRepository.save(any(Project.class))).willReturn(savedProject);
 
             // when
-            Project updatedProject = projectService.updateProject(PROJECT_ID, request);
+            Project updatedProject = projectService.updateProject(PROJECT_ID, request, USER);
 
             // then
             then(projectRepository).should().findById(PROJECT_ID);
@@ -175,7 +189,7 @@ class ProjectServiceTest {
             given(projectRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> projectService.updateProject(NON_EXISTENT_ID, request))
+            assertThatThrownBy(() -> projectService.updateProject(NON_EXISTENT_ID, request, USER))
                 .isInstanceOf(ProjectException.class)
                 .hasMessage(ProjectErrorCode.PROJECT_NOT_FOUND.getMessage(NON_EXISTENT_ID));
 
@@ -190,7 +204,7 @@ class ProjectServiceTest {
         @Test
         void givenProjectId_whenDeleteProject_thenProjectIsDeleted() {
             // when
-            projectService.deleteProject(PROJECT_ID);
+            projectService.deleteProject(PROJECT_ID, USER);
 
             // then
             then(projectRepository).should().deleteById(PROJECT_ID);
