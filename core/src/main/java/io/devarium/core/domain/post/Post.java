@@ -2,12 +2,14 @@ package io.devarium.core.domain.post;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
+import io.devarium.core.domain.like.EntityType;
+import io.devarium.core.domain.like.Likeable;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Post {
+public class Post implements Likeable {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -38,5 +40,15 @@ public class Post {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.POST;
     }
 }
