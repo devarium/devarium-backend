@@ -1,6 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.feedback.Feedback;
+import io.devarium.core.domain.feedback.FeedbackSummary;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
@@ -27,6 +28,11 @@ public class FeedbackServiceDecorator implements FeedbackService {
     @Transactional(readOnly = true)
     public Feedback getFeedback(Long projectId, User user) {
         return feedbackService.getFeedback(projectId, user);
+    }
+
+    @Override
+    public FeedbackSummary getFeedbackSummary(Long projectId, User user) {
+        return feedbackService.getFeedbackSummary(projectId, user);
     }
 
     @Override
