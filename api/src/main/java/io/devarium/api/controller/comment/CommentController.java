@@ -7,6 +7,7 @@ import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
+import io.devarium.core.domain.like.service.LikeService;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ public class CommentController {
 
     private final CommentService commentService;
     private final ReplyService replyService;
+    private final LikeService likeService;
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<CommentResponse>> createComment(
@@ -89,5 +91,31 @@ public class CommentController {
     ) {
         commentService.deleteComment(commentId, principal.getUser());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{commentId}/likes")
+    public ResponseEntity<Void> likeComment(
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Comment comment = commentService.getComment(commentId);
+        likeService.like(comment, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{commentId}/likes")
+    public ResponseEntity<Void> unlikeComment(
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Comment comment = commentService.getComment(commentId);
+        likeService.unlike(comment, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{commentId}/likes")
+    public ResponseEntity<Long> getCommentLikeCount(@PathVariable Long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        return ResponseEntity.ok(likeService.getLikeCount(comment));
     }
 }
