@@ -13,12 +13,12 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void like(Likeable likeable, User user) {
-        if (likeRepository.existsByEntityTypeAndEntityIdAndUser(likeable.getType(), likeable.getId(), user)) {
+        if (likeRepository.existsByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user)) {
             unlike(likeable, user);
         } else {
             Like like = Like.builder()
-                .entityType(likeable.getType())
-                .entityId(likeable.getId())
+                .targetType(likeable.getType())
+                .targetId(likeable.getId())
                 .userId(user.getId())
                 .build();
             likeRepository.save(like);
@@ -27,11 +27,11 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void unlike(Likeable likeable, User user) {
-        likeRepository.deleteByEntityTypeAndEntityIdAndUser(likeable.getType(), likeable.getId(), user);
+        likeRepository.deleteByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user);
     }
 
     @Override
     public Long getLikeCount(Likeable likeable) {
-        return likeRepository.countByEntityTypeAndEntityId(likeable.getType(), likeable.getId());
+        return likeRepository.countByTargetTypeAndTargetId(likeable.getType(), likeable.getId());
     }
 }

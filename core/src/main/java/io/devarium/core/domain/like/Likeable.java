@@ -4,5 +4,5 @@ public interface Likeable {
 
     Long getId();
 
-    EntityType getType();
+    LikeTargetType getType();
 }

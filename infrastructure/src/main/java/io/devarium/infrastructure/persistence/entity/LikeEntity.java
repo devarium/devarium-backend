@@ -1,6 +1,6 @@
 package io.devarium.infrastructure.persistence.entity;
 
-import io.devarium.core.domain.like.EntityType;
+import io.devarium.core.domain.like.LikeTargetType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "likes",
     uniqueConstraints = @UniqueConstraint(
-        columnNames = {"user_id", "entity_type", "entity_id"}))
+        columnNames = {"user_id", "target_type", "target_id"}))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikeEntity extends BaseEntity {
@@ -32,20 +32,20 @@ public class LikeEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EntityType entityType;
+    private LikeTargetType targetType;
 
     @Column(nullable = false)
-    private Long entityId;
+    private Long targetId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @Builder
-    private LikeEntity(Long id, EntityType entityType, Long entityId, UserEntity user) {
+    private LikeEntity(Long id, LikeTargetType targetType, Long targetId, UserEntity user) {
         this.id = id;
-        this.entityType = entityType;
-        this.entityId = entityId;
+        this.targetType = targetType;
+        this.targetId = targetId;
         this.user = user;
     }
 }

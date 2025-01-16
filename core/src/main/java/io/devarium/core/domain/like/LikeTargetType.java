@@ -5,16 +5,16 @@ import io.devarium.core.domain.like.exception.LikeException;
 import lombok.Getter;
 
 @Getter
-public enum EntityType {
+public enum LikeTargetType {
     POST,
     COMMENT,
     REPLY;
 
-    public static EntityType fromString(String type) {
+    public static LikeTargetType fromString(String type) {
         try {
-            return EntityType.valueOf(type.toUpperCase());
+            return LikeTargetType.valueOf(type.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new LikeException(LikeErrorCode.ENTITY_TYPE_NOT_FOUND, type);
+            throw new LikeException(LikeErrorCode.TARGET_TYPE_NOT_FOUND, type);
         }
     }
 }

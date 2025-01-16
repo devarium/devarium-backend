@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.devarium.core.domain.like.EntityType;
+import io.devarium.core.domain.like.LikeTargetType;
 import io.devarium.core.domain.like.Like;
 import io.devarium.core.domain.like.repository.LikeRepository;
 import io.devarium.core.domain.user.User;
@@ -27,8 +27,8 @@ public class LikeRepositoryImpl implements LikeRepository {
             .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND, like.getUserId()));
 
         LikeEntity entity = LikeEntity.builder()
-            .entityType(like.getEntityType())
-            .entityId(like.getEntityId())
+            .targetType(like.getTargetType())
+            .targetId(like.getTargetId())
             .user(userEntity)
             .build();
 
@@ -36,29 +36,29 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public boolean existsByEntityTypeAndEntityIdAndUser(EntityType entityType, Long typeId, User user) {
+    public boolean existsByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId, User user) {
         QLikeEntity like = QLikeEntity.likeEntity;
         return queryFactory
             .selectOne()
             .from(like)
-            .where(like.entityType.eq(entityType), like.entityId.eq(typeId), like.user.id.eq(user.getId()))
+            .where(like.targetType.eq(targetType), like.targetId.eq(targetId), like.user.id.eq(user.getId()))
             .fetchFirst() != null;
     }
 
     @Override
-    public void deleteByEntityTypeAndEntityIdAndUser(EntityType entityType, Long typeId, User user) {
+    public void deleteByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId, User user) {
         QLikeEntity like = QLikeEntity.likeEntity;
         queryFactory.delete(like)
-            .where(like.entityType.eq(entityType), like.entityId.eq(typeId), like.user.id.eq(user.getId()))
+            .where(like.targetType.eq(targetType), like.targetId.eq(targetId), like.user.id.eq(user.getId()))
             .execute();
     }
 
     @Override
-    public Long countByEntityTypeAndEntityId(EntityType entityType, Long typeId) {
+    public Long countByTargetTypeAndTargetId(LikeTargetType targetType, Long targetId) {
         QLikeEntity like = QLikeEntity.likeEntity;
         return queryFactory.select(like.count())
             .from(like)
-            .where(like.entityType.eq(entityType), like.entityId.eq(typeId))
+            .where(like.targetType.eq(targetType), like.targetId.eq(targetId))
             .fetchOne();
     }
 }

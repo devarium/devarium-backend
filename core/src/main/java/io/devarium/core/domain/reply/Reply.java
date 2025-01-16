@@ -2,7 +2,7 @@ package io.devarium.core.domain.reply;
 
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
-import io.devarium.core.domain.like.EntityType;
+import io.devarium.core.domain.like.LikeTargetType;
 import io.devarium.core.domain.like.Likeable;
 import java.time.Instant;
 import lombok.Builder;
@@ -40,7 +40,7 @@ public class Reply implements Likeable {
     }
 
     @Override
-    public EntityType getType() {
-        return EntityType.REPLY;
+    public LikeTargetType getType() {
+        return LikeTargetType.REPLY;
     }
 }
