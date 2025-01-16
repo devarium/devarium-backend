@@ -78,11 +78,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public LikeService likeService(
-        LikeRepository likeRepository, PostRepository postRepository,
-        CommentRepository commentRepository, ReplyRepository replyRepository) {
-        return new LikeServiceDecorator(
-            new LikeServiceImpl(likeRepository, postRepository, commentRepository,
-                replyRepository));
+    public LikeService likeService(LikeRepository likeRepository) {
+        return new LikeServiceDecorator(new LikeServiceImpl(likeRepository));
     }
 }
