@@ -1,8 +1,6 @@
 spring:
   application:
     name: api
-  config:
-    import: file:infrastructure/src/main/resources/application.yaml
   security:
     oauth2:
       client:
