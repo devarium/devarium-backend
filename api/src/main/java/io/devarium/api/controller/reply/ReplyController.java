@@ -4,6 +4,7 @@ import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
+import io.devarium.core.domain.like.service.LikeService;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReplyController {
 
     private final ReplyService replyService;
+    private final LikeService likeService;
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
@@ -67,5 +69,31 @@ public class ReplyController {
     ) {
         replyService.deleteReply(replyId, principal.getUser());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{replyId}/likes")
+    public ResponseEntity<Void> likeReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Reply reply = replyService.getReply(replyId);
+        likeService.like(reply, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{replyId}/likes")
+    public ResponseEntity<Void> unlikeReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Reply reply = replyService.getReply(replyId);
+        likeService.unlike(reply, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{replyId}/likes")
+    public ResponseEntity<Long> getReplyLikeCount(@PathVariable Long replyId) {
+        Reply reply = replyService.getReply(replyId);
+        return ResponseEntity.ok(likeService.getLikeCount(reply));
     }
 }
