@@ -1,5 +1,6 @@
 package io.devarium.infrastructure.persistence.service;
 
+import io.devarium.core.domain.like.Likeable;
 import io.devarium.core.domain.like.service.LikeService;
 import io.devarium.core.domain.like.service.LikeServiceImpl;
 import io.devarium.core.domain.user.User;
@@ -13,18 +14,19 @@ public class LikeServiceDecorator implements LikeService {
 
     @Override
     @Transactional
-    public void like(String type, Long typeId, User user) {
-        likeService.like(type, typeId, user);
+    public void like(Likeable likeable, User user) {
+        likeService.like(likeable, user);
     }
 
     @Override
     @Transactional
-    public void unlike(String type, Long typeId, User user) {
-        likeService.unlike(type, typeId, user);
+    public void unlike(Likeable likeable, User user) {
+        likeService.unlike(likeable, user);
     }
 
     @Override
-    public Long countLikes(String type, Long typeId) {
-        return likeService.countLikes(type, typeId);
+    @Transactional(readOnly = true)
+    public Long getLikeCount(Likeable likeable) {
+        return likeService.getLikeCount(likeable);
     }
 }

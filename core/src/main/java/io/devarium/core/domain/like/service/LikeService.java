@@ -1,12 +1,13 @@
 package io.devarium.core.domain.like.service;
 
+import io.devarium.core.domain.like.Likeable;
 import io.devarium.core.domain.user.User;
 
 public interface LikeService {
 
-    void like(String type, Long typeId, User user);
+    void like(Likeable likeable, User user);
 
-    void unlike(String type, Long typeId, User user);
+    void unlike(Likeable likeable, User user);
 
-    Long countLikes(String type, Long typeId);
+    Long getLikeCount(Likeable likeable);
 }
