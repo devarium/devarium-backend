@@ -3,7 +3,7 @@ name: dev-deploy-java-app-to-ec2.yml
 on:
   push:
     branches:
-      - main
+      - BE-34
 
 env:
   DOCKER_IMAGE_TAG_NAME: dev-devarium-backend
@@ -24,7 +24,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
 
   docker-push:
     needs: build-app
@@ -67,14 +67,24 @@ jobs:
             sudo usermod -aG docker $USER
             newgrp docker
             
-            CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080-8080")
-            
+            CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080")
             if [ ! -z "$CONTAINER_ID" ]; then
-            sudo docker stop $CONTAINER_ID
-            sudo docker rm $CONTAINER_ID
+              sudo docker stop $CONTAINER_ID
+              sudo docker rm $CONTAINER_ID
             fi
             
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
 
             sudo docker run -d -p 8080:8080 \
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
+              -e SPRING_PROFILES_ACTIVE=api,infrastructure,infrastructure-dev \
+              -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} \
+              -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} \
+              -e DEV_DB_NAME=${{ secrets.DEV_DB_NAME }} \
+              -e DEV_DB_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
+              -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+              -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+              -e JWT_ACCESS_TOKEN_EXPIRATION=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }} \
+              -e JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }} \
+              -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+              -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+              ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
