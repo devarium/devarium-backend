@@ -26,13 +26,13 @@ public class FeedbackServiceDecorator implements FeedbackService {
 
     @Override
     @Transactional(readOnly = true)
-    public Feedback getFeedback(Long projectId, User user) {
-        return feedbackService.getFeedback(projectId, user);
+    public List<Feedback> getFeedbacks(Long projectId, User user) {
+        return feedbackService.getFeedbacks(projectId, user);
     }
 
     @Override
-    public FeedbackSummary getFeedbackSummary(Long projectId, User user) {
-        return feedbackService.getFeedbackSummary(projectId, user);
+    public List<FeedbackSummary> getFeedbackSummaries(Long projectId, User user) {
+        return feedbackService.getFeedbackSummaries(projectId, user);
     }
 
     @Override
