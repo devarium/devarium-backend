@@ -124,8 +124,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         return questionRepository.saveAll(upsertQuestions(projectId, request, questions));
     }
-
-
+    
     private FeedbackSummary summarizeFeedback(Feedback feedback) {
         List<String> answerContents = feedback.answers().stream()
             .map(Answer::getContent)
