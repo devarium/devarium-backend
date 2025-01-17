@@ -2,7 +2,6 @@ package io.devarium.api.controller.feedback;
 
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.ListResponse;
-import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.feedback.dto.AnswerResponse;
 import io.devarium.api.controller.feedback.dto.FeedbackResponse;
 import io.devarium.api.controller.feedback.dto.FeedbackSummaryResponse;
@@ -52,14 +51,14 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public ResponseEntity<SingleItemResponse<FeedbackResponse>> getFeedback(
+    public ResponseEntity<ListResponse<FeedbackResponse>> getFeedback(
         @PathVariable Long projectId,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Feedback feedback = feedbackService.getFeedback(projectId, principal.getUser());
-        FeedbackResponse response = FeedbackResponse.from(feedback);
+        List<Feedback> feedbacks = feedbackService.getFeedbacks(projectId, principal.getUser());
+        List<FeedbackResponse> responses = feedbacks.stream().map(FeedbackResponse::from).toList();
 
-        return ResponseEntity.ok(SingleItemResponse.from(response));
+        return ResponseEntity.ok(ListResponse.from(responses));
     }
 
     @GetMapping("/questions")
@@ -73,17 +72,19 @@ public class FeedbackController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<SingleItemResponse<FeedbackSummaryResponse>> getFeedbackSummary(
+    public ResponseEntity<ListResponse<FeedbackSummaryResponse>> getFeedbackSummary(
         @PathVariable Long projectId,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        FeedbackSummary feedbackSummary = feedbackService.getFeedbackSummary(
+        List<FeedbackSummary> feedbackSummaries = feedbackService.getFeedbackSummaries(
             projectId,
             principal.getUser()
         );
-        FeedbackSummaryResponse response = FeedbackSummaryResponse.from(feedbackSummary);
+        List<FeedbackSummaryResponse> responses = feedbackSummaries.stream()
+            .map(FeedbackSummaryResponse::from)
+            .toList();
 
-        return ResponseEntity.ok(SingleItemResponse.from(response));
+        return ResponseEntity.ok(ListResponse.from(responses));
     }
 
     @PutMapping("/questions")
