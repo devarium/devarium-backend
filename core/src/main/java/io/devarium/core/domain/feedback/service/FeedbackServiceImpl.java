@@ -114,6 +114,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         return questionRepository.saveAll(upsertQuestions(projectId, request, questions));
     }
 
+    @Override
+    public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
+
+    }
+
     private List<Question> upsertQuestions(
         Long projectId,
         SyncQuestions request,

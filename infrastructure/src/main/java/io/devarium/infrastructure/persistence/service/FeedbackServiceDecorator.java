@@ -40,4 +40,10 @@ public class FeedbackServiceDecorator implements FeedbackService {
     public List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user) {
         return feedbackService.syncFeedbackQuestions(projectId, request, user);
     }
+
+    @Override
+    @Transactional
+    public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
+        feedbackService.deleteFeedbackQuestion(projectId, questionId, user);
+    }
 }

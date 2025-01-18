@@ -17,4 +17,6 @@ public interface FeedbackService {
     List<Question> getFeedbackQuestions(Long projectId);
 
     List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user);
+
+    void deleteFeedbackQuestion(Long projectId, Long questionId, User user);
 }
