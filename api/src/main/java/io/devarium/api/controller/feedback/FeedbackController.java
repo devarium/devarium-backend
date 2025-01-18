@@ -135,6 +135,7 @@ public class FeedbackController {
         @PathVariable Long questionId,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return null;
+        feedbackService.deleteFeedbackQuestion(projectId, questionId, principal.getUser());
+        return ResponseEntity.noContent().build();
     }
 }
