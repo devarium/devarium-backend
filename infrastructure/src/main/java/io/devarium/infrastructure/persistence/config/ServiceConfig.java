@@ -3,9 +3,6 @@ package io.devarium.infrastructure.persistence.config;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
-import io.devarium.core.domain.member.repository.MemberRepository;
-import io.devarium.core.domain.member.service.MemberService;
-import io.devarium.core.domain.member.service.MemberServiceImpl;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.feedback.service.FeedbackService;
@@ -13,10 +10,6 @@ import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.member.repository.MemberRepository;
 import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.member.service.MemberServiceImpl;
-import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
-import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
-import io.devarium.core.domain.feedback.service.FeedbackService;
-import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
@@ -34,10 +27,8 @@ import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.service.StorageService;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
-import io.devarium.infrastructure.persistence.service.MemberServiceDecorator;
 import io.devarium.infrastructure.persistence.service.FeedbackServiceDecorator;
 import io.devarium.infrastructure.persistence.service.MemberServiceDecorator;
-import io.devarium.infrastructure.persistence.service.FeedbackServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
@@ -91,10 +82,16 @@ public class ServiceConfig {
     public FeedbackService feedbackService(
         QuestionRepository questionRepository,
         AnswerRepository answerRepository,
-        ProjectService projectService
+        ProjectService projectService,
+        MemberService memberService
     ) {
         return new FeedbackServiceDecorator(
-            new FeedbackServiceImpl(questionRepository, answerRepository, projectService)
+            new FeedbackServiceImpl(
+                questionRepository,
+                answerRepository,
+                projectService,
+                memberService
+            )
         );
     }
 }
