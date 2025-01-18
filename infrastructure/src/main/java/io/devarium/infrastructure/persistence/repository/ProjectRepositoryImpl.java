@@ -5,6 +5,8 @@ import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.project.repository.ProjectRepository;
 import io.devarium.infrastructure.persistence.entity.ProjectEntity;
+import io.devarium.infrastructure.persistence.entity.TeamEntity;
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProjectRepositoryImpl implements ProjectRepository {
 
+    private final EntityManager entityManager;
     private final ProjectJpaRepository projectJpaRepository;
 
     @Override
@@ -27,7 +30,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
             return projectJpaRepository.save(entity).toDomain();
         }
 
-        ProjectEntity entity = ProjectEntity.fromDomain(project);
+        TeamEntity team = entityManager.getReference(TeamEntity.class, project.getTeamId());
+        ProjectEntity entity = ProjectEntity.fromDomain(project, team);
         return projectJpaRepository.save(entity).toDomain();
     }
 
