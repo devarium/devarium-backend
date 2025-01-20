@@ -116,7 +116,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
 
+        questionRepository.deleteById(questionId);
     }
 
     private List<Question> upsertQuestions(
