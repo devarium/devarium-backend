@@ -3,7 +3,7 @@ name: dev-deploy-java-app-to-ec2.yml
 on:
   push:
     branches:
-      - BE-34
+      - dev
 
 env:
   DOCKER_IMAGE_TAG_NAME: dev-devarium-backend
