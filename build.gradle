@@ -63,6 +63,12 @@ springBoot {
 
 tasks.named('shadowJar') {
     archiveClassifier.set('')
+
+    manifest {
+        attributes(
+                'Main-Class': 'io.devarium.api.ApiApplication'
+        )
+    }
 }
 
 tasks.named('bootJar') {
