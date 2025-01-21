@@ -8,16 +8,20 @@ public record CommentResponse(
     String content,
     Long postId,
     Long userId,
-    Instant createdAt
+    Instant createdAt,
+    Long likeCount,
+    Boolean userLiked
 ) {
 
-    public static CommentResponse from(Comment comment) {
+    public static CommentResponse from(Comment comment, Long likeCount, Boolean userLiked) {
         return new CommentResponse(
             comment.getId(),
             comment.getContent(),
             comment.getPostId(),
             comment.getUserId(),
-            comment.getCreatedAt()
+            comment.getCreatedAt(),
+            likeCount,
+            userLiked
         );
     }
 }

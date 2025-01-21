@@ -35,7 +35,7 @@ public class ReplyController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.createReply(request, principal.getUser());
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -43,9 +43,12 @@ public class ReplyController {
     }
 
     @GetMapping("/{replyId}")
-    public ResponseEntity<SingleItemResponse<ReplyResponse>> getReply(@PathVariable Long replyId) {
+    public ResponseEntity<SingleItemResponse<ReplyResponse>> getReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
         Reply reply = replyService.getReply(replyId);
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -57,7 +60,7 @@ public class ReplyController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.updateReply(replyId, request, principal.getUser());
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -91,9 +94,10 @@ public class ReplyController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{replyId}/likes")
-    public ResponseEntity<Long> getReplyLikeCount(@PathVariable Long replyId) {
-        Reply reply = replyService.getReply(replyId);
-        return ResponseEntity.ok(likeService.getLikeCount(reply));
+    private ReplyResponse createReplyResponse(Reply reply, CustomUserPrincipal principal) {
+        Long likeCount = likeService.getLikeCount(reply);
+        Boolean userLiked =
+            (principal != null) ? likeService.hasUserLiked(reply, principal.getUser()) : null;
+        return ReplyResponse.from(reply, likeCount, userLiked);
     }
 }

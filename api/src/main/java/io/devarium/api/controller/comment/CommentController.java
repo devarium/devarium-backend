@@ -43,7 +43,7 @@ public class CommentController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Comment comment = commentService.createComment(request, principal.getUser());
-        CommentResponse response = CommentResponse.from(comment);
+        CommentResponse response = createCommentResponse(comment, principal);
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -52,10 +52,11 @@ public class CommentController {
 
     @GetMapping("/{commentId}")
     public ResponseEntity<SingleItemResponse<CommentResponse>> getComment(
-        @PathVariable Long commentId
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Comment comment = commentService.getComment(commentId);
-        CommentResponse response = CommentResponse.from(comment);
+        CommentResponse response = createCommentResponse(comment, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -79,7 +80,7 @@ public class CommentController {
     ) {
         Comment comment = commentService.updateComment(commentId, request,
             principal.getUser());
-        CommentResponse response = CommentResponse.from(comment);
+        CommentResponse response = createCommentResponse(comment, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -113,9 +114,10 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{commentId}/likes")
-    public ResponseEntity<Long> getCommentLikeCount(@PathVariable Long commentId) {
-        Comment comment = commentService.getComment(commentId);
-        return ResponseEntity.ok(likeService.getLikeCount(comment));
+    private CommentResponse createCommentResponse(Comment comment, CustomUserPrincipal principal) {
+        Long likeCount = likeService.getLikeCount(comment);
+        Boolean userLiked =
+            (principal != null) ? likeService.hasUserLiked(comment, principal.getUser()) : null;
+        return CommentResponse.from(comment, likeCount, userLiked);
     }
 }

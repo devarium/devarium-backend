@@ -43,7 +43,7 @@ public class PostController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Post post = postService.createPost(request, principal.getUser());
-        PostResponse response = PostResponse.from(post);
+        PostResponse response = createPostResponse(post, principal);
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -51,9 +51,12 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<SingleItemResponse<PostResponse>> getPost(@PathVariable Long postId) {
+    public ResponseEntity<SingleItemResponse<PostResponse>> getPost(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
         Post post = postService.getPost(postId);
-        PostResponse response = PostResponse.from(post);
+        PostResponse response = createPostResponse(post, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -85,7 +88,7 @@ public class PostController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Post post = postService.updatePost(postId, request, principal.getUser());
-        PostResponse response = PostResponse.from(post);
+        PostResponse response = createPostResponse(post, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -119,9 +122,10 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{postId}/likes")
-    public ResponseEntity<Long> getPostLikeCount(@PathVariable Long postId) {
-        Post post = postService.getPost(postId);
-        return ResponseEntity.ok(likeService.getLikeCount(post));
+    private PostResponse createPostResponse(Post post, CustomUserPrincipal principal) {
+        Long likeCount = likeService.getLikeCount(post);
+        Boolean userLiked =
+            (principal != null) ? likeService.hasUserLiked(post, principal.getUser()) : null;
+        return PostResponse.from(post, likeCount, userLiked);
     }
 }
