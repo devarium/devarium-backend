@@ -8,8 +8,12 @@ import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.port.CreateQuestion;
 import io.devarium.core.domain.feedback.question.port.SyncQuestion;
 import io.devarium.core.domain.feedback.question.port.SyncQuestions;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrder;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.member.Member;
 import io.devarium.core.domain.member.service.MemberService;
@@ -32,6 +36,25 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final AnswerRepository answerRepository;
     private final ProjectService projectService;
     private final MemberService memberService;
+
+    @Override
+    public Question createFeedbackQuestion(Long projectId, CreateQuestion request, User user) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
+
+        questionRepository.incrementOrderNumbersFrom(projectId, request.orderNumber());
+
+        Question question = Question.builder()
+            .orderNumber(request.orderNumber())
+            .content(request.content())
+            .type(request.type())
+            .required(request.required())
+            .projectId(projectId)
+            .build();
+
+        return questionRepository.save(question);
+    }
 
     @Override
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
@@ -86,6 +109,56 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<Question> getFeedbackQuestions(Long projectId) {
         return questionRepository.findAllByProjectId(projectId);
+    }
+
+    @Override
+    public Question updateFeedbackQuestion(
+        Long projectId,
+        Long questionId,
+        UpdateQuestion request,
+        User user
+    ) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
+
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() ->
+                new FeedbackException(FeedbackErrorCode.QUESTION_NOT_FOUND, questionId)
+            );
+        question.validateProjectAccess(projectId);
+        question.update(
+            request.content(),
+            request.type(),
+            request.required()
+        );
+
+        return questionRepository.save(question);
+    }
+
+    @Override
+    public List<Question> updateFeedbackQuestionOrders(
+        Long projectId,
+        UpdateQuestionOrders request,
+        User user
+    ) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
+
+        List<Question> questions = questionRepository.findAllByProjectId(projectId);
+
+        Map<Long, Integer> orderNumberById = request.orderNumbers().stream()
+            .collect(Collectors.toMap(
+                UpdateQuestionOrder::questionId,
+                UpdateQuestionOrder::orderNumber)
+            );
+
+        questions.forEach(question ->
+            question.updateOrderNumber(orderNumberById.get(question.getId()))
+        );
+
+        return questionRepository.saveAll(questions);
     }
 
     @Override
@@ -159,7 +232,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         question.update(
-            request.orderNumber(),
             request.content(),
             request.type(),
             request.required()
