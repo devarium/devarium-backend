@@ -7,6 +7,8 @@ import java.util.Set;
 
 public interface QuestionRepository {
 
+    Question save(Question question);
+
     List<Question> saveAll(List<Question> questions);
 
     Optional<Question> findById(Long id);
@@ -16,4 +18,6 @@ public interface QuestionRepository {
     void deleteAllById(Set<Long> ids);
 
     void deleteById(Long id);
+
+    void incrementOrderNumbersFrom(Long projectId, int fromOrder);
 }
