@@ -64,6 +64,11 @@ jobs:
             sudo usermod -aG docker $USER
             newgrp docker
             
+            EXITED_CONTAINERS=$(sudo docker ps -aq --filter "status=exited")
+            if [ ! -z "$EXITED_CONTAINERS" ]; then
+              sudo docker rm $EXITED_CONTAINERS || true
+            fi
+            
             CONTAINER_ID=$(sudo docker ps -aq --filter "publish=8080")
             if [ ! -z "$CONTAINER_ID" ]; then
               sudo docker stop $CONTAINER_ID || true
@@ -84,4 +89,6 @@ jobs:
               -e JWT_REFRESH_TOKEN_EXPIRATION=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }} \
               -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
               -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+              -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+              -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
