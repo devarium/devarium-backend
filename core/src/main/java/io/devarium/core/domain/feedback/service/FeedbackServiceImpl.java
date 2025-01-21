@@ -9,8 +9,6 @@ import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestion;
-import io.devarium.core.domain.feedback.question.port.SyncQuestion;
-import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrder;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
@@ -22,11 +20,8 @@ import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.user.User;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -162,106 +157,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Question> syncFeedbackQuestions(
-        Long projectId,
-        SyncQuestions request,
-        User user
-    ) {
-        Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
-
-        // 기존 질문 조회
-        List<Question> questions = questionRepository.findAllByProjectId(projectId);
-
-        Set<Long> missingQuestionIds = getMissingQuestions(request, questions);
-        Set<Long> typeChangedQuestionIds = getTypeChangedQuestions(request, questions);
-        questionRepository.deleteAllById(missingQuestionIds);
-        answerRepository.deleteAllByQuestionIdIn(
-            Stream.concat(
-                missingQuestionIds.stream(),
-                typeChangedQuestionIds.stream()
-            ).collect(Collectors.toSet())
-        );
-
-        return questionRepository.saveAll(upsertQuestions(projectId, request, questions));
-    }
-
-    @Override
     public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
         Project project = projectService.getProject(projectId);
         Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
         member.validateMembership(project.getTeamId());
 
         questionRepository.deleteById(questionId);
-    }
-
-    private List<Question> upsertQuestions(
-        Long projectId,
-        SyncQuestions request,
-        List<Question> questions
-    ) {
-        Map<Long, Question> questionById = questions.stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
-
-        return request.questions().stream()
-            .map(syncQuestion ->
-                syncQuestion.questionId() == null ?
-                    createQuestion(projectId, syncQuestion) :
-                    updateQuestion(syncQuestion, questionById.get(syncQuestion.questionId()))
-            )
-            .toList();
-    }
-
-    private Question createQuestion(Long projectId, SyncQuestion request) {
-        return Question.builder()
-            .orderNumber(request.orderNumber())
-            .content(request.content())
-            .type(request.type())
-            .required(request.required())
-            .projectId(projectId)
-            .build();
-    }
-
-    private Question updateQuestion(SyncQuestion request, Question question) {
-        if (question == null) {
-            throw new FeedbackException(
-                FeedbackErrorCode.QUESTION_NOT_FOUND,
-                request.questionId()
-            );
-        }
-
-        question.update(
-            request.content(),
-            request.type(),
-            request.required()
-        );
-
-        return question;
-    }
-
-    private Set<Long> getMissingQuestions(SyncQuestions request, List<Question> questions) {
-        Set<Long> requestedIds = request.questions().stream()
-            .map(SyncQuestion::questionId)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
-
-        return questions.stream()
-            .map(Question::getId)
-            .filter(id -> !requestedIds.contains(id))
-            .collect(Collectors.toSet());
-    }
-
-    private Set<Long> getTypeChangedQuestions(SyncQuestions request, List<Question> questions) {
-        Map<Long, Question> questionById = questions.stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
-
-        return request.questions().stream()
-            .filter(q -> {
-                Question existingQuestion = questionById.get(q.questionId());
-                return existingQuestion != null && !existingQuestion.getType().equals(q.type());
-            })
-            .map(SyncQuestion::questionId)
-            .collect(Collectors.toSet());
     }
 }

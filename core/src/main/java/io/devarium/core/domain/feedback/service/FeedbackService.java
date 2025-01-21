@@ -5,7 +5,6 @@ import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestion;
-import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
 import io.devarium.core.domain.user.User;
@@ -33,8 +32,6 @@ public interface FeedbackService {
         UpdateQuestionOrders request,
         User user
     );
-
-    List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user);
 
     void deleteFeedbackQuestion(Long projectId, Long questionId, User user);
 }

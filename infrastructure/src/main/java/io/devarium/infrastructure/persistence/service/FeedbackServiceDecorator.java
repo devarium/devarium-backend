@@ -5,7 +5,6 @@ import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestion;
-import io.devarium.core.domain.feedback.question.port.SyncQuestions;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
 import io.devarium.core.domain.feedback.service.FeedbackService;
@@ -63,12 +62,6 @@ public class FeedbackServiceDecorator implements FeedbackService {
         User user
     ) {
         return feedbackService.updateFeedbackQuestionOrders(projectId, request, user);
-    }
-
-    @Override
-    @Transactional
-    public List<Question> syncFeedbackQuestions(Long projectId, SyncQuestions request, User user) {
-        return feedbackService.syncFeedbackQuestions(projectId, request, user);
     }
 
     @Override

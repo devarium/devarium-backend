@@ -9,7 +9,6 @@ import io.devarium.infrastructure.persistence.entity.QuestionEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -56,10 +55,5 @@ public class AnswerRepositoryImpl implements AnswerRepository {
             .stream()
             .map(AnswerEntity::toDomain)
             .toList();
-    }
-
-    @Override
-    public void deleteAllByQuestionIdIn(Set<Long> questionIds) {
-        answerJpaRepository.deleteAllByQuestionIdIn(questionIds);
     }
 }

@@ -12,7 +12,6 @@ import io.devarium.infrastructure.persistence.entity.QuestionEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -86,11 +85,6 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     @Override
     public void deleteById(Long id) {
         questionJpaRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAllById(Set<Long> ids) {
-        questionJpaRepository.deleteAllById(ids);
     }
 
     @Override
