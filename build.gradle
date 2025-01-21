@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 allprojects {
@@ -61,16 +60,6 @@ springBoot {
     mainClass = 'io.devarium.api.ApiApplication'
 }
 
-tasks.named('shadowJar') {
-    archiveClassifier.set('')
-
-    manifest {
-        attributes(
-                'Main-Class': 'io.devarium.api.ApiApplication'
-        )
-    }
-}
-
 tasks.named('bootJar') {
-    enabled = false
+    archiveClassifier.set('')
 }
