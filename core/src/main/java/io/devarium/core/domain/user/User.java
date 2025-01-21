@@ -17,8 +17,8 @@ public class User {
     private final UserRole role;
     private final OAuth2Provider provider;
 
-    private String name;
-    private String picture;
+    private String username;
+    private String profileImageUrl;
     private String blogUrl;
     private String githubUrl;
     private String bio;
@@ -28,9 +28,9 @@ public class User {
     public User(
         Long id,
         String email,
-        String name,
+        String username,
         String bio,
-        String picture,
+        String profileImageUrl,
         String blogUrl,
         String githubUrl,
         UserRole role,
@@ -38,21 +38,21 @@ public class User {
     ) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.username = username;
         this.bio = bio;
-        this.picture = picture;
+        this.profileImageUrl = profileImageUrl;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
         this.role = role;
         this.provider = provider;
     }
 
-    public void update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
+    public void update(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
-    public void update(String bio, String blogUrl, String githubUrl) {
+    public void update(String username, String bio, String blogUrl, String githubUrl) {
+        this.username = username;
         this.bio = bio;
         this.blogUrl = blogUrl;
         this.githubUrl = githubUrl;
@@ -75,8 +75,8 @@ public class User {
     public Map<String, Object> toAttributes() {
         return Map.of(
             "email", email,
-            "name", name,
-            "picture", picture,
+            "name", username,
+            "picture", profileImageUrl,
             "provider", provider
         );
     }
