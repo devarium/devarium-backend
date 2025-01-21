@@ -39,12 +39,19 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping("/questions")
-    public ResponseEntity<Void> createFeedbackQuestion(
+    public ResponseEntity<SingleItemResponse<QuestionResponse>> createFeedbackQuestion(
         @PathVariable Long projectId,
         @Valid @RequestBody CreateQuestionRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return null;
+        Question question = feedbackService.createFeedbackQuestion(
+            projectId,
+            request,
+            principal.getUser()
+        );
+        QuestionResponse response = QuestionResponse.from(question);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(SingleItemResponse.from(response));
     }
 
     @PostMapping("/answers")
@@ -95,22 +102,37 @@ public class FeedbackController {
     }
 
     @PatchMapping("/questions/{questionId}")
-    public ResponseEntity<Void> updateFeedbackQuestion(
+    public ResponseEntity<SingleItemResponse<QuestionResponse>> updateFeedbackQuestion(
         @PathVariable Long projectId,
         @PathVariable Long questionId,
         @Valid @RequestBody UpdateQuestionRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return null;
+        Question question = feedbackService.updateFeedbackQuestion(
+            projectId,
+            questionId,
+            request,
+            principal.getUser()
+        );
+        QuestionResponse response = QuestionResponse.from(question);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
     }
 
     @PatchMapping("/questions/orders")
-    public ResponseEntity<Void> updateQuestionsOrder(
+    public ResponseEntity<ListResponse<QuestionResponse>> updateFeedbackQuestionOrders(
         @PathVariable Long projectId,
         @Valid @RequestBody UpdateQuestionOrdersRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return null;
+        List<Question> questions = feedbackService.updateFeedbackQuestionOrders(
+            projectId,
+            request,
+            principal.getUser()
+        );
+        List<QuestionResponse> responses = questions.stream().map(QuestionResponse::from).toList();
+
+        return ResponseEntity.ok(ListResponse.from(responses));
     }
 
     @PutMapping("/questions")
