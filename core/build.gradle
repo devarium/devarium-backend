@@ -1,6 +1,2 @@
 dependencies {
 }
-
-bootJar {
-    enabled = false
-}

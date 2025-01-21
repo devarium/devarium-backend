@@ -25,7 +25,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew shadowJar
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -64,10 +64,10 @@ jobs:
             sudo usermod -aG docker $USER
             newgrp docker
             
-            CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080")
+            CONTAINER_ID=$(sudo docker ps -aq --filter "publish=8080")
             if [ ! -z "$CONTAINER_ID" ]; then
-              sudo docker stop $CONTAINER_ID
-              sudo docker rm $CONTAINER_ID
+              sudo docker stop $CONTAINER_ID || true
+              sudo docker rm $CONTAINER_ID || true
             fi
             
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
