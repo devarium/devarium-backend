@@ -1,10 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
 import io.devarium.core.domain.feedback.answer.Answer;
-import io.devarium.core.domain.feedback.answer.Rating;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,9 +26,6 @@ public class AnswerEntity extends BaseEntity {
 
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    private Rating rating;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
     private QuestionEntity question;
@@ -44,13 +38,11 @@ public class AnswerEntity extends BaseEntity {
     private AnswerEntity(
         Long id,
         String content,
-        Rating rating,
         QuestionEntity question,
         UserEntity user
     ) {
         this.id = id;
         this.content = content;
-        this.rating = rating;
         this.question = question;
         this.user = user;
     }
@@ -59,7 +51,6 @@ public class AnswerEntity extends BaseEntity {
         return AnswerEntity.builder()
             .id(answer.getId())
             .content(answer.getContent())
-            .rating(answer.getRating())
             .question(question)
             .user(user)
             .build();
@@ -69,7 +60,6 @@ public class AnswerEntity extends BaseEntity {
         return Answer.builder()
             .id(id)
             .content(content)
-            .rating(rating)
             .questionId(question.getId())
             .userId(user.getId())
             .answeredAt(getUpdatedAt())
@@ -78,6 +68,5 @@ public class AnswerEntity extends BaseEntity {
 
     public void update(Answer answer) {
         this.content = answer.getContent();
-        this.rating = answer.getRating();
     }
 }
