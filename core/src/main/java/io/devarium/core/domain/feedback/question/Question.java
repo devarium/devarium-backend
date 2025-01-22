@@ -13,7 +13,7 @@ public class Question {
     private final Long projectId;
 
     private int orderNumber;
-    private String content;
+    private QuestionContent content;
     private QuestionType type;
     private boolean required;
 
@@ -21,7 +21,7 @@ public class Question {
     public Question(
         Long id,
         int orderNumber,
-        String content,
+        QuestionContent content,
         QuestionType type,
         boolean required,
         Long projectId
@@ -38,7 +38,7 @@ public class Question {
         this.orderNumber = orderNumber;
     }
 
-    public void update(String content, QuestionType type, Boolean required) {
+    public void update(QuestionContent content, QuestionType type, Boolean required) {
         this.content = content;
         this.type = type;
         this.required = required;

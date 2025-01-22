@@ -1,8 +1,11 @@
 package io.devarium.infrastructure.persistence.entity;
 
 import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.QuestionContent;
+import io.devarium.core.domain.feedback.question.QuestionContentConverter;
 import io.devarium.core.domain.feedback.question.QuestionType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,8 +34,9 @@ public class QuestionEntity extends BaseEntity {
     @Column(nullable = false)
     private int orderNumber;
 
-    @Column(nullable = false)
-    private String content;
+    @Column(nullable = false, columnDefinition = "json")
+    @Convert(converter = QuestionContentConverter.class)
+    private QuestionContent content;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -46,7 +50,7 @@ public class QuestionEntity extends BaseEntity {
     private ProjectEntity project;
 
     @Builder
-    private QuestionEntity(Long id, int orderNumber, String content, QuestionType type,
+    private QuestionEntity(Long id, int orderNumber, QuestionContent content, QuestionType type,
         boolean required, ProjectEntity project) {
         this.id = id;
         this.orderNumber = orderNumber;
