@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: infrastructure
   datasource:
     url: jdbc:mysql://localhost:3306/devarium
     username: root
