@@ -44,7 +44,11 @@ public class SecurityConfig {
                         "/login",
                         "/oauth2/**",
                         "/error",
-                        "/favicon.ico"
+                        "/favicon.ico",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/api-docs/**"
                     ).permitAll()
                     .anyRequest().authenticated()
                 //.anyRequest().permitAll()
