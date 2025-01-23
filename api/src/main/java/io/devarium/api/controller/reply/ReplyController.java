@@ -98,6 +98,6 @@ public class ReplyController {
         Long likeCount = likeService.getLikeCount(reply);
         Boolean userLiked =
             (principal != null) ? likeService.hasUserLiked(reply, principal.getUser()) : null;
-        return ReplyResponse.from(reply, likeCount, userLiked);
+        return ReplyResponse.of(reply, likeCount, userLiked);
     }
 }

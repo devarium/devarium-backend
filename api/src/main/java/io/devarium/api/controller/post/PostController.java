@@ -126,6 +126,6 @@ public class PostController {
         Long likeCount = likeService.getLikeCount(post);
         Boolean userLiked =
             (principal != null) ? likeService.hasUserLiked(post, principal.getUser()) : null;
-        return PostResponse.from(post, likeCount, userLiked);
+        return PostResponse.of(post, likeCount, userLiked);
     }
 }

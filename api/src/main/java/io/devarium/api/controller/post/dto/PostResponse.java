@@ -13,7 +13,7 @@ public record PostResponse(
     Boolean userLiked
 ) {
 
-    public static PostResponse from(Post post, Long likeCount, Boolean userLiked) {
+    public static PostResponse of(Post post, Long likeCount, Boolean userLiked) {
         return new PostResponse(
             post.getId(),
             post.getTitle(),

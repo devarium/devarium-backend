@@ -118,6 +118,6 @@ public class CommentController {
         Long likeCount = likeService.getLikeCount(comment);
         Boolean userLiked =
             (principal != null) ? likeService.hasUserLiked(comment, principal.getUser()) : null;
-        return CommentResponse.from(comment, likeCount, userLiked);
+        return CommentResponse.of(comment, likeCount, userLiked);
     }
 }

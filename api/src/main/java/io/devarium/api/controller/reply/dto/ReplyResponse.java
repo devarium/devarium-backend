@@ -13,7 +13,7 @@ public record ReplyResponse(
     Boolean userLiked
 ) {
 
-    public static ReplyResponse from(Reply reply, Long likeCount, Boolean userLiked) {
+    public static ReplyResponse of(Reply reply, Long likeCount, Boolean userLiked) {
         return new ReplyResponse(
             reply.getId(),
             reply.getContent(),

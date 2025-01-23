@@ -13,7 +13,7 @@ public record CommentResponse(
     Boolean userLiked
 ) {
 
-    public static CommentResponse from(Comment comment, Long likeCount, Boolean userLiked) {
+    public static CommentResponse of(Comment comment, Long likeCount, Boolean userLiked) {
         return new CommentResponse(
             comment.getId(),
             comment.getContent(),
