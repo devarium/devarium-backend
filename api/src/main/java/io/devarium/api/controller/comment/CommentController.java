@@ -5,6 +5,7 @@ import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
+import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.like.service.LikeService;
@@ -63,13 +64,19 @@ public class CommentController {
 
     // TODO: 책임분리 및 URL 구조 논의 필요
     @GetMapping("/{commentId}/replies")
-    public ResponseEntity<PagedListResponse<Reply>> getRepliesByCommentId(
+    public ResponseEntity<PagedListResponse<ReplyResponse>> getRepliesByCommentId(
         @PathVariable Long commentId,
-        @PageableDefault(size = Reply.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
+        @PageableDefault(size = Reply.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
+        @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Page<Reply> replies = replyService.getRepliesByCommentId(commentId, pageable);
+        Page<ReplyResponse> replyResponses = replies.map(reply -> {
+            Long likeCount = likeService.getLikeCount(reply);
+            boolean userLiked = principal != null && likeService.hasUserLiked(reply, principal.getUser());
+            return ReplyResponse.of(reply, likeCount, userLiked);
+        });
 
-        return ResponseEntity.ok(PagedListResponse.from(replies));
+        return ResponseEntity.ok(PagedListResponse.from(replyResponses));
     }
 
     @PutMapping("/{commentId}")
@@ -116,8 +123,7 @@ public class CommentController {
 
     private CommentResponse createCommentResponse(Comment comment, CustomUserPrincipal principal) {
         Long likeCount = likeService.getLikeCount(comment);
-        Boolean userLiked =
-            (principal != null) ? likeService.hasUserLiked(comment, principal.getUser()) : null;
+        boolean userLiked = principal != null && likeService.hasUserLiked(comment, principal.getUser());
         return CommentResponse.of(comment, likeCount, userLiked);
     }
 }

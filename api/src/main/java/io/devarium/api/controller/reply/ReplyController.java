@@ -96,8 +96,7 @@ public class ReplyController {
 
     private ReplyResponse createReplyResponse(Reply reply, CustomUserPrincipal principal) {
         Long likeCount = likeService.getLikeCount(reply);
-        Boolean userLiked =
-            (principal != null) ? likeService.hasUserLiked(reply, principal.getUser()) : null;
+        boolean userLiked = principal != null && likeService.hasUserLiked(reply, principal.getUser());
         return ReplyResponse.of(reply, likeCount, userLiked);
     }
 }
