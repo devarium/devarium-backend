@@ -3,8 +3,9 @@ package io.devarium.api.controller.teamRequest;
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
+import io.devarium.api.controller.teamRequest.dto.CreateInvitationRequest;
 import io.devarium.api.controller.teamRequest.dto.TeamRequestResponse;
-import io.devarium.api.controller.teamRequest.dto.UpsertJoinRequest;
+import io.devarium.api.controller.teamRequest.dto.UpdateJoinRequest;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -43,7 +44,7 @@ public class TeamRequestController {
     @PostMapping("/invitations")
     public ResponseEntity<ListResponse<TeamRequestResponse>> createInvitation(
         @PathVariable Long teamId,
-        @Valid @RequestBody UpsertJoinRequest request,
+        @Valid @RequestBody CreateInvitationRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<TeamRequest> teamRequests = teamRequestService.invite(
@@ -62,15 +63,13 @@ public class TeamRequestController {
     @PatchMapping("/join-requests/{requestId}")
     public ResponseEntity<ListResponse<TeamRequestResponse>> updateJoinRequest(
         @PathVariable Long teamId,
-        @PathVariable Long requestId,
-        @RequestParam @Valid @NotNull @Pattern(regexp = "PENDING|ACCEPTED|REJECTED") String status,
-        @RequestBody @Valid UpsertJoinRequest request,
+        @RequestParam @Valid @NotNull @Pattern(regexp = "(?i)PENDING|ACCEPTED|REJECTED") String status,
+        @RequestBody @Valid UpdateJoinRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<TeamRequest> teamRequests = teamRequestService.update(
             teamId,
-            requestId,
-            status,
+            TeamRequestStatus.valueOf(status),
             request,
             principal.getUser()
         );
