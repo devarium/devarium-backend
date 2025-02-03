@@ -11,8 +11,8 @@ public class TeamRequest {
     private final Long teamId;
     private final Long userId;
     private final TeamRequestType type;
-    private final TeamRequestStatus status;
-    private final Instant statusChangedAt;
+    private TeamRequestStatus status;
+    private Instant statusChangedAt;
 
     @Builder
     public TeamRequest(
@@ -29,5 +29,10 @@ public class TeamRequest {
         this.type = type;
         this.status = status;
         this.statusChangedAt = statusChangedAt;
+    }
+
+    public void update(TeamRequestStatus status) {
+        this.status = status;
+        this.statusChangedAt = Instant.now();
     }
 }
