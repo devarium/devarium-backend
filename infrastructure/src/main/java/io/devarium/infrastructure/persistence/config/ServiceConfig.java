@@ -18,6 +18,9 @@ import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.team.service.TeamServiceImpl;
+import io.devarium.core.domain.teamRequest.repository.TeamRequestRepository;
+import io.devarium.core.domain.teamRequest.service.TeamRequestService;
+import io.devarium.core.domain.teamRequest.service.TeamRequestServiceImpl;
 import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
@@ -27,6 +30,7 @@ import io.devarium.infrastructure.persistence.service.MemberServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
+import io.devarium.infrastructure.persistence.service.TeamRequestServiceDecorator;
 import io.devarium.infrastructure.persistence.service.TeamServiceDecorator;
 import io.devarium.infrastructure.persistence.service.UserServiceDecorator;
 import org.springframework.context.annotation.Bean;
@@ -71,5 +75,10 @@ public class ServiceConfig {
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {
         return new MemberServiceDecorator(new MemberServiceImpl(memberRepository));
+    }
+
+    @Bean
+    public TeamRequestService teamRequestService(TeamRequestRepository teamRequestRepository) {
+        return new TeamRequestServiceDecorator(new TeamRequestServiceImpl(teamRequestRepository));
     }
 }
