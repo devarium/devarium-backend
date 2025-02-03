@@ -7,6 +7,9 @@ import io.devarium.api.controller.teamRequest.dto.CreateInvitationRequest;
 import io.devarium.api.controller.teamRequest.dto.TeamRequestResponse;
 import io.devarium.api.controller.teamRequest.dto.UpdateJoinRequest;
 import io.devarium.core.domain.teamRequest.TeamRequest;
+import io.devarium.core.domain.teamRequest.TeamRequestStatus;
+import io.devarium.core.domain.teamRequest.TeamRequestType;
+import io.devarium.core.domain.teamRequest.service.TeamRequestService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +64,41 @@ public class TeamRequestController {
             .body(ListResponse.from(response));
     }
 
-    @PatchMapping("/join-requests/{requestId}")
+    @GetMapping("/join-requests")
+    public ResponseEntity<ListResponse<TeamRequestResponse>> getJoinRequest(
+        @PathVariable Long teamId,
+        @RequestParam @Valid @NotNull @Pattern(regexp = "(?i)PENDING|ACCEPTED|REJECTED") String status,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        List<TeamRequest> teamRequests = teamRequestService.getTeamRequests(
+            teamId,
+            TeamRequestType.JOIN_REQUEST,
+            TeamRequestStatus.valueOf(status),
+            principal.getUser()
+        );
+        List<TeamRequestResponse> response = teamRequests.stream()
+            .map(TeamRequestResponse::from).toList();
+        return ResponseEntity.ok(ListResponse.from(response));
+    }
+
+    @GetMapping("/invitations")
+    public ResponseEntity<ListResponse<TeamRequestResponse>> getInvitation(
+        @PathVariable Long teamId,
+        @RequestParam @Valid @NotNull @Pattern(regexp = "(?i)PENDING|ACCEPTED|REJECTED") String status,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        List<TeamRequest> teamRequests = teamRequestService.getTeamRequests(
+            teamId,
+            TeamRequestType.INVITATION,
+            TeamRequestStatus.valueOf(status),
+            principal.getUser()
+        );
+        List<TeamRequestResponse> response = teamRequests.stream()
+            .map(TeamRequestResponse::from).toList();
+        return ResponseEntity.ok(ListResponse.from(response));
+    }
+
+    @PatchMapping("/join-requests")
     public ResponseEntity<ListResponse<TeamRequestResponse>> updateJoinRequest(
         @PathVariable Long teamId,
         @RequestParam @Valid @NotNull @Pattern(regexp = "(?i)PENDING|ACCEPTED|REJECTED") String status,
