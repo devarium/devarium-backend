@@ -11,7 +11,7 @@ public class Answer {
     private final Long questionId;
     private final Long userId;
     private final Instant answeredAt;
-    
+
     private String content;
 
     @Builder
@@ -28,6 +28,10 @@ public class Answer {
         this.questionId = questionId;
         this.userId = userId;
         this.answeredAt = answeredAt;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 
 //    private void validateAnswer(String content, Rating rating) {
