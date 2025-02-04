@@ -1,12 +1,13 @@
 package io.devarium.api.controller.feedback.dto;
 
 import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.QuestionContent;
 import io.devarium.core.domain.feedback.question.QuestionType;
 
 public record QuestionResponse(
     Long id,
     int orderNumber,
-    String content,
+    QuestionContent content,
     QuestionType type,
     boolean required,
     Long projectId
