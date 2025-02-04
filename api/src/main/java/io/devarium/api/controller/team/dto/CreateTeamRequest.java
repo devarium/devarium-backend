@@ -1,6 +1,6 @@
 package io.devarium.api.controller.team.dto;
 
-import io.devarium.core.domain.team.port.UpsertTeam;
+import io.devarium.core.domain.team.port.CreateTeam;
 import jakarta.validation.constraints.NotBlank;
 
 public record CreateTeamRequest(
@@ -8,6 +8,6 @@ public record CreateTeamRequest(
     String description,
     String picture,
     String githubUrl
-) implements UpsertTeam {
+) implements CreateTeam {
 
 }

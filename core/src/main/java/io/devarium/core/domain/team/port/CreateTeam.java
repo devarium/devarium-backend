@@ -1,6 +1,6 @@
 package io.devarium.core.domain.team.port;
 
-public interface UpsertTeam {
+public interface CreateTeam {
 
     String name();
 
