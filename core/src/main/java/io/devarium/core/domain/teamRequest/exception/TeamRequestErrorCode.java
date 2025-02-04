@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum TeamRequestErrorCode {
+    TEAM_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Team request (ID: %d) not found"),
     TEAM_REQUESTS_NOT_FOUND(HttpStatus.NOT_FOUND, "Team requests (ID: %s) not found");
 
     private final HttpStatus status;
