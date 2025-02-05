@@ -22,16 +22,15 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     @Override
     public Team save(Team team) {
+        TeamEntity entity;
         UserEntity leader = entityManager.getReference(UserEntity.class, team.getLeaderId());
-
         if (team.getId() != null) {
-            TeamEntity entity = teamJpaRepository.findById(team.getId())
+            entity = teamJpaRepository.findById(team.getId())
                 .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, team.getId()));
             entity.update(team, leader);
-            return teamJpaRepository.save(entity).toDomain();
+        } else {
+            entity = TeamEntity.fromDomain(team, leader);
         }
-
-        TeamEntity entity = TeamEntity.fromDomain(team, leader);
         return teamJpaRepository.save(entity).toDomain();
     }
 
