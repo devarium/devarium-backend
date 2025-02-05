@@ -3,6 +3,7 @@ package io.devarium.core.domain.feedback.service;
 import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.QuestionWithAnswers;
 import io.devarium.core.domain.feedback.answer.Answer;
+import io.devarium.core.domain.feedback.answer.port.SubmitAnswer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
@@ -42,7 +43,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         Question question = Question.builder()
             .orderNumber(request.orderNumber())
-            .content(request.content())
+            .questionContent(request.questionContent())
             .type(request.type())
             .required(request.required())
             .projectId(projectId)
@@ -56,6 +57,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         Project project = projectService.getProject(projectId);
         project.validateStatusInReview();
 
+        Map<Long, Answer> answerById = answerRepository.findAllByUserIdAndQuestionIdIn(
+                user.getId(),
+                request.answers().stream().map(SubmitAnswer::questionId).toList()
+            )
+            .stream()
+            .collect(Collectors.toMap(Answer::getQuestionId, a -> a));
+
         Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId).stream()
             .collect(Collectors.toMap(Question::getId, q -> q));
 
@@ -67,12 +75,18 @@ public class FeedbackServiceImpl implements FeedbackService {
                         a.questionId()
                     ));
 
-                return Answer.builder()
-                    .content(a.content())
-                    .rating(a.rating())
-                    .questionId(question.getId())
-                    .userId(user.getId())
-                    .build();
+                return Optional.ofNullable(answerById.get(question.getId()))
+                    .map(answer -> {
+                        answer.updateContent(a.content());
+                        return answer;
+                    })
+                    .orElse(
+                        Answer.builder()
+                            .content(a.content())
+                            .questionId(question.getId())
+                            .userId(user.getId())
+                            .build()
+                    );
             })
             .toList();
 
