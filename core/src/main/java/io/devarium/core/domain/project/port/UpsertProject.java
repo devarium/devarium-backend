@@ -9,5 +9,7 @@ public interface UpsertProject {
 
     public String description();
 
+    public Long teamId();
+
     public Set<Skill> skills();
 }

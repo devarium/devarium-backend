@@ -5,4 +5,11 @@ import java.util.List;
 public interface SubmitAnswers {
 
     List<? extends SubmitAnswer> answers();
+
+    interface SubmitAnswer {
+
+        Long questionId();
+
+        String content();
+    }
 }

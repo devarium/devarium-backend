@@ -8,8 +8,8 @@ import io.devarium.infrastructure.persistence.entity.AnswerEntity;
 import io.devarium.infrastructure.persistence.entity.QuestionEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -59,7 +59,10 @@ public class AnswerRepositoryImpl implements AnswerRepository {
     }
 
     @Override
-    public void deleteAllByQuestionIdIn(Set<Long> questionIds) {
-        answerJpaRepository.deleteAllByQuestionIdIn(questionIds);
+    public List<Answer> findAllByUserIdAndQuestionIdIn(Long userId, Collection<Long> questionIds) {
+        return answerJpaRepository.findAllByUserIdAndQuestionIdIn(userId, questionIds)
+            .stream()
+            .map(AnswerEntity::toDomain)
+            .toList();
     }
 }

@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum FeedbackErrorCode {
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "Answer not found with id: %d"),
-    QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "Question not found with id: %d");
+    QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "Question not found with id: %d"),
+    INVALID_PROJECT_ACCESS(HttpStatus.FORBIDDEN, "Question is not associated with this project");
 
     private final HttpStatus status;
     private final String message;

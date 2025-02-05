@@ -8,18 +8,16 @@ import lombok.Getter;
 public class Answer {
 
     private final Long id;
-    private final Rating rating;
     private final Long questionId;
     private final Long userId;
+    private final Instant answeredAt;
 
     private String content;
-    private Instant answeredAt;
 
     @Builder
     public Answer(
         Long id,
         String content,
-        Rating rating,
         Long questionId,
         Long userId,
         Instant answeredAt
@@ -27,10 +25,13 @@ public class Answer {
 //        validateAnswer(content, rating);
         this.id = id;
         this.content = content;
-        this.rating = rating;
         this.questionId = questionId;
         this.userId = userId;
         this.answeredAt = answeredAt;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 
 //    private void validateAnswer(String content, Rating rating) {

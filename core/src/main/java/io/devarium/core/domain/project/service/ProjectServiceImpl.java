@@ -1,6 +1,7 @@
 package io.devarium.core.domain.project.service;
 
 import io.devarium.core.domain.project.Project;
+import io.devarium.core.domain.project.ProjectStatus;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.project.port.UpsertProject;
@@ -18,6 +19,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = Project.builder()
             .name(request.name())
             .description(request.description())
+            .status(ProjectStatus.TODO)
+            .teamId(request.teamId())
             .skills(request.skills())
             .build();
         return projectRepository.save(project);

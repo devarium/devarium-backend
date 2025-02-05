@@ -1,8 +1,8 @@
 package io.devarium.core.domain.feedback.answer.repository;
 
 import io.devarium.core.domain.feedback.answer.Answer;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public interface AnswerRepository {
 
@@ -10,5 +10,5 @@ public interface AnswerRepository {
 
     List<Answer> findAllByQuestionIdIn(List<Long> questionIds);
 
-    void deleteAllByQuestionIdIn(Set<Long> questionIds);
+    List<Answer> findAllByUserIdAndQuestionIdIn(Long userId, Collection<Long> questionIds);
 }

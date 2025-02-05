@@ -1,6 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
 import io.devarium.core.domain.feedback.question.Question;
+import io.devarium.core.domain.feedback.question.QuestionContent;
 import io.devarium.core.domain.feedback.question.QuestionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +18,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "questions")
@@ -31,8 +34,11 @@ public class QuestionEntity extends BaseEntity {
     @Column(nullable = false)
     private int orderNumber;
 
-    @Column(nullable = false)
-    private String content;
+    @Column(nullable = false, columnDefinition = "json")
+//    @Convert(converter = QuestionContentConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private QuestionContent questionContent;
+
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -46,11 +52,12 @@ public class QuestionEntity extends BaseEntity {
     private ProjectEntity project;
 
     @Builder
-    private QuestionEntity(Long id, int orderNumber, String content, QuestionType type,
+    private QuestionEntity(Long id, int orderNumber, QuestionContent questionContent,
+        QuestionType type,
         boolean required, ProjectEntity project) {
         this.id = id;
         this.orderNumber = orderNumber;
-        this.content = content;
+        this.questionContent = questionContent;
         this.type = type;
         this.required = required;
         this.project = project;
@@ -60,7 +67,7 @@ public class QuestionEntity extends BaseEntity {
         return QuestionEntity.builder()
             .id(question.getId())
             .orderNumber(question.getOrderNumber())
-            .content(question.getContent())
+            .questionContent(question.getQuestionContent())
             .type(question.getType())
             .required(question.isRequired())
             .project(project)
@@ -71,7 +78,7 @@ public class QuestionEntity extends BaseEntity {
         return Question.builder()
             .id(id)
             .orderNumber(orderNumber)
-            .content(content)
+            .questionContent(questionContent)
             .type(type)
             .required(required)
             .projectId(project.getId())
@@ -80,7 +87,7 @@ public class QuestionEntity extends BaseEntity {
 
     public void update(Question question) {
         this.orderNumber = question.getOrderNumber();
-        this.content = question.getContent();
+        this.questionContent = question.getQuestionContent();
         this.type = question.getType();
         this.required = question.isRequired();
     }

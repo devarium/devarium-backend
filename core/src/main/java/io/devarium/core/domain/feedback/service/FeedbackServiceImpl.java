@@ -4,13 +4,16 @@ import io.devarium.core.domain.feedback.Feedback;
 import io.devarium.core.domain.feedback.FeedbackSummary;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
+import io.devarium.core.domain.feedback.answer.port.SubmitAnswers.SubmitAnswer;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.feedback.port.TextSummarizer;
 import io.devarium.core.domain.feedback.question.Question;
-import io.devarium.core.domain.feedback.question.port.SyncQuestion;
-import io.devarium.core.domain.feedback.question.port.SyncQuestions;
+import io.devarium.core.domain.feedback.question.port.CreateQuestion;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
+import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders.UpdateQuestionOrder;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.member.Member;
 import io.devarium.core.domain.member.service.MemberService;
@@ -20,11 +23,8 @@ import io.devarium.core.domain.user.User;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,9 +37,35 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final TextSummarizer textSummarizer;
 
     @Override
+    public Question createFeedbackQuestion(Long projectId, CreateQuestion request, User user) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
+
+        questionRepository.incrementOrderNumbersFrom(projectId, request.orderNumber());
+
+        Question question = Question.builder()
+            .orderNumber(request.orderNumber())
+            .questionContent(request.questionContent())
+            .type(request.type())
+            .required(request.required())
+            .projectId(projectId)
+            .build();
+
+        return questionRepository.save(question);
+    }
+
+    @Override
     public List<Answer> submitFeedbackAnswers(Long projectId, SubmitAnswers request, User user) {
         Project project = projectService.getProject(projectId);
         project.validateStatusInReview();
+
+        Map<Long, Answer> answerById = answerRepository.findAllByUserIdAndQuestionIdIn(
+                user.getId(),
+                request.answers().stream().map(SubmitAnswer::questionId).toList()
+            )
+            .stream()
+            .collect(Collectors.toMap(Answer::getQuestionId, a -> a));
 
         Map<Long, Question> questionById = questionRepository.findAllByProjectId(projectId).stream()
             .collect(Collectors.toMap(Question::getId, q -> q));
@@ -52,12 +78,18 @@ public class FeedbackServiceImpl implements FeedbackService {
                         a.questionId()
                     ));
 
-                return Answer.builder()
-                    .content(a.content())
-                    .rating(a.rating())
-                    .questionId(question.getId())
-                    .userId(user.getId())
-                    .build();
+                return Optional.ofNullable(answerById.get(question.getId()))
+                    .map(answer -> {
+                        answer.updateContent(a.content());
+                        return answer;
+                    })
+                    .orElse(
+                        Answer.builder()
+                            .content(a.content())
+                            .questionId(question.getId())
+                            .userId(user.getId())
+                            .build()
+                    );
             })
             .toList();
 
@@ -100,29 +132,28 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Question> syncFeedbackQuestions(
+    public Question updateFeedbackQuestion(
         Long projectId,
-        SyncQuestions request,
+        Long questionId,
+        UpdateQuestion request,
         User user
     ) {
         Project project = projectService.getProject(projectId);
         Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
         member.validateMembership(project.getTeamId());
 
-        // 기존 질문 조회
-        List<Question> questions = questionRepository.findAllByProjectId(projectId);
-
-        Set<Long> missingQuestionIds = getMissingQuestions(request, questions);
-        Set<Long> typeChangedQuestionIds = getTypeChangedQuestions(request, questions);
-        questionRepository.deleteAllById(missingQuestionIds);
-        answerRepository.deleteAllByQuestionIdIn(
-            Stream.concat(
-                missingQuestionIds.stream(),
-                typeChangedQuestionIds.stream()
-            ).collect(Collectors.toSet())
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() ->
+                new FeedbackException(FeedbackErrorCode.QUESTION_NOT_FOUND, questionId)
+            );
+        question.validateProjectAccess(projectId);
+        question.update(
+            request.content(),
+            request.type(),
+            request.required()
         );
 
-        return questionRepository.saveAll(upsertQuestions(projectId, request, questions));
+        return questionRepository.save(question);
     }
     
     private FeedbackSummary summarizeFeedback(Feedback feedback) {
@@ -140,73 +171,37 @@ public class FeedbackServiceImpl implements FeedbackService {
         return FeedbackSummary.of(feedback.question(), summariedAnswer);
     }
 
-    private List<Question> upsertQuestions(
+    @Override
+    public List<Question> updateFeedbackQuestionOrders(
         Long projectId,
-        SyncQuestions request,
-        List<Question> questions
+        UpdateQuestionOrders request,
+        User user
     ) {
-        Map<Long, Question> questionById = questions.stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
 
-        return request.questions().stream()
-            .map(syncQuestion ->
-                syncQuestion.questionId() == null ?
-                    createQuestion(projectId, syncQuestion) :
-                    updateQuestion(syncQuestion, questionById.get(syncQuestion.questionId()))
-            )
-            .toList();
-    }
+        List<Question> questions = questionRepository.findAllByProjectId(projectId);
 
-    private Question createQuestion(Long projectId, SyncQuestion request) {
-        return Question.builder()
-            .orderNumber(request.orderNumber())
-            .content(request.content())
-            .type(request.type())
-            .required(request.required())
-            .projectId(projectId)
-            .build();
-    }
-
-    private Question updateQuestion(SyncQuestion request, Question question) {
-        if (question == null) {
-            throw new FeedbackException(
-                FeedbackErrorCode.QUESTION_NOT_FOUND,
-                request.questionId()
+        Map<Long, Integer> orderNumberById = request.orderNumbers().stream()
+            .collect(Collectors.toMap(
+                UpdateQuestionOrder::questionId,
+                UpdateQuestionOrder::orderNumber)
             );
-        }
 
-        question.update(
-            request.orderNumber(),
-            request.content(),
-            request.type(),
-            request.required()
+        questions.forEach(question ->
+            question.updateOrderNumber(orderNumberById.get(question.getId()))
         );
 
-        return question;
+        return questionRepository.saveAll(questions);
     }
 
-    private Set<Long> getMissingQuestions(SyncQuestions request, List<Question> questions) {
-        Set<Long> requestedIds = request.questions().stream()
-            .map(SyncQuestion::questionId)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+    @Override
+    public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
+        Project project = projectService.getProject(projectId);
+        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
+        member.validateMembership(project.getTeamId());
 
-        return questions.stream()
-            .map(Question::getId)
-            .filter(id -> !requestedIds.contains(id))
-            .collect(Collectors.toSet());
-    }
-
-    private Set<Long> getTypeChangedQuestions(SyncQuestions request, List<Question> questions) {
-        Map<Long, Question> questionById = questions.stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
-
-        return request.questions().stream()
-            .filter(q -> {
-                Question existingQuestion = questionById.get(q.questionId());
-                return existingQuestion != null && !existingQuestion.getType().equals(q.type());
-            })
-            .map(SyncQuestion::questionId)
-            .collect(Collectors.toSet());
+        questionRepository.deleteById(questionId);
     }
 }

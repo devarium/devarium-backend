@@ -1,5 +1,8 @@
 package io.devarium.core.domain.feedback.question;
 
+import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
+import io.devarium.core.domain.feedback.exception.FeedbackException;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +13,7 @@ public class Question {
     private final Long projectId;
 
     private int orderNumber;
-    private String content;
+    private QuestionContent questionContent;
     private QuestionType type;
     private boolean required;
 
@@ -18,23 +21,32 @@ public class Question {
     public Question(
         Long id,
         int orderNumber,
-        String content,
+        QuestionContent questionContent,
         QuestionType type,
         boolean required,
         Long projectId
     ) {
         this.id = id;
         this.orderNumber = orderNumber;
-        this.content = content;
+        this.questionContent = questionContent;
         this.type = type;
         this.required = required;
         this.projectId = projectId;
     }
 
-    public void update(int orderNumber, String content, QuestionType type, Boolean required) {
+    public void updateOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
-        this.content = content;
+    }
+
+    public void update(QuestionContent content, QuestionType type, Boolean required) {
+        this.questionContent = content;
         this.type = type;
         this.required = required;
+    }
+
+    public void validateProjectAccess(Long projectId) {
+        if (!Objects.equals(this.projectId, projectId)) {
+            throw new FeedbackException(FeedbackErrorCode.INVALID_PROJECT_ACCESS);
+        }
     }
 }

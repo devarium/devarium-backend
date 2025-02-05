@@ -1,7 +1,5 @@
 package io.devarium.api.controller.feedback.dto;
 
-import io.devarium.core.domain.feedback.answer.Rating;
-import io.devarium.core.domain.feedback.answer.port.SubmitAnswer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -12,8 +10,7 @@ public record SubmitAnswersRequest(
 
     public record SubmitAnswerRequest(
         @NotNull(message = "'questionId' must not be null") Long questionId,
-        String content,
-        Rating rating
+        String content
     ) implements SubmitAnswer {
 
     }

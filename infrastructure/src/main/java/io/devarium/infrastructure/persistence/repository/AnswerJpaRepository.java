@@ -8,5 +8,10 @@ public interface AnswerJpaRepository extends JpaRepository<AnswerEntity, Long> {
 
     Collection<AnswerEntity> findAllByQuestionIdIn(Collection<Long> questionIds);
 
+    Collection<AnswerEntity> findAllByUserIdAndQuestionIdIn(
+        Long userId,
+        Collection<Long> questionIds
+    );
+
     void deleteAllByQuestionIdIn(Collection<Long> questionIds);
 }
