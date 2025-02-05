@@ -27,8 +27,7 @@ public class TeamRepositoryImpl implements TeamRepository {
         if (team.getId() != null) {
             TeamEntity entity = teamJpaRepository.findById(team.getId())
                 .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, team.getId()));
-            entity.update(team);
-            entity.updateLeader(leader);
+            entity.update(team, leader);
             return teamJpaRepository.save(entity).toDomain();
         }
 

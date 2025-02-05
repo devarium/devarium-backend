@@ -10,6 +10,7 @@ import io.devarium.api.controller.team.dto.UpdateTeamInfoRequest;
 import io.devarium.api.controller.team.dto.UpdateTeamNameRequest;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -95,10 +96,14 @@ public class TeamController {
     @PutMapping("/{teamId}/profile-image")
     public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeamProfileImage(
         @PathVariable Long teamId,
-        @RequestPart MultipartFile image,
+        @RequestPart MultipartFile file,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.updateTeamProfileImage(teamId, image, principal.getUser());
+        Team team = teamService.updateTeamProfileImage(
+            teamId,
+            Image.from(file),
+            principal.getUser()
+        );
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));

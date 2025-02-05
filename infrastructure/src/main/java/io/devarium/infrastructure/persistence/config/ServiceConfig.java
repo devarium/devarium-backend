@@ -68,8 +68,13 @@ public class ServiceConfig {
     }
 
     @Bean
-    public TeamService teamService(TeamRepository teamRepository, MemberService memberService) {
-        return new TeamServiceDecorator(new TeamServiceImpl(teamRepository, memberService));
+    public TeamService teamService(
+        TeamRepository teamRepository,
+        MemberService memberService,
+        StorageService storageService
+    ) {
+        return new TeamServiceDecorator(
+            new TeamServiceImpl(teamRepository, memberService, storageService));
     }
 
     @Bean

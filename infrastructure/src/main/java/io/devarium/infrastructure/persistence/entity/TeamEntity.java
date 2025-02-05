@@ -31,7 +31,7 @@ public class TeamEntity extends BaseEntity {
 
     private String description;
 
-    private String picture;
+    private String profileImageUrl;
 
     private String githubUrl;
 
@@ -45,13 +45,13 @@ public class TeamEntity extends BaseEntity {
     private TeamEntity(
         String name,
         String description,
-        String picture,
+        String profileImageUrl,
         String githubUrl,
         UserEntity leader
     ) {
         this.name = name;
         this.description = description;
-        this.picture = picture;
+        this.profileImageUrl = profileImageUrl;
         this.githubUrl = githubUrl;
         this.leader = leader;
     }
@@ -60,7 +60,7 @@ public class TeamEntity extends BaseEntity {
         return TeamEntity.builder()
             .name(team.getName())
             .description(team.getDescription())
-            .picture(team.getPicture())
+            .profileImageUrl(team.getProfileImageUrl())
             .githubUrl(team.getGithubUrl())
             .leader(leader)
             .build();
@@ -71,22 +71,19 @@ public class TeamEntity extends BaseEntity {
             .id(id)
             .name(name)
             .description(description)
-            .picture(picture)
+            .profileImageUrl(profileImageUrl)
             .githubUrl(githubUrl)
             .leaderId(leader.getId())
             .deletedAt(deletedAt)
             .build();
     }
 
-    public void update(Team domain) {
+    public void update(Team domain, UserEntity leader) {
         this.name = domain.getName();
         this.description = domain.getDescription();
-        this.picture = domain.getPicture();
+        this.profileImageUrl = domain.getProfileImageUrl();
         this.githubUrl = domain.getGithubUrl();
-        this.deletedAt = domain.getDeletedAt();
-    }
-
-    public void updateLeader(UserEntity leader) {
         this.leader = leader;
+        this.deletedAt = domain.getDeletedAt();
     }
 }

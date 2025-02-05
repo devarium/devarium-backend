@@ -6,7 +6,7 @@ public record TeamResponse(
     Long id,
     String name,
     String description,
-    String picture,
+    String profileImageUrl,
     String githubUrl,
     Long leaderId
 ) {
@@ -16,7 +16,7 @@ public record TeamResponse(
             team.getId(),
             team.getName(),
             team.getDescription(),
-            team.getPicture(),
+            team.getProfileImageUrl(),
             team.getGithubUrl(),
             team.getLeaderId()
         );
