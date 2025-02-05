@@ -17,7 +17,7 @@ public record QuestionResponse(
         return new QuestionResponse(
             question.getId(),
             question.getOrderNumber(),
-            question.getContent(),
+            question.getQuestionContent(),
             question.getType(),
             question.isRequired(),
             question.getProjectId()
