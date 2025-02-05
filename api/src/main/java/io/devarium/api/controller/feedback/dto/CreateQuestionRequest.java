@@ -1,5 +1,6 @@
 package io.devarium.api.controller.feedback.dto;
 
+import io.devarium.api.controller.feedback.dto.CreateQuestionRequest.CreateQuestionContentRequest.CreateChoiceRequest;
 import io.devarium.core.domain.feedback.question.QuestionContent;
 import io.devarium.core.domain.feedback.question.QuestionType;
 import io.devarium.core.domain.feedback.question.port.CreateQuestion;
@@ -17,14 +18,18 @@ public record CreateQuestionRequest(
 
     @Override
     public QuestionContent questionContent() {
+        List<CreateChoiceRequest> choices = createQuestionContent.choices();
+
         return new QuestionContent(
             createQuestionContent.content(),
-            createQuestionContent.choices().stream()
-                .map(choice -> new QuestionContent.Choice(
-                    choice.orderNumber(),
-                    choice.label()
-                ))
-                .toList()
+            choices != null ?
+                choices.stream()
+                    .map(choice -> new QuestionContent.Choice(
+                        choice.orderNumber(),
+                        choice.label()
+                    ))
+                    .toList() :
+                List.of()
         );
     }
 
