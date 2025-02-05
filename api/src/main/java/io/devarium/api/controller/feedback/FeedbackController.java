@@ -2,6 +2,7 @@ package io.devarium.api.controller.feedback;
 
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.ListResponse;
+import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.feedback.dto.AnswerResponse;
 import io.devarium.api.controller.feedback.dto.CreateQuestionRequest;
 import io.devarium.api.controller.feedback.dto.FeedbackResponse;
