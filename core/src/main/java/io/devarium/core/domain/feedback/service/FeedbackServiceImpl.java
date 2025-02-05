@@ -1,13 +1,14 @@
 package io.devarium.core.domain.feedback.service;
 
 import io.devarium.core.domain.feedback.Feedback;
-import io.devarium.core.domain.feedback.QuestionWithAnswers;
+import io.devarium.core.domain.feedback.FeedbackSummary;
 import io.devarium.core.domain.feedback.answer.Answer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers.SubmitAnswer;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
+import io.devarium.core.domain.feedback.port.TextSummarizer;
 import io.devarium.core.domain.feedback.question.Question;
 import io.devarium.core.domain.feedback.question.port.CreateQuestion;
 import io.devarium.core.domain.feedback.question.port.UpdateQuestion;
@@ -19,6 +20,7 @@ import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.service.ProjectService;
 import io.devarium.core.domain.user.User;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +34,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final AnswerRepository answerRepository;
     private final ProjectService projectService;
     private final MemberService memberService;
+    private final TextSummarizer textSummarizer;
 
     @Override
     public Question createFeedbackQuestion(Long projectId, CreateQuestion request, User user) {
@@ -94,7 +97,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public Feedback getFeedback(Long projectId, User user) {
+    public List<Feedback> getFeedbacks(Long projectId, User user) {
         Project project = projectService.getProject(projectId);
         Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
         member.validateMembership(project.getTeamId());
@@ -105,14 +108,22 @@ public class FeedbackServiceImpl implements FeedbackService {
         );
         Map<Long, List<Answer>> answersByQuestionId = answers.stream()
             .collect(Collectors.groupingBy(Answer::getQuestionId));
-        List<QuestionWithAnswers> questionAnswers = questions.stream()
-            .map(q -> new QuestionWithAnswers(
+
+        return questions.stream()
+            .sorted(Comparator.comparing(Question::getOrderNumber))
+            .map(q -> Feedback.of(
                 q,
                 answersByQuestionId.getOrDefault(q.getId(), List.of())
             ))
             .toList();
+    }
 
-        return Feedback.of(projectId, questionAnswers);
+    @Override
+    public List<FeedbackSummary> getFeedbackSummaries(Long projectId, User user) {
+        List<Feedback> feedbacks = getFeedbacks(projectId, user);
+        return feedbacks.stream()
+            .map(this::summarizeFeedback)
+            .toList();
     }
 
     @Override
@@ -143,6 +154,21 @@ public class FeedbackServiceImpl implements FeedbackService {
         );
 
         return questionRepository.save(question);
+    }
+    
+    private FeedbackSummary summarizeFeedback(Feedback feedback) {
+        List<String> answerContents = feedback.answers().stream()
+            .map(Answer::getContent)
+            .toList();
+
+        String summary = textSummarizer.summarizeTexts(answerContents);
+
+        Answer summariedAnswer = Answer.builder()
+            .content(summary)
+            .questionId(feedback.question().getId())
+            .build();
+
+        return FeedbackSummary.of(feedback.question(), summariedAnswer);
     }
 
     @Override

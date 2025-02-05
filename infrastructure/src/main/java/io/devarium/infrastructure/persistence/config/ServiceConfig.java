@@ -4,6 +4,7 @@ import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
 import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
+import io.devarium.core.domain.feedback.port.TextSummarizer;
 import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.core.domain.feedback.service.FeedbackService;
 import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
@@ -83,14 +84,16 @@ public class ServiceConfig {
         QuestionRepository questionRepository,
         AnswerRepository answerRepository,
         ProjectService projectService,
-        MemberService memberService
+        MemberService memberService,
+        TextSummarizer textSummarizer
     ) {
         return new FeedbackServiceDecorator(
             new FeedbackServiceImpl(
                 questionRepository,
                 answerRepository,
                 projectService,
-                memberService
+                memberService,
+                textSummarizer
             )
         );
     }
