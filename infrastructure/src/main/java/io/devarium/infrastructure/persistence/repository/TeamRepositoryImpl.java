@@ -48,7 +48,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Page<Team> findAllByUserId(Long userId, Pageable pageable) {
-        return teamJpaRepository.findAllByUserId(userId, pageable).map(TeamEntity::toDomain);
+    public Page<Team> findByNameContaining(String name, Pageable pageable) {
+        return teamJpaRepository.findByNameContaining(name, pageable).map(TeamEntity::toDomain);
     }
 }

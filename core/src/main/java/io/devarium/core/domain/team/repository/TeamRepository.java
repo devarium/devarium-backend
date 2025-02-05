@@ -13,5 +13,5 @@ public interface TeamRepository {
 
     Optional<Team> findById(Long id);
 
-    Page<Team> findAllByUserId(Long userId, Pageable pageable);
+    Page<Team> findByNameContaining(String name, Pageable pageable);
 }

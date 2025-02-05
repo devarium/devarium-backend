@@ -16,7 +16,7 @@ public interface TeamService {
 
     Team getTeam(Long teamId);
 
-    Page<Team> getTeams(Pageable pageable, User user);
+    Page<Team> getTeams(Pageable pageable, String teamName);
 
     Team updateTeamInfo(Long teamId, UpdateTeamInfo request, User user);
 

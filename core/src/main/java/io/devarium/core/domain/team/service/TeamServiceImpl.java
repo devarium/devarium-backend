@@ -46,8 +46,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Page<Team> getTeams(Pageable pageable, User user) {
-        return teamRepository.findAllByUserId(user.getId(), pageable);
+    public Page<Team> getTeams(Pageable pageable, String teamName) {
+        return teamRepository.findByNameContaining(teamName, pageable);
     }
 
     @Override
