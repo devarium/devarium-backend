@@ -9,6 +9,7 @@ import java.util.Set;
 public record UpsertProjectRequest(
     @NotBlank(message = "'name' must not be blank") String name,
     String description,
+    @NotNull(message = "'teamId' must not be null") Long teamId,
     @NotNull(message = "'skills' must not be null") Set<Skill> skills
 ) implements UpsertProject {
 
