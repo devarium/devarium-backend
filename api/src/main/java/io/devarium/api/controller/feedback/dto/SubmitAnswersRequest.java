@@ -1,6 +1,5 @@
 package io.devarium.api.controller.feedback.dto;
 
-import io.devarium.core.domain.feedback.answer.port.SubmitAnswer;
 import io.devarium.core.domain.feedback.answer.port.SubmitAnswers;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
