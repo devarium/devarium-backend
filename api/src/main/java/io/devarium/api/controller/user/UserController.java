@@ -107,8 +107,9 @@ public class UserController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<TeamRequest> teamRequests = userService.getTeamRequests(
-            principal.getUser(),
-            TeamRequestType.JOIN_REQUEST
+            TeamRequestType.JOIN_REQUEST,
+            null,
+            principal.getUser()
         );
         List<TeamRequestResponse> response = teamRequests.stream()
             .map(TeamRequestResponse::from).toList();
@@ -120,8 +121,9 @@ public class UserController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         List<TeamRequest> teamRequests = userService.getTeamRequests(
-            principal.getUser(),
-            TeamRequestType.INVITATION
+            TeamRequestType.INVITATION,
+            TeamRequestStatus.PENDING,
+            principal.getUser()
         );
         List<TeamRequestResponse> response = teamRequests.stream()
             .map(TeamRequestResponse::from).toList();

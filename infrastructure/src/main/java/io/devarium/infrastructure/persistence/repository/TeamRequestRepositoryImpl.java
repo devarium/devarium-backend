@@ -11,6 +11,7 @@ import io.devarium.infrastructure.persistence.entity.TeamRequestEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -57,6 +58,11 @@ public class TeamRequestRepositoryImpl implements TeamRequestRepository {
     }
 
     @Override
+    public Optional<TeamRequest> findById(Long id) {
+        return teamRequestJpaRepository.findById(id).map(TeamRequestEntity::toDomain);
+    }
+
+    @Override
     public List<TeamRequest> findByTeamIdAndTypeAndStatus(
         Long teamId,
         TeamRequestType type,
@@ -64,6 +70,22 @@ public class TeamRequestRepositoryImpl implements TeamRequestRepository {
     ) {
         return teamRequestJpaRepository.findByTeamIdAndTypeAndStatus(teamId, type, status).stream()
             .map(TeamRequestEntity::toDomain).toList();
+    }
+
+    @Override
+    public List<TeamRequest> findByUserIdAndTypeAndStatus(
+        Long userId,
+        TeamRequestType type,
+        TeamRequestStatus status
+    ) {
+        List<TeamRequestEntity> entities;
+
+        if (status == null) {
+            entities = teamRequestJpaRepository.findByUserIdAndType(userId, type);
+        } else {
+            entities = teamRequestJpaRepository.findByUserIdAndTypeAndStatus(userId, type, status);
+        }
+        return entities.stream().map(TeamRequestEntity::toDomain).toList();
     }
 
     @Override

@@ -1,6 +1,10 @@
 package io.devarium.core.domain.user.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
+import io.devarium.core.domain.teamRequest.TeamRequest;
+import io.devarium.core.domain.teamRequest.TeamRequestStatus;
+import io.devarium.core.domain.teamRequest.TeamRequestType;
+import io.devarium.core.domain.teamRequest.service.TeamRequestService;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import io.devarium.core.domain.user.exception.UserErrorCode;
@@ -10,6 +14,7 @@ import io.devarium.core.domain.user.repository.UserRepository;
 import io.devarium.core.storage.Image;
 import io.devarium.core.storage.ImageType;
 import io.devarium.core.storage.service.StorageService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -17,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final StorageService storageService;
+    private final TeamRequestService teamRequestService;
 
     @Override
     public User createUser(OAuth2UserInfo userInfo) {
@@ -62,6 +68,17 @@ public class UserServiceImpl implements UserService {
         String newImageUrl = storageService.upload(image, ImageType.PROFILE);
         user.update(newImageUrl);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<TeamRequest> getTeamRequests(TeamRequestType type, TeamRequestStatus status,
+        User user) {
+        return teamRequestService.getTeamRequestsByUser(type, status, user);
+    }
+
+    @Override
+    public TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user) {
+        return teamRequestService.updateInvitation(teamRequestId, status, user);
     }
 
     @Override

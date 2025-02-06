@@ -1,11 +1,15 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
+import io.devarium.core.domain.teamRequest.TeamRequest;
+import io.devarium.core.domain.teamRequest.TeamRequestStatus;
+import io.devarium.core.domain.teamRequest.TeamRequestType;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.Image;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +38,6 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional
-    public User updateUserProfile(UpdateUser request, User user) {
-        return userService.updateUserProfile(request, user);
     public User updateProfile(UpdateUser request, User user) {
         return userService.updateProfile(request, user);
     }
@@ -45,12 +47,20 @@ public class UserServiceDecorator implements UserService {
     public User updateProfileImage(Image image, User user) {
         return userService.updateProfileImage(image, user);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<TeamRequest> getTeamRequests(
+        TeamRequestType type,
+        TeamRequestStatus status,
+        User user
+    ) {
+        return userService.getTeamRequests(type, status, user);
     }
 
     @Override
     @Transactional
-    public User updateUserProfileImage(Image image, User user) {
-        return userService.updateUserProfileImage(image, user);
+    public TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user) {
+        return userService.updateInvitation(teamRequestId, status, user);
     }
 
     @Override

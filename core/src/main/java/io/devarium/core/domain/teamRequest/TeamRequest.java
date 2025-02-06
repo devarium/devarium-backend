@@ -1,6 +1,9 @@
 package io.devarium.core.domain.teamRequest;
 
+import io.devarium.core.domain.teamRequest.exception.TeamRequestErrorCode;
+import io.devarium.core.domain.teamRequest.exception.TeamRequestException;
 import java.time.Instant;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -34,5 +37,15 @@ public class TeamRequest {
     public void update(TeamRequestStatus status) {
         this.status = status;
         this.statusChangedAt = Instant.now();
+    }
+
+    public void validateUser(Long userId) {
+        if (!Objects.equals(this.userId, userId)) {
+            throw new TeamRequestException(
+                TeamRequestErrorCode.TEAM_REQUEST_NOT_FOUND_BY_USER,
+                id,
+                userId
+            );
+        }
     }
 }

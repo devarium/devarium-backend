@@ -14,5 +14,13 @@ public interface TeamRequestJpaRepository extends JpaRepository<TeamRequestEntit
         TeamRequestStatus status
     );
 
+    List<TeamRequestEntity> findByUserIdAndType(Long userId, TeamRequestType type);
+
+    List<TeamRequestEntity> findByUserIdAndTypeAndStatus(
+        Long userId,
+        TeamRequestType type,
+        TeamRequestStatus status
+    );
+
     List<TeamRequestEntity> findByIdInAndTeamId(List<Long> ids, Long teamId);
 }

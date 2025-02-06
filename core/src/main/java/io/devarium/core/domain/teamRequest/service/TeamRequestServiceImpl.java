@@ -51,11 +51,23 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     }
 
     @Override
-    public List<TeamRequest> getTeamRequests(Long teamId, TeamRequestType type,
-        TeamRequestStatus status, User user) {
+    public List<TeamRequest> getTeamRequests(
+        Long teamId,
+        TeamRequestType type,
+        TeamRequestStatus status,
+        User user
+    ) {
         // TODO: User의 멤버십 검증
         // TODO: INVITATION은 매니저 이상
         return teamRequestRepository.findByTeamIdAndTypeAndStatus(teamId, type, status);
+    }
+
+    @Override
+    public List<TeamRequest> getTeamRequestsByUser(
+        TeamRequestType type,
+        TeamRequestStatus status,
+        User user) {
+        return teamRequestRepository.findByUserIdAndTypeAndStatus(user.getId(), type, status);
     }
 
     @Override
@@ -86,5 +98,17 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
         teamRequests.forEach(teamRequest -> teamRequest.update(status));
         return teamRequestRepository.saveAll(teamRequests);
+    }
+
+    @Override
+    public TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user) {
+        TeamRequest teamRequest = teamRequestRepository.findById(teamRequestId)
+            .orElseThrow(() -> new TeamRequestException(
+                TeamRequestErrorCode.TEAM_REQUEST_NOT_FOUND,
+                teamRequestId)
+            );
+        teamRequest.validateUser(user.getId());
+        teamRequest.update(status);
+        return teamRequestRepository.save(teamRequest);
     }
 }

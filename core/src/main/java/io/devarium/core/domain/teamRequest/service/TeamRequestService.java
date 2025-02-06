@@ -21,10 +21,18 @@ public interface TeamRequestService {
         User user
     );
 
+    List<TeamRequest> getTeamRequestsByUser(
+        TeamRequestType type,
+        TeamRequestStatus status,
+        User user
+    );
+
     List<TeamRequest> update(
         Long teamId,
         TeamRequestStatus status,
         UpdateJoin request,
         User user
     );
+
+    TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user);
 }
