@@ -35,7 +35,6 @@ public class QuestionEntity extends BaseEntity {
     private int orderNumber;
 
     @Column(nullable = false, columnDefinition = "json")
-//    @Convert(converter = QuestionContentConverter.class)
     @JdbcTypeCode(SqlTypes.JSON)
     private QuestionContent questionContent;
 
