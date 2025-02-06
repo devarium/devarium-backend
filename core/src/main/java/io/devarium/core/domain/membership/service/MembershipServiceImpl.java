@@ -26,13 +26,13 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public void createMemberships(Long teamId, Set<Long> userIds, User user) {
-        getMembership(teamId, user.getId()).validateRole(MemberRole.ADMIN);
+        getMembership(teamId, user.getId()).validateRole(MemberRole.MANAGER);
 
         Set<Membership> memberships = userIds.stream()
             .map(userId -> Membership.builder()
                 .userId(userId)
                 .teamId(teamId)
-                .role(MemberRole.VIEWER)
+                .role(MemberRole.MEMBER)
                 .isLeader(false)
                 .build())
             .collect(Collectors.toSet());
@@ -49,7 +49,7 @@ public class MembershipServiceImpl implements MembershipService {
         Membership membership = Membership.builder()
             .userId(userId)
             .teamId(teamId)
-            .role(MemberRole.SUPER_ADMIN)
+            .role(MemberRole.LEADER)
             .isLeader(true)
             .build();
         membershipRepository.save(membership);
@@ -67,7 +67,7 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public Page<Membership> getMemberships(Pageable pageable, Long teamId, User user) {
-        getMembership(teamId, user.getId()).validateRole(MemberRole.VIEWER);
+        getMembership(teamId, user.getId()).validateRole(MemberRole.MEMBER);
 
         return membershipRepository.findByTeamId(teamId, pageable);
     }
@@ -80,7 +80,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public void updateMemberships(Long teamId, UpdateMemberships request, User user) {
         Membership userMembership = getMembership(teamId, user.getId());
-        userMembership.validateRole(MemberRole.ADMIN);
+        userMembership.validateRole(MemberRole.MANAGER);
 
         Set<Long> membershipIds = request.memberships().stream()
             .map(UpdateMembership::membershipId)
@@ -99,15 +99,15 @@ public class MembershipServiceImpl implements MembershipService {
         Membership oldLeader = getMembership(teamId, oldLeaderId);
         Membership newLeader = getMembership(teamId, newLeaderId);
 
-        oldLeader.update(MemberRole.ADMIN);
-        newLeader.update(MemberRole.SUPER_ADMIN);
+        oldLeader.update(MemberRole.MANAGER);
+        newLeader.update(MemberRole.LEADER);
         membershipRepository.saveAll(teamId, Set.of(oldLeader, newLeader));
     }
 
     @Override
     public void deleteMemberships(Long teamId, DeleteMemberships request, User user) {
         getMembership(teamId, user.getId())
-            .validateRole(MemberRole.ADMIN);
+            .validateRole(MemberRole.MANAGER);
 
         Set<Membership> memberships = membershipRepository.findAllById(request.ids());
         memberships.forEach(membership -> membership.validateTeam(teamId));
@@ -145,7 +145,7 @@ public class MembershipServiceImpl implements MembershipService {
             throw new MembershipException(MembershipErrorCode.MEMBER_ROLE_HIERARCHY_VIOLATION);
         }
 
-        if (newRole == MemberRole.SUPER_ADMIN) {
+        if (newRole == MemberRole.LEADER) {
             throw new MembershipException(MembershipErrorCode.UPDATE_LEADER_ONLY,
                 membership.getId());
         }

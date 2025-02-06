@@ -48,9 +48,9 @@ public class Membership {
     }
 
     public void update(MemberRole role) {
-        if (role == MemberRole.ADMIN && this.isLeader) {
+        if (role == MemberRole.MANAGER && this.isLeader) {
             this.isLeader = false;
-        } else if (role == MemberRole.SUPER_ADMIN) {
+        } else if (role == MemberRole.LEADER) {
             this.isLeader = true;
         }
         this.role = role;

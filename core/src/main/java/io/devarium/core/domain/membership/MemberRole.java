@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MemberRole {
-    SUPER_ADMIN(11),
-    ADMIN(10),
-    VIEWER(1);
+    LEADER(3),
+    MANAGER(2),
+    MEMBER(1);
 
     private final int level;
 }
