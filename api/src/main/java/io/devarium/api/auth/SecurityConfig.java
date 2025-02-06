@@ -5,8 +5,8 @@ import io.devarium.api.auth.filter.JwtAuthenticationFilter;
 import io.devarium.api.auth.handler.JwtAccessDeniedHandler;
 import io.devarium.api.auth.handler.JwtAuthenticationEntryPoint;
 import io.devarium.api.auth.handler.OAuth2AuthenticationSuccessHandler;
+import io.devarium.core.auth.port.TokenProvider;
 import io.devarium.core.auth.service.TokenService;
-import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtUtil jwtUtil;
+    private final TokenProvider tokenProvider;
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
     private final ObjectMapper objectMapper;
     private final TokenService tokenService;
@@ -56,11 +56,16 @@ public class SecurityConfig {
                         "/api-docs/**"
                     ).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/all").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}/comments").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/comments/{commentId}").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/comments/{commentId}/replies").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/replies/{replyId}").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}/comments")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/comments/{commentId}")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                        "/api/" + apiVersion + "/comments/{commentId}/replies").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/replies/{replyId}")
+                    .permitAll()
                     .anyRequest().authenticated()
                 //.anyRequest().permitAll()
             )
@@ -81,7 +86,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 비활성화 (Stateless)
             )
             .addFilterBefore(
-                new JwtAuthenticationFilter(jwtUtil, customUserDetailsService), // JWT 필터 추가
+                new JwtAuthenticationFilter(tokenProvider, customUserDetailsService), // JWT 필터 추가
                 UsernamePasswordAuthenticationFilter.class
             );
         return http.build();
