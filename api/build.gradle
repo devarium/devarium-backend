@@ -5,6 +5,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    testImplementation project(':infrastructure')
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.security:spring-security-test'
 }
