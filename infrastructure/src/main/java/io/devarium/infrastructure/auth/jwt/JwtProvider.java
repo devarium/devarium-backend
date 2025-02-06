@@ -2,6 +2,7 @@ package io.devarium.infrastructure.auth.jwt;
 
 import static io.devarium.infrastructure.auth.jwt.JwtConstants.BEARER_PREFIX;
 
+import io.devarium.core.auth.port.TokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -21,9 +22,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Slf4j(topic = "JwtUtil")
+@Slf4j(topic = "JwtProvider")
 @Component
-public class JwtProvider {
+public class JwtProvider implements TokenProvider {
 
     private static final String AUTHORIZATION_KEY = "auth";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
@@ -31,6 +32,7 @@ public class JwtProvider {
     private final JwtProperties jwtProperties;
     private final Key key;
 
+    @Override
     public String generateAccessToken(
         String email,
         Collection<? extends GrantedAuthority> authorities
@@ -42,6 +44,7 @@ public class JwtProvider {
         );
     }
 
+    @Override
     public String generateRefreshToken(
         String email,
         Collection<? extends GrantedAuthority> authorities
@@ -49,10 +52,12 @@ public class JwtProvider {
         return generateToken(email, authorities, jwtProperties.getRefreshTokenExpiration());
     }
 
+    @Override
     public String extractEmail(String email) {
         return getClaims(email).getSubject();
     }
 
+    @Override
     public Collection<? extends GrantedAuthority> extractAuthorities(String token) {
         Claims claims = getClaims(token);
 
@@ -64,10 +69,12 @@ public class JwtProvider {
             .collect(Collectors.toList());
     }
 
+    @Override
     public String resolveToken(String token) {
         return token.startsWith(BEARER_PREFIX) ? token.substring(BEARER_PREFIX.length()) : token;
     }
 
+    @Override
     public boolean isTokenValid(String token) {
         if (token == null) {
             log.error("Jwt token is null");
