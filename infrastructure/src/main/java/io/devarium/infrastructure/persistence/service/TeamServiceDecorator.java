@@ -68,6 +68,7 @@ public class TeamServiceDecorator implements TeamService {
     }
 
     @Override
+    @Transactional
     public boolean checkUserIsLeader(Long userId) {
         return teamService.checkUserIsLeader(userId);
     }
