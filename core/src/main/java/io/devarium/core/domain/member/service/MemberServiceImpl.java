@@ -4,7 +4,6 @@ import io.devarium.core.domain.member.Member;
 import io.devarium.core.domain.member.MemberRole;
 import io.devarium.core.domain.member.exception.MemberErrorCode;
 import io.devarium.core.domain.member.exception.MemberException;
-import io.devarium.core.domain.member.port.CreateMembers;
 import io.devarium.core.domain.member.port.DeleteMembers;
 import io.devarium.core.domain.member.port.UpdateMember;
 import io.devarium.core.domain.member.port.UpdateMembers;
@@ -26,29 +25,16 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void createMembers(Long teamId, CreateMembers request, User user) {
-        getUserMembership(teamId, user.getId())
-            .validateRole(MemberRole.ADMIN);
+    public void createMembers(Long teamId, Set<Long> userIds, User user) {
+        getMember(teamId, user.getId()).validateRole(MemberRole.ADMIN);
 
-        Set<Member> members = request.members().stream()
-            .map(member -> {
-                Long userId = member.userId();
-                MemberRole role = member.role();
-
-                if (role == MemberRole.SUPER_ADMIN) {
-                    throw new MemberException(
-                        MemberErrorCode.FIRST_MEMBER_ONLY,
-                        userId,
-                        teamId
-                    );
-                }
-                return Member.builder()
-                    .userId(userId)
-                    .teamId(teamId)
-                    .role(role)
-                    .isLeader(false)
-                    .build();
-            })
+        Set<Member> members = userIds.stream()
+            .map(userId -> Member.builder()
+                .userId(userId)
+                .teamId(teamId)
+                .role(MemberRole.VIEWER)
+                .isLeader(false)
+                .build())
             .collect(Collectors.toSet());
 
         memberRepository.saveAll(teamId, members);
@@ -69,9 +55,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member getMember(Long teamId, Long userId) {
+        return memberRepository.findByUserIdAndTeamId(userId, teamId)
+            .orElseThrow(() -> new MemberException(
+                MemberErrorCode.MEMBER_NOT_IN_TEAM,
+                userId,
+                teamId
+            ));
+    }
+
+    @Override
     public Page<Member> getMembers(Pageable pageable, Long teamId, User user) {
-        getUserMembership(teamId, user.getId())
-            .validateRole(MemberRole.VIEWER);
+        getMember(teamId, user.getId()).validateRole(MemberRole.VIEWER);
 
         return memberRepository.findByTeamId(teamId, pageable);
     }
@@ -83,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMembers(Long teamId, UpdateMembers request, User user) {
-        Member userMember = getUserMembership(teamId, user.getId());
+        Member userMember = getMember(teamId, user.getId());
         userMember.validateRole(MemberRole.ADMIN);
 
         Set<Long> memberIds = request.members().stream()
@@ -99,38 +94,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId) {
-        Member oldLeader = getUserMembership(teamId, oldLeaderId);
-        if (!oldLeader.isLeader()) {
-            throw new MemberException(
-                MemberErrorCode.FORBIDDEN_ACCESS,
-                oldLeader.getId(),
-                oldLeader.getUserId(),
-                teamId
-            );
-        }
+        Member oldLeader = getMember(teamId, oldLeaderId);
+        Member newLeader = getMember(teamId, newLeaderId);
+
         oldLeader.update(MemberRole.ADMIN);
-        Member newLeader = getUserMembership(teamId, newLeaderId);
         newLeader.update(MemberRole.SUPER_ADMIN);
         memberRepository.saveAll(teamId, Set.of(oldLeader, newLeader));
     }
 
     @Override
     public void deleteMembers(Long teamId, DeleteMembers request, User user) {
-        getUserMembership(teamId, user.getId())
+        getMember(teamId, user.getId())
             .validateRole(MemberRole.ADMIN);
 
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
         members.forEach(member -> member.validateMembership(teamId));
         memberRepository.deleteAll(members);
-    }
-
-    private Member getUserMembership(Long teamId, Long userId) {
-        return memberRepository.findByUserIdAndTeamId(userId, teamId)
-            .orElseThrow(() -> new MemberException(
-                MemberErrorCode.MEMBER_NOT_IN_TEAM,
-                userId,
-                teamId
-            ));
     }
 
     private void updateMemberRole(

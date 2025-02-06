@@ -1,13 +1,13 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.member.Member;
-import io.devarium.core.domain.member.port.CreateMembers;
 import io.devarium.core.domain.member.port.DeleteMembers;
 import io.devarium.core.domain.member.port.UpdateMembers;
 import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.member.service.MemberServiceImpl;
 import io.devarium.core.domain.user.User;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +20,20 @@ public class MemberServiceDecorator implements MemberService {
 
     @Override
     @Transactional
-    public void createMembers(Long teamId, CreateMembers request, User user) {
-        memberService.createMembers(teamId, request, user);
+    public void createMembers(Long teamId, Set<Long> userIds, User user) {
+        memberService.createMembers(teamId, userIds, user);
     }
 
     @Override
     @Transactional
     public void createLeader(Long teamId, Long userId) {
         memberService.createLeader(teamId, userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Member getMember(Long teamId, Long userId) {
+        return memberService.getMember(teamId, userId);
     }
 
     @Override

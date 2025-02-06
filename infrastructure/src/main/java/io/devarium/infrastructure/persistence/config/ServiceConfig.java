@@ -96,7 +96,11 @@ public class ServiceConfig {
     }
 
     @Bean
-    public TeamRequestService teamRequestService(TeamRequestRepository teamRequestRepository) {
-        return new TeamRequestServiceDecorator(new TeamRequestServiceImpl(teamRequestRepository));
+    public TeamRequestService teamRequestService(
+        TeamRequestRepository teamRequestRepository,
+        MemberService memberService
+    ) {
+        return new TeamRequestServiceDecorator(
+            new TeamRequestServiceImpl(teamRequestRepository, memberService));
     }
 }
