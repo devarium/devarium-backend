@@ -27,4 +27,6 @@ public interface TeamService {
     Team updateLeader(Long teamId, UpdateLeader request, User user);
 
     void deleteTeam(Long teamId, User user);
+
+    boolean checkUserIsLeader(Long userId);
 }

@@ -66,4 +66,9 @@ public class TeamServiceDecorator implements TeamService {
     public void deleteTeam(Long teamId, User user) {
         teamService.deleteTeam(teamId, user);
     }
+
+    @Override
+    public boolean checkUserIsLeader(Long userId) {
+        return teamService.checkUserIsLeader(userId);
+    }
 }

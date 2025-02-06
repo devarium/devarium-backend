@@ -83,6 +83,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void withdraw(User user) {
+        if (teamService.checkUserIsLeader(user.getId())) {
+            throw new UserException(UserErrorCode.USER_WITHDRAW_FAILED, user.getId());
+        }
         user.delete();
         userRepository.save(user);
     }

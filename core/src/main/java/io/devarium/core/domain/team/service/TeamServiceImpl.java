@@ -99,4 +99,9 @@ public class TeamServiceImpl implements TeamService {
         team.delete();
         teamRepository.save(team);
     }
+
+    @Override
+    public boolean checkUserIsLeader(Long userId) {
+        return teamRepository.existsByLeaderId(userId);
+    }
 }

@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamJpaRepository extends JpaRepository<TeamEntity, Long> {
 
+    boolean existsByLeaderId(Long leaderId);
+
     Page<TeamEntity> findByNameContaining(String name, Pageable pageable);
 }

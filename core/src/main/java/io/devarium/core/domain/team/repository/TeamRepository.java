@@ -13,5 +13,7 @@ public interface TeamRepository {
 
     Optional<Team> findById(Long id);
 
+    boolean existsByLeaderId(Long leaderId);
+
     Page<Team> findByNameContaining(String name, Pageable pageable);
 }

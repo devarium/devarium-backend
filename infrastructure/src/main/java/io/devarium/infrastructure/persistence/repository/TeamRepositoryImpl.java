@@ -47,6 +47,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
+    public boolean existsByLeaderId(Long leaderId) {
+        return teamJpaRepository.existsByLeaderId(leaderId);
+    }
+
+    @Override
     public Page<Team> findByNameContaining(String name, Pageable pageable) {
         return teamJpaRepository.findByNameContaining(name, pageable).map(TeamEntity::toDomain);
     }
