@@ -155,21 +155,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         return questionRepository.save(question);
     }
-    
-    private FeedbackSummary summarizeFeedback(Feedback feedback) {
-        List<String> answerContents = feedback.answers().stream()
-            .map(Answer::getContent)
-            .toList();
-
-        String summary = textSummarizer.summarizeTexts(answerContents);
-
-        Answer summariedAnswer = Answer.builder()
-            .content(summary)
-            .questionId(feedback.question().getId())
-            .build();
-
-        return FeedbackSummary.of(feedback.question(), summariedAnswer);
-    }
 
     @Override
     public List<Question> updateFeedbackQuestionOrders(
@@ -203,5 +188,20 @@ public class FeedbackServiceImpl implements FeedbackService {
         member.validateMembership(project.getTeamId());
 
         questionRepository.deleteById(questionId);
+    }
+
+    private FeedbackSummary summarizeFeedback(Feedback feedback) {
+        List<String> answerContents = feedback.answers().stream()
+            .map(Answer::getContent)
+            .toList();
+
+        String summary = textSummarizer.summarizeTexts(answerContents);
+
+        Answer summariedAnswer = Answer.builder()
+            .content(summary)
+            .questionId(feedback.question().getId())
+            .build();
+
+        return FeedbackSummary.of(feedback.question(), summariedAnswer);
     }
 }
