@@ -1,17 +1,20 @@
 package io.devarium.infrastructure.openai;
 
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import io.devarium.core.domain.feedback.port.TextSummarizer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 @RequiredArgsConstructor
+@Slf4j
 @Component
 public class OpenAiTextSummarizer implements TextSummarizer {
 
@@ -24,6 +27,7 @@ public class OpenAiTextSummarizer implements TextSummarizer {
         String cachedSummary = redisTemplate.opsForValue().get("summary:" + cacheKey);
 
         if (cachedSummary != null) {
+            log.info("Cache hit for key: {}", cacheKey);
             return cachedSummary;
         }
 
@@ -37,8 +41,12 @@ public class OpenAiTextSummarizer implements TextSummarizer {
             ))
             .build();
 
-        String summary = openAiService.createChatCompletion(request)
-            .getChoices()
+        log.info("Sending request to OpenAI: {}", request);
+
+        ChatCompletionResult response = openAiService.createChatCompletion(request);
+        log.info("Received response from OpenAI: {}", response);
+
+        String summary = response.getChoices()
             .getFirst()
             .getMessage()
             .getContent();
