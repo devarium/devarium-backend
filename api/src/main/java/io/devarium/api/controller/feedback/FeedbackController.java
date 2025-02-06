@@ -92,7 +92,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<ListResponse<FeedbackSummaryResponse>> getFeedbackSummary(
+    public ResponseEntity<ListResponse<FeedbackSummaryResponse>> getFeedbackSummaries(
         @PathVariable Long projectId,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
