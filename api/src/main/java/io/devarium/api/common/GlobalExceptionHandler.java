@@ -9,6 +9,10 @@ import io.devarium.core.domain.member.exception.MemberErrorCode;
 import io.devarium.core.domain.member.exception.MemberException;
 import io.devarium.core.domain.like.exception.LikeErrorCode;
 import io.devarium.core.domain.like.exception.LikeException;
+import io.devarium.core.domain.member.exception.MemberErrorCode;
+import io.devarium.core.domain.member.exception.MemberException;
+import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
+import io.devarium.core.domain.feedback.exception.FeedbackException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
@@ -19,6 +23,8 @@ import io.devarium.core.storage.exception.StorageErrorCode;
 import io.devarium.core.storage.exception.StorageException;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
+import io.devarium.core.domain.team.exception.TeamErrorCode;
+import io.devarium.core.domain.team.exception.TeamException;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
 import java.util.List;
@@ -93,8 +99,20 @@ public class GlobalExceptionHandler {
             );
     }
 
+    @ExceptionHandler(FeedbackException.class)
+    public ResponseEntity<ErrorResponse> handleFeedbackException(FeedbackException e) {
+        FeedbackErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
     @ExceptionHandler(TeamException.class)
-    public ResponseEntity<ErrorResponse> handlerTeamException(TeamException e) {
+    public ResponseEntity<ErrorResponse> handleTeamException(TeamException e) {
         TeamErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
@@ -106,32 +124,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ErrorResponse> handlerMemberException(MemberException e) {
+    public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
         MemberErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(ErrorResponse.of(
-                errorCode.getStatus().name(),
-                errorCode.getStatus().value(),
-                e.getMessage())
-            );
-    }
-
-    @ExceptionHandler(StorageException.class)
-    public ResponseEntity<ErrorResponse> handleStorageException(StorageException e) {
-        StorageErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-            .status(errorCode.getStatus())
-            .body(ErrorResponse.of(
-                errorCode.getStatus().name(),
-                errorCode.getStatus().value(),
-                e.getMessage())
-            );
-    }
-
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<ErrorResponse> handleUserException(UserException e) {
-        UserErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(

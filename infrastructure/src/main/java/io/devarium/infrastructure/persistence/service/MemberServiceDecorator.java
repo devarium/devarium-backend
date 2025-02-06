@@ -30,6 +30,12 @@ public class MemberServiceDecorator implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
+    public Member getUserMembership(Long teamId, Long userId) {
+        return memberService.getUserMembership(teamId, userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user) {
         return memberService.getMembersByTeamId(pageable, teamId, user);
     }

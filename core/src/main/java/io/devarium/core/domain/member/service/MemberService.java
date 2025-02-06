@@ -14,6 +14,8 @@ public interface MemberService {
 
     void createLeader(Long teamId, Long userId);
 
+    Member getUserMembership(Long teamId, Long userId);
+
     Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user);
 
     Page<Member> getMembersByUser(Pageable pageable, User user);

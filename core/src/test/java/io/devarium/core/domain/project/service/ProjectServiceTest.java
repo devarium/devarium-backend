@@ -29,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProjectServiceTest {
 
     private static final Long PROJECT_ID = 1L;
+    private static final Long TEAM_ID = 1L;
     private static final Long NON_EXISTENT_ID = 999L;
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
@@ -54,6 +55,7 @@ class ProjectServiceTest {
     private record TestUpsertProject(
         String name,
         String description,
+        Long teamId,
         Set<Skill> skills
     ) implements UpsertProject {
 
@@ -65,7 +67,7 @@ class ProjectServiceTest {
         @Test
         void givenValidProjectRequest_whenCreateProject_thenProjectIsSaved() {
             // given
-            UpsertProject request = new TestUpsertProject(NAME, DESCRIPTION, SKILLS);
+            UpsertProject request = new TestUpsertProject(NAME, DESCRIPTION, TEAM_ID, SKILLS);
 
             Project expectedProject = Project.builder()
                 .name(NAME)
@@ -149,6 +151,7 @@ class ProjectServiceTest {
             UpsertProject request = new TestUpsertProject(
                 updatedName,
                 updatedDescription,
+                TEAM_ID,
                 updatedSkills
             );
 
@@ -185,7 +188,7 @@ class ProjectServiceTest {
         @Test
         void givenNonExistentProjectAndValidProjectRequest_whenUpdateProject_thenProjectIsNotFound() {
             // given
-            UpsertProject request = new TestUpsertProject(NAME, DESCRIPTION, SKILLS);
+            UpsertProject request = new TestUpsertProject(NAME, DESCRIPTION, TEAM_ID, SKILLS);
             given(projectRepository.findById(NON_EXISTENT_ID)).willReturn(Optional.empty());
 
             // when & then

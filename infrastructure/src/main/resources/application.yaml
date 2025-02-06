@@ -12,6 +12,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
+
   data:
     redis:
       host: localhost
@@ -41,3 +46,11 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
+logging:
+  level:
+    com.theokanning.openai: DEBUG

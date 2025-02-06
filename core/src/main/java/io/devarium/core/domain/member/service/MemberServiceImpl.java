@@ -55,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createLeader(Long teamId, Long userId) {
-        if (!memberRepository.existsByTeamId(teamId)) {
+        if (memberRepository.existsByTeamId(teamId)) {
             throw new MemberException(MemberErrorCode.FIRST_MEMBER_ONLY, userId, teamId);
         }
         Member member = Member.builder()
@@ -65,6 +65,16 @@ public class MemberServiceImpl implements MemberService {
             .isLeader(true)
             .build();
         memberRepository.save(member);
+    }
+
+    @Override
+    public Member getUserMembership(Long teamId, Long userId) {
+        return memberRepository.findByUserIdAndTeamId(userId, teamId)
+            .orElseThrow(() -> new MemberException(
+                MemberErrorCode.MEMBER_NOT_IN_TEAM,
+                userId,
+                teamId
+            ));
     }
 
     @Override
@@ -121,15 +131,6 @@ public class MemberServiceImpl implements MemberService {
         Set<Member> members = memberRepository.findByIdIn(request.memberIds());
         members.forEach(member -> member.validateMembership(teamId));
         memberRepository.deleteAll(members);
-    }
-
-    private Member getUserMembership(Long teamId, Long userId) {
-        return memberRepository.findByUserIdAndTeamId(userId, teamId)
-            .orElseThrow(() -> new MemberException(
-                MemberErrorCode.MEMBER_NOT_IN_TEAM,
-                userId,
-                teamId
-            ));
     }
 
     private void updateMemberRole(
