@@ -62,6 +62,7 @@ public class Project {
 
     public void validateStatusInReview() {
         if (status != ProjectStatus.IN_REVIEW) {
+            // TODO: 커스텀 예외 정의 필요
             throw new RuntimeException();
         }
     }
