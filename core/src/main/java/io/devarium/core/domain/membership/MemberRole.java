@@ -1,4 +1,4 @@
-package io.devarium.core.domain.member;
+package io.devarium.core.domain.membership;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

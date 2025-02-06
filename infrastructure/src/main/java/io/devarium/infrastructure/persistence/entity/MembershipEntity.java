@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
-import io.devarium.core.domain.member.Member;
-import io.devarium.core.domain.member.MemberRole;
+import io.devarium.core.domain.membership.MemberRole;
+import io.devarium.core.domain.membership.Membership;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,10 +22,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
-    name = "members",
+    name = "memberships",
     uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "team_id"})
 )
-public class MemberEntity extends BaseEntity {
+public class MembershipEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,24 +48,25 @@ public class MemberEntity extends BaseEntity {
     private Boolean isLeader;
 
     @Builder
-    private MemberEntity(UserEntity user, TeamEntity team, MemberRole role, Boolean isLeader) {
+    private MembershipEntity(UserEntity user, TeamEntity team, MemberRole role, Boolean isLeader) {
         this.user = user;
         this.team = team;
         this.role = role;
         this.isLeader = isLeader;
     }
 
-    public static MemberEntity fromDomain(Member member, UserEntity user, TeamEntity team) {
-        return MemberEntity.builder()
+    public static MembershipEntity fromDomain(Membership membership, UserEntity user,
+        TeamEntity team) {
+        return MembershipEntity.builder()
             .user(user)
             .team(team)
-            .role(member.getRole())
-            .isLeader(member.isLeader())
+            .role(membership.getRole())
+            .isLeader(membership.isLeader())
             .build();
     }
 
-    public Member toDomain() {
-        return Member.builder()
+    public Membership toDomain() {
+        return Membership.builder()
             .id(id)
             .userId(user.getId())
             .teamId(team.getId())

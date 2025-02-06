@@ -3,12 +3,12 @@ package io.devarium.api.controller.user;
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.SingleItemResponse;
-import io.devarium.api.controller.member.dto.MemberResponse;
+import io.devarium.api.controller.membership.dto.MembershipResponse;
 import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.teamRequest.dto.TeamRequestResponse;
 import io.devarium.api.controller.user.dto.UpdateUserRequest;
 import io.devarium.api.controller.user.dto.UserResponse;
-import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.membership.Membership;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
@@ -93,12 +93,12 @@ public class UserController {
     }
 
     @GetMapping("/me/memberships")
-    public ResponseEntity<ListResponse<MemberResponse>> getMemberships(
+    public ResponseEntity<ListResponse<MembershipResponse>> getMemberships(
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        List<Member> members = userService.getMemberships(principal.getUser());
-        List<MemberResponse> response = members.stream()
-            .map(MemberResponse::from).toList();
+        List<Membership> memberships = userService.getMemberships(principal.getUser());
+        List<MembershipResponse> response = memberships.stream()
+            .map(MembershipResponse::from).toList();
         return ResponseEntity.ok(ListResponse.from(response));
     }
 

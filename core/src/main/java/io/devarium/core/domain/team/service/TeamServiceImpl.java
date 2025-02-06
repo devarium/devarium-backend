@@ -1,6 +1,6 @@
 package io.devarium.core.domain.team.service;
 
-import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.membership.service.MembershipService;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
-    private final MemberService memberService;
+    private final MembershipService membershipService;
     private final StorageService storageService;
 
     @Override
@@ -36,7 +36,7 @@ public class TeamServiceImpl implements TeamService {
             .leaderId(user.getId())
             .build();
         Team savedTeam = teamRepository.save(team);
-        memberService.createLeader(savedTeam.getId(), user.getId());
+        membershipService.createLeader(savedTeam.getId(), user.getId());
         return savedTeam;
     }
 
@@ -94,7 +94,7 @@ public class TeamServiceImpl implements TeamService {
         Team team = getTeam(teamId);
         team.validateLeader(user.getId());
         team.updateLeader(request.leaderId());
-        memberService.updateLeader(teamId, user.getId(), team.getLeaderId());
+        membershipService.updateLeader(teamId, user.getId(), team.getLeaderId());
         return teamRepository.save(team);
     }
 

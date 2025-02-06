@@ -1,6 +1,6 @@
 package io.devarium.core.domain.teamRequest.service;
 
-import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.membership.service.MembershipService;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class TeamRequestServiceImpl implements TeamRequestService {
 
     private final TeamRequestRepository teamRequestRepository;
-    private final MemberService memberService;
+    private final MembershipService membershipService;
 
     @Override
     public TeamRequest join(Long teamId, User user) {
@@ -105,7 +105,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             Set<Long> userIds = teamRequests.stream()
                 .map(TeamRequest::getUserId)
                 .collect(Collectors.toSet());
-            memberService.createMembers(teamId, userIds, user);
+            membershipService.createMemberships(teamId, userIds, user);
         }
         teamRequests.forEach(teamRequest -> teamRequest.update(status));
         return teamRequestRepository.saveAll(teamRequests);
@@ -120,7 +120,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             );
         teamRequest.validateUser(user.getId());
         if (status == TeamRequestStatus.ACCEPTED) {
-            memberService.createMembers(
+            membershipService.createMemberships(
                 teamRequest.getTeamId(),
                 Set.of(teamRequest.getUserId()),
                 user

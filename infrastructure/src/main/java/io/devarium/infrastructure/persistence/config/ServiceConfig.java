@@ -3,9 +3,9 @@ package io.devarium.infrastructure.persistence.config;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
-import io.devarium.core.domain.member.repository.MemberRepository;
-import io.devarium.core.domain.member.service.MemberService;
-import io.devarium.core.domain.member.service.MemberServiceImpl;
+import io.devarium.core.domain.membership.repository.MembershipRepository;
+import io.devarium.core.domain.membership.service.MembershipService;
+import io.devarium.core.domain.membership.service.MembershipServiceImpl;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
@@ -26,7 +26,7 @@ import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.service.StorageService;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
-import io.devarium.infrastructure.persistence.service.MemberServiceDecorator;
+import io.devarium.infrastructure.persistence.service.MembershipServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
@@ -62,7 +62,7 @@ public class ServiceConfig {
         UserRepository userRepository,
         StorageService storageService,
         TeamService teamService,
-        MemberService memberService,
+        MembershipService membershipService,
         TeamRequestService teamRequestService
     ) {
         return new UserServiceDecorator(
@@ -70,7 +70,7 @@ public class ServiceConfig {
                 userRepository,
                 storageService,
                 teamService,
-                memberService,
+                membershipService,
                 teamRequestService
             ));
     }
@@ -83,24 +83,24 @@ public class ServiceConfig {
     @Bean
     public TeamService teamService(
         TeamRepository teamRepository,
-        MemberService memberService,
+        MembershipService membershipService,
         StorageService storageService
     ) {
         return new TeamServiceDecorator(
-            new TeamServiceImpl(teamRepository, memberService, storageService));
+            new TeamServiceImpl(teamRepository, membershipService, storageService));
     }
 
     @Bean
-    public MemberService memberService(MemberRepository memberRepository) {
-        return new MemberServiceDecorator(new MemberServiceImpl(memberRepository));
+    public MembershipService membershipService(MembershipRepository membershipRepository) {
+        return new MembershipServiceDecorator(new MembershipServiceImpl(membershipRepository));
     }
 
     @Bean
     public TeamRequestService teamRequestService(
         TeamRequestRepository teamRequestRepository,
-        MemberService memberService
+        MembershipService membershipService
     ) {
         return new TeamRequestServiceDecorator(
-            new TeamRequestServiceImpl(teamRequestRepository, memberService));
+            new TeamRequestServiceImpl(teamRequestRepository, membershipService));
     }
 }

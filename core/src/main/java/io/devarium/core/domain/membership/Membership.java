@@ -1,14 +1,14 @@
-package io.devarium.core.domain.member;
+package io.devarium.core.domain.membership;
 
-import io.devarium.core.domain.member.exception.MemberErrorCode;
-import io.devarium.core.domain.member.exception.MemberException;
+import io.devarium.core.domain.membership.exception.MembershipErrorCode;
+import io.devarium.core.domain.membership.exception.MembershipException;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Member {
+public class Membership {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -21,7 +21,7 @@ public class Member {
     private Boolean isLeader;
 
     @Builder
-    public Member(Long id, Long userId, Long teamId, MemberRole role, Boolean isLeader) {
+    public Membership(Long id, Long userId, Long teamId, MemberRole role, Boolean isLeader) {
         this.id = id;
         this.userId = userId;
         this.teamId = teamId;
@@ -29,16 +29,17 @@ public class Member {
         this.isLeader = isLeader;
     }
 
-    public void validateMembership(Long teamId) {
+    public void validateTeam(Long teamId) {
         if (!Objects.equals(this.teamId, teamId)) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_IN_TEAM, this.userId, teamId);
+            throw new MembershipException(MembershipErrorCode.MEMBERSHIP_NOT_IN_TEAM, this.userId,
+                teamId);
         }
     }
 
     public void validateRole(MemberRole requiredRole) {
         if (this.role.getLevel() < requiredRole.getLevel()) {
-            throw new MemberException(
-                MemberErrorCode.FORBIDDEN_ACCESS,
+            throw new MembershipException(
+                MembershipErrorCode.FORBIDDEN_ACCESS,
                 this.id,
                 this.userId,
                 this.teamId

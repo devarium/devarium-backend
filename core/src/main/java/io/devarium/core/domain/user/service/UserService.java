@@ -1,7 +1,7 @@
 package io.devarium.core.domain.user.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
-import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.membership.Membership;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
@@ -25,7 +25,7 @@ public interface UserService {
 
     List<Team> getTeams(User user);
 
-    List<Member> getMemberships(User user);
+    List<Membership> getMemberships(User user);
 
     List<TeamRequest> getTeamRequests(TeamRequestType type, TeamRequestStatus status, User user);
 

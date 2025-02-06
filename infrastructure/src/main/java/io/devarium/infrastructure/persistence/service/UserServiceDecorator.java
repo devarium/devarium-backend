@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
-import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.membership.Membership;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
@@ -58,7 +58,7 @@ public class UserServiceDecorator implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Member> getMemberships(User user) {
+    public List<Membership> getMemberships(User user) {
         return userService.getMemberships(user);
     }
 
