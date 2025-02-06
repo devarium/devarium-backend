@@ -65,7 +65,7 @@ public class UserController {
         @Valid @RequestBody UpdateUserRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        User user = userService.updateUserProfile(request, principal.getUser());
+        User user = userService.updateProfile(request, principal.getUser());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
@@ -76,7 +76,7 @@ public class UserController {
         @RequestPart MultipartFile file,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        User user = userService.updateUserProfileImage(Image.from(file), principal.getUser());
+        User user = userService.updateProfileImage(Image.from(file), principal.getUser());
         UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
