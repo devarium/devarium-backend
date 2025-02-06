@@ -1,11 +1,14 @@
 package io.devarium.api.auth.handler;
 
+import static io.devarium.core.auth.AuthConstants.AUTHORIZATION_HEADER;
+import static io.devarium.core.auth.AuthConstants.BEARER_PREFIX;
+import static io.devarium.core.auth.AuthConstants.REFRESH_HEADER;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
 import io.devarium.core.auth.service.TokenService;
-import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,9 +38,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         // TokenResponse 생성
         TokenResponse tokenResponse = TokenResponse.from(token);
 
-        response.setHeader(JwtConstants.AUTHORIZATION_HEADER,
-            JwtConstants.BEARER_PREFIX + token.accessToken());
-        response.setHeader(JwtConstants.REFRESH_HEADER, token.refreshToken());
+        response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + token.accessToken());
+        response.setHeader(REFRESH_HEADER, token.refreshToken());
 
         // JSON 직렬화 및 응답
         response.setContentType("application/json");
