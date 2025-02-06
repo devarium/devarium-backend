@@ -14,7 +14,6 @@ public record UpdateMembersRequest(
 
     public record UpdateMemberRequest(
         @NotNull(message = "'memberId' must not be null") Long memberId,
-
         @NotBlank(message = "'role' must not be blank") MemberRole role
     ) implements UpdateMember {
 
