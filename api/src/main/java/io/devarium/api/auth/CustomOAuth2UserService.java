@@ -3,6 +3,7 @@ package io.devarium.api.auth;
 import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -39,7 +40,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserInfo userInfo = OAuth2UserInfo.of(id, email, name, picture, provider);
 
         // 동일 이메일로 등록된 다른 Provider 확인
-        User existingUser = userService.getByEmail(email);
+        User existingUser;
+        try {
+            existingUser = userService.getByEmail(email);
+        } catch (UserException e) {
+            // 등록된 user가 없을 때 신규 사용자 등록 (로그인 시에는 업데이트하지 않음)
+            User NewUser = userService.createUser(userInfo);
+            return new CustomUserPrincipal(NewUser);
+        }
+
         if (existingUser != null && !existingUser.getProvider().equals(provider)) {
             throw new OAuth2AuthenticationException(
                 "This email is already registered with a different provider: "
@@ -47,12 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             );
         }
 
-        // 신규 사용자 등록 (로그인 시에는 업데이트하지 않음)
-        User user = (existingUser != null)
-            ? existingUser
-            : userService.createUser(userInfo);
-
         // 최종적으로 CustomUserDetails 객체 생성 및 반환
-        return new CustomUserPrincipal(user);
+        return new CustomUserPrincipal(existingUser);
     }
 }
