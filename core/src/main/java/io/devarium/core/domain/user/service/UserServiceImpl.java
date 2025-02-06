@@ -44,13 +44,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserProfile(UpdateUser request, User user) {
+    public User updateProfile(UpdateUser request, User user) {
         user.update(request.username(), request.bio(), request.blogUrl(), request.githubUrl());
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUserProfileImage(Image image, User user) {
+    public User updateProfileImage(Image image, User user) {
         storageService.delete(user.getProfileImageUrl());
         String newImageUrl = storageService.upload(image, ImageType.PROFILE);
         user.update(newImageUrl);

@@ -36,6 +36,15 @@ public class UserServiceDecorator implements UserService {
     @Transactional
     public User updateUserProfile(UpdateUser request, User user) {
         return userService.updateUserProfile(request, user);
+    public User updateProfile(UpdateUser request, User user) {
+        return userService.updateProfile(request, user);
+    }
+
+    @Override
+    @Transactional
+    public User updateProfileImage(Image image, User user) {
+        return userService.updateProfileImage(image, user);
+    }
     }
 
     @Override

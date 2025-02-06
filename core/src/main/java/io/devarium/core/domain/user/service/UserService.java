@@ -14,6 +14,9 @@ public interface UserService {
     User getByEmail(String email);
 
     User updateUserProfile(UpdateUser request, User user);
+    User updateProfile(UpdateUser request, User user);
+
+    User updateProfileImage(Image image, User user);
 
     User updateUserProfileImage(Image image, User user);
 
