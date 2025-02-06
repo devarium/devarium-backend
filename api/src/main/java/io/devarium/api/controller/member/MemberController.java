@@ -43,12 +43,12 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByTeam(
+    public ResponseEntity<PagedListResponse<MemberResponse>> getMembers(
         @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
         @PathVariable Long teamId,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Page<Member> members = memberService.getMembersByTeamId(
+        Page<Member> members = memberService.getMembers(
             pageable,
             teamId,
             principal.getUser()

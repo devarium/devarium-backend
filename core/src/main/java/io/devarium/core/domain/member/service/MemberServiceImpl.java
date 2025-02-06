@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user) {
+    public Page<Member> getMembers(Pageable pageable, Long teamId, User user) {
         getUserMembership(teamId, user.getId())
             .validateRole(MemberRole.VIEWER);
 
