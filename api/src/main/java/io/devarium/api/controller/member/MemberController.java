@@ -2,7 +2,6 @@ package io.devarium.api.controller.member;
 
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.PagedListResponse;
-import io.devarium.api.controller.member.dto.CreateMembersRequest;
 import io.devarium.api.controller.member.dto.DeleteMembersRequest;
 import io.devarium.api.controller.member.dto.MemberResponse;
 import io.devarium.api.controller.member.dto.UpdateMembersRequest;
@@ -19,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-
-    @PostMapping
-    public ResponseEntity<Void> createMembers(
-        @PathVariable Long teamId,
-        @Valid @RequestBody CreateMembersRequest request,
-        @AuthenticationPrincipal CustomUserPrincipal principal
-    ) {
-        memberService.createMembers(teamId, request, principal.getUser());
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping
     public ResponseEntity<PagedListResponse<MemberResponse>> getMembers(
