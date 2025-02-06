@@ -7,7 +7,7 @@ import io.devarium.core.auth.exception.TokenStorageErrorCode;
 import io.devarium.core.auth.exception.TokenStorageException;
 import io.devarium.core.auth.repository.RefreshTokenRepository;
 import io.devarium.core.auth.service.TokenService;
-import io.devarium.infrastructure.auth.jwt.JwtUtil;
+import io.devarium.infrastructure.auth.jwt.JwtProvider;
 import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 class TokenServiceImpl implements TokenService {
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
@@ -26,8 +26,8 @@ class TokenServiceImpl implements TokenService {
         String email,
         Collection<? extends GrantedAuthority> authorities
     ) {
-        String accessToken = jwtUtil.generateAccessToken(email, authorities);
-        String refreshToken = jwtUtil.generateRefreshToken(email, authorities);
+        String accessToken = jwtProvider.generateAccessToken(email, authorities);
+        String refreshToken = jwtProvider.generateRefreshToken(email, authorities);
 
         refreshTokenRepository.save(email, refreshToken);
 
@@ -37,12 +37,12 @@ class TokenServiceImpl implements TokenService {
     @Override
     public Token refreshTokens(String refreshToken) {
         // 1. Refresh Token 유효성 검증
-        if (!jwtUtil.isTokenValid(refreshToken)) {
+        if (!jwtProvider.isTokenValid(refreshToken)) {
             throw new CustomAuthException(AuthErrorCode.INVALID_TOKEN);
         }
 
         // 2. Refresh Token에서 사용자명 추출
-        String username = jwtUtil.extractEmail(refreshToken);
+        String username = jwtProvider.extractEmail(refreshToken);
 
         // 3. 저장된 Refresh Token 확인 및 클라이언트가 보낸 Refresh Token과 저장된 토큰 비교
         Optional<String> savedToken = refreshTokenRepository.findByEmail(username);
@@ -54,10 +54,10 @@ class TokenServiceImpl implements TokenService {
         }
 
         // 4. 새 Access Token 및 Refresh Token 발급
-        Collection<? extends GrantedAuthority> authorities = jwtUtil.extractAuthorities(
+        Collection<? extends GrantedAuthority> authorities = jwtProvider.extractAuthorities(
             refreshToken);
-        String newAccessToken = jwtUtil.generateAccessToken(username, authorities);
-        String newRefreshToken = jwtUtil.generateRefreshToken(username, authorities);
+        String newAccessToken = jwtProvider.generateAccessToken(username, authorities);
+        String newRefreshToken = jwtProvider.generateRefreshToken(username, authorities);
 
         // 5. 기존 Refresh Token 제거 및 새 Refresh Token 저장
         refreshTokenRepository.deleteByEmail(username);

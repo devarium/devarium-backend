@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j(topic = "JwtUtil")
 @Component
-public class JwtUtil {
+public class JwtProvider {
 
     private static final String AUTHORIZATION_KEY = "auth";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
