@@ -8,8 +8,10 @@ import io.devarium.api.auth.handler.OAuth2AuthenticationSuccessHandler;
 import io.devarium.core.auth.service.TokenService;
 import io.devarium.infrastructure.auth.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,6 +36,9 @@ public class SecurityConfig {
     private final TokenService tokenService;
     private final UserDetailsService customUserDetailsService;
 
+    @Value("${api.version}")
+    private String apiVersion;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -50,6 +55,12 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/api-docs/**"
                     ).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/all").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/posts/{postId}/comments").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/comments/{commentId}").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/comments/{commentId}/replies").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/" + apiVersion + "/replies/{replyId}").permitAll()
                     .anyRequest().authenticated()
                 //.anyRequest().permitAll()
             )

@@ -8,16 +8,20 @@ public record PostResponse(
     String title,
     String content,
     Long userId,
-    Instant createdAt
+    Instant createdAt,
+    Long likeCount,
+    Boolean userLiked
 ) {
 
-    public static PostResponse from(Post post) {
+    public static PostResponse of(Post post, Long likeCount, Boolean userLiked) {
         return new PostResponse(
             post.getId(),
             post.getTitle(),
             post.getContent(),
             post.getUserId(),
-            post.getCreatedAt()
+            post.getCreatedAt(),
+            likeCount,
+            userLiked
         );
     }
 }
