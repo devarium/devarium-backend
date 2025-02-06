@@ -13,6 +13,7 @@ import io.devarium.core.domain.user.User;
 import io.devarium.core.storage.Image;
 import io.devarium.core.storage.ImageType;
 import io.devarium.core.storage.service.StorageService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Page<Team> getTeams(Pageable pageable, String teamName) {
         return teamRepository.findByNameContaining(teamName, pageable);
+    }
+
+    @Override
+    public List<Team> getTeams(List<Long> teamIds) {
+        return teamRepository.findAllById(teamIds);
     }
 
     @Override

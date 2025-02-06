@@ -58,17 +58,6 @@ public class MemberController {
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
-    @GetMapping("/members")
-    public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByUser(
-        @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
-        @AuthenticationPrincipal CustomUserPrincipal principal
-    ) {
-        Page<Member> members = memberService.getMembersByUser(pageable, principal.getUser());
-        Page<MemberResponse> response = members.map(MemberResponse::from);
-
-        return ResponseEntity.ok(PagedListResponse.from(response));
-    }
-
     @PutMapping("/teams/{teamId}/members")
     public ResponseEntity<Void> updateMembers(
         @PathVariable Long teamId,

@@ -1,6 +1,10 @@
 package io.devarium.core.domain.user.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
+import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.team.Team;
+import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
@@ -22,6 +26,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final StorageService storageService;
+    private final TeamService teamService;
+    private final MemberService memberService;
     private final TeamRequestService teamRequestService;
 
     @Override
@@ -68,6 +74,19 @@ public class UserServiceImpl implements UserService {
         String newImageUrl = storageService.upload(image, ImageType.PROFILE);
         user.update(newImageUrl);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<Team> getTeams(User user) {
+        List<Long> teamIds = getMemberships(user).stream()
+            .map(Member::getTeamId)
+            .toList();
+        return teamService.getTeams(teamIds);
+    }
+
+    @Override
+    public List<Member> getMemberships(User user) {
+        return memberService.getMembers(user.getId());
     }
 
     @Override

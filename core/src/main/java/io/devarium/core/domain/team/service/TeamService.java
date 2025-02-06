@@ -7,6 +7,7 @@ import io.devarium.core.domain.team.port.UpdateTeamInfo;
 import io.devarium.core.domain.team.port.UpdateTeamName;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.storage.Image;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +18,8 @@ public interface TeamService {
     Team getTeam(Long teamId);
 
     Page<Team> getTeams(Pageable pageable, String teamName);
+
+    List<Team> getTeams(List<Long> teamIds);
 
     Team updateTeamInfo(Long teamId, UpdateTeamInfo request, User user);
 

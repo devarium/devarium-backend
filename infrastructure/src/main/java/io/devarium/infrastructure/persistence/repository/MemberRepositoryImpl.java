@@ -8,6 +8,7 @@ import io.devarium.infrastructure.persistence.entity.MemberEntity;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,9 +83,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Page<Member> findByUserId(Long userId, Pageable pageable) {
+    public List<Member> findByUserId(Long userId) {
         checkUserDeleted(userId);
-        return memberJpaRepository.findByUserId(userId, pageable).map(MemberEntity::toDomain);
+        return memberJpaRepository.findByUserId(userId).stream()
+            .map(MemberEntity::toDomain)
+            .toList();
     }
 
     @Override

@@ -58,8 +58,21 @@ public class ServiceConfig {
     }
 
     @Bean
-    public UserService userService(UserRepository userRepository, StorageService storageService) {
-        return new UserServiceDecorator(new UserServiceImpl(userRepository, storageService));
+    public UserService userService(
+        UserRepository userRepository,
+        StorageService storageService,
+        TeamService teamService,
+        MemberService memberService,
+        TeamRequestService teamRequestService
+    ) {
+        return new UserServiceDecorator(
+            new UserServiceImpl(
+                userRepository,
+                storageService,
+                teamService,
+                memberService,
+                teamRequestService
+            ));
     }
 
     @Bean

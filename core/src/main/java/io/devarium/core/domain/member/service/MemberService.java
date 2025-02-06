@@ -5,6 +5,7 @@ import io.devarium.core.domain.member.port.CreateMembers;
 import io.devarium.core.domain.member.port.DeleteMembers;
 import io.devarium.core.domain.member.port.UpdateMembers;
 import io.devarium.core.domain.user.User;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,7 +17,7 @@ public interface MemberService {
 
     Page<Member> getMembersByTeamId(Pageable pageable, Long teamId, User user);
 
-    Page<Member> getMembersByUser(Pageable pageable, User user);
+    List<Member> getMembers(Long userId);
 
     void updateMembers(Long teamId, UpdateMembers request, User user);
 

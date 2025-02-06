@@ -11,6 +11,7 @@ import io.devarium.core.domain.member.port.UpdateMembers;
 import io.devarium.core.domain.member.repository.MemberRepository;
 import io.devarium.core.domain.user.User;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -76,8 +77,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<Member> getMembersByUser(Pageable pageable, User user) {
-        return memberRepository.findByUserId(user.getId(), pageable);
+    public List<Member> getMembers(Long userId) {
+        return memberRepository.findByUserId(userId);
     }
 
     @Override

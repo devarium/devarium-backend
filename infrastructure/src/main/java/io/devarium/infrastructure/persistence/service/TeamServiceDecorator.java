@@ -9,6 +9,7 @@ import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.team.service.TeamServiceImpl;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.storage.Image;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,12 @@ public class TeamServiceDecorator implements TeamService {
     @Transactional(readOnly = true)
     public Page<Team> getTeams(Pageable pageable, String teamName) {
         return teamService.getTeams(pageable, teamName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Team> getTeams(List<Long> teamIds) {
+        return teamService.getTeams(teamIds);
     }
 
     @Override

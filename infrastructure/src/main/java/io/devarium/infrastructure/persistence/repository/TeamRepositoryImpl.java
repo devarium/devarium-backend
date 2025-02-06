@@ -7,6 +7,7 @@ import io.devarium.core.domain.team.repository.TeamRepository;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public Optional<Team> findById(Long id) {
         return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
+    }
+
+    @Override
+    public List<Team> findAllById(List<Long> Ids) {
+        return teamJpaRepository.findAllById(Ids).stream().map(TeamEntity::toDomain).toList();
     }
 
     @Override

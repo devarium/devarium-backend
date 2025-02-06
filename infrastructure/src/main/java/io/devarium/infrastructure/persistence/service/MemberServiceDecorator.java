@@ -7,6 +7,7 @@ import io.devarium.core.domain.member.port.UpdateMembers;
 import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.member.service.MemberServiceImpl;
 import io.devarium.core.domain.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +38,8 @@ public class MemberServiceDecorator implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Member> getMembersByUser(Pageable pageable, User user) {
-        return memberService.getMembersByUser(pageable, user);
+    public List<Member> getMembers(Long userId) {
+        return memberService.getMembers(userId);
     }
 
     @Override

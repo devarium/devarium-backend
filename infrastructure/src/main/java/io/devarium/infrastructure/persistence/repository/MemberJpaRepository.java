@@ -1,6 +1,7 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.infrastructure.persistence.entity.MemberEntity;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
 
     Page<MemberEntity> findByTeamId(Long teamId, Pageable pageable);
 
-    Page<MemberEntity> findByUserId(Long userId, Pageable pageable);
+    List<MemberEntity> findByUserId(Long userId);
 
     Optional<MemberEntity> findByUserIdAndTeamId(Long userId, Long teamId);
 

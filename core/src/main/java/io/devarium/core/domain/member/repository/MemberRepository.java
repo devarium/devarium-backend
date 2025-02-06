@@ -1,6 +1,7 @@
 package io.devarium.core.domain.member.repository;
 
 import io.devarium.core.domain.member.Member;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ public interface MemberRepository {
 
     Page<Member> findByTeamId(Long teamId, Pageable pageable);
 
-    Page<Member> findByUserId(Long userId, Pageable pageable);
+    List<Member> findByUserId(Long userId);
 
     Optional<Member> findByUserIdAndTeamId(Long userId, Long teamId);
 

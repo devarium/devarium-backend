@@ -1,6 +1,8 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
+import io.devarium.core.domain.member.Member;
+import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
@@ -47,6 +49,19 @@ public class UserServiceDecorator implements UserService {
     public User updateProfileImage(Image image, User user) {
         return userService.updateProfileImage(image, user);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Team> getTeams(User user) {
+        return userService.getTeams(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Member> getMemberships(User user) {
+        return userService.getMemberships(user);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<TeamRequest> getTeamRequests(
