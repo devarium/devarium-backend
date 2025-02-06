@@ -4,6 +4,7 @@ import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
+import io.devarium.core.domain.like.service.LikeService;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReplyController {
 
     private final ReplyService replyService;
+    private final LikeService likeService;
 
     @PostMapping
     public ResponseEntity<SingleItemResponse<ReplyResponse>> createReply(
@@ -33,7 +35,7 @@ public class ReplyController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.createReply(request, principal.getUser());
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -41,9 +43,12 @@ public class ReplyController {
     }
 
     @GetMapping("/{replyId}")
-    public ResponseEntity<SingleItemResponse<ReplyResponse>> getReply(@PathVariable Long replyId) {
+    public ResponseEntity<SingleItemResponse<ReplyResponse>> getReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
         Reply reply = replyService.getReply(replyId);
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -55,7 +60,7 @@ public class ReplyController {
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         Reply reply = replyService.updateReply(replyId, request, principal.getUser());
-        ReplyResponse response = ReplyResponse.from(reply);
+        ReplyResponse response = createReplyResponse(reply, principal);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));
     }
@@ -67,5 +72,31 @@ public class ReplyController {
     ) {
         replyService.deleteReply(replyId, principal.getUser());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{replyId}/likes")
+    public ResponseEntity<Void> likeReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Reply reply = replyService.getReply(replyId);
+        likeService.like(reply, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{replyId}/likes")
+    public ResponseEntity<Void> unlikeReply(
+        @PathVariable Long replyId,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Reply reply = replyService.getReply(replyId);
+        likeService.unlike(reply, principal.getUser());
+        return ResponseEntity.noContent().build();
+    }
+
+    private ReplyResponse createReplyResponse(Reply reply, CustomUserPrincipal principal) {
+        Long likeCount = likeService.getLikeCount(reply);
+        boolean userLiked = principal != null && likeService.hasUserLiked(reply, principal.getUser());
+        return ReplyResponse.of(reply, likeCount, userLiked);
     }
 }

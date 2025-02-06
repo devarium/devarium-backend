@@ -11,6 +11,9 @@ import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
 import io.devarium.core.domain.member.repository.MemberRepository;
 import io.devarium.core.domain.member.service.MemberService;
 import io.devarium.core.domain.member.service.MemberServiceImpl;
+import io.devarium.core.domain.like.repository.LikeRepository;
+import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.like.service.LikeServiceImpl;
 import io.devarium.core.domain.post.repository.PostRepository;
 import io.devarium.core.domain.post.service.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
@@ -30,6 +33,7 @@ import io.devarium.core.storage.service.StorageService;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
 import io.devarium.infrastructure.persistence.service.FeedbackServiceDecorator;
 import io.devarium.infrastructure.persistence.service.MemberServiceDecorator;
+import io.devarium.infrastructure.persistence.service.LikeServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ReplyServiceDecorator;
@@ -96,5 +100,10 @@ public class ServiceConfig {
                 textSummarizer
             )
         );
+    }
+  
+    @Bean
+    public LikeService likeService(LikeRepository likeRepository) {
+        return new LikeServiceDecorator(new LikeServiceImpl(likeRepository));
     }
 }
