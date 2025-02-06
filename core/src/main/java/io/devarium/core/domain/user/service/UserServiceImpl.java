@@ -32,15 +32,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long userId) {
-        return userRepository.findById(userId)
-            //TODO: 소프트딜리트 고려 .filter(user -> !user.isDeleted())
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND, userId));
+        if (user.isDeleted()) {
+            throw new UserException(UserErrorCode.USER_IS_DELETED, user.getId());
+        }
+        return user;
     }
 
     @Override
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND, email));
+        if (user.isDeleted()) {
+            throw new UserException(UserErrorCode.USER_IS_DELETED, user.getId());
+        }
+        return user;
     }
 
     @Override
