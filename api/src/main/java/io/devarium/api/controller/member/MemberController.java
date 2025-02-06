@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/${api.version}")
+@RequestMapping("/api/${api.version}/teams/{teamId}/members")
 @RestController
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/teams/{teamId}/members")
+    @PostMapping
     public ResponseEntity<Void> createMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody CreateMembersRequest request,
@@ -42,7 +42,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/teams/{teamId}/members")
+    @GetMapping
     public ResponseEntity<PagedListResponse<MemberResponse>> getMembersByTeam(
         @PageableDefault(size = Member.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
         @PathVariable Long teamId,
@@ -58,7 +58,7 @@ public class MemberController {
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
-    @PutMapping("/teams/{teamId}/members")
+    @PutMapping
     public ResponseEntity<Void> updateMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateMembersRequest request,
@@ -68,7 +68,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/teams/{teamId}/members")
+    @DeleteMapping
     public ResponseEntity<Void> deleteMembers(
         @PathVariable Long teamId,
         @Valid @RequestBody DeleteMembersRequest request,
