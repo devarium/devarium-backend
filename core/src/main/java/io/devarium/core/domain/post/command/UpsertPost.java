@@ -1,4 +1,4 @@
-package io.devarium.core.domain.post.port;
+package io.devarium.core.domain.post.command;
 
 public interface UpsertPost {
 

@@ -1,6 +1,6 @@
 package io.devarium.api.controller.comment.dto;
 
-import io.devarium.core.domain.comment.port.UpsertComment;
+import io.devarium.core.domain.comment.command.UpsertComment;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

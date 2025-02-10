@@ -1,4 +1,4 @@
-package io.devarium.core.domain.reply.port;
+package io.devarium.core.domain.reply.command;
 
 public interface UpsertReply {
 

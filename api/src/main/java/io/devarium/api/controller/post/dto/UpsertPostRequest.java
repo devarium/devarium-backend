@@ -1,6 +1,6 @@
 package io.devarium.api.controller.post.dto;
 
-import io.devarium.core.domain.post.port.UpsertPost;
+import io.devarium.core.domain.post.command.UpsertPost;
 import jakarta.validation.constraints.NotBlank;
 
 public record UpsertPostRequest(

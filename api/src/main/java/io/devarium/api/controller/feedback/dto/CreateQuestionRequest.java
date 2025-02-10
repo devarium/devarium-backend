@@ -3,7 +3,7 @@ package io.devarium.api.controller.feedback.dto;
 import io.devarium.api.controller.feedback.dto.CreateQuestionRequest.CreateQuestionContentRequest.CreateChoiceRequest;
 import io.devarium.core.domain.feedback.question.QuestionContent;
 import io.devarium.core.domain.feedback.question.QuestionType;
-import io.devarium.core.domain.feedback.question.port.CreateQuestion;
+import io.devarium.core.domain.feedback.question.command.CreateQuestion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

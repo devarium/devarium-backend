@@ -1,4 +1,4 @@
-package io.devarium.core.domain.project.port;
+package io.devarium.core.domain.project.command;
 
 import io.devarium.core.domain.skill.Skill;
 import java.util.Set;

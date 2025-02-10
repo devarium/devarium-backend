@@ -1,4 +1,4 @@
-package io.devarium.core.domain.member.port;
+package io.devarium.core.domain.member.command;
 
 import io.devarium.core.domain.member.MemberRole;
 

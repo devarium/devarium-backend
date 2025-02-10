@@ -1,6 +1,6 @@
 package io.devarium.api.controller.team.dto;
 
-import io.devarium.core.domain.team.port.UpsertTeam;
+import io.devarium.core.domain.team.command.UpsertTeam;
 
 public record UpdateTeamRequest(
     String name,

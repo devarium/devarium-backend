@@ -1,4 +1,4 @@
-package io.devarium.core.domain.user.port;
+package io.devarium.core.domain.user.command;
 
 public interface UpdateUser {
 

@@ -1,4 +1,4 @@
-package io.devarium.core.domain.feedback.answer.port;
+package io.devarium.core.domain.feedback.answer.command;
 
 import java.util.List;
 
