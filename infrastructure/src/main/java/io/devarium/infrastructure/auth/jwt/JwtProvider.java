@@ -2,7 +2,7 @@ package io.devarium.infrastructure.auth.jwt;
 
 import static io.devarium.infrastructure.auth.jwt.JwtConstants.BEARER_PREFIX;
 
-import io.devarium.core.auth.port.TokenProvider;
+import io.devarium.core.auth.port.in.TokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

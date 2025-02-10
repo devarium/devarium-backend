@@ -7,7 +7,7 @@ import io.devarium.api.controller.member.dto.DeleteMembersRequest;
 import io.devarium.api.controller.member.dto.MemberResponse;
 import io.devarium.api.controller.member.dto.UpdateMembersRequest;
 import io.devarium.core.domain.member.Member;
-import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.member.port.in.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

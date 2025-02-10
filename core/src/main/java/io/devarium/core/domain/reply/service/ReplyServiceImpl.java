@@ -1,10 +1,11 @@
 package io.devarium.core.domain.reply.service;
 
 import io.devarium.core.domain.reply.Reply;
+import io.devarium.core.domain.reply.command.UpsertReply;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
-import io.devarium.core.domain.reply.port.UpsertReply;
-import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.core.domain.reply.port.in.ReplyService;
+import io.devarium.core.domain.reply.port.out.ReplyRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,9 +1,9 @@
 package io.devarium.infrastructure.persistence.repository;
 
 import io.devarium.core.domain.feedback.answer.Answer;
-import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
+import io.devarium.core.domain.feedback.port.out.AnswerRepository;
 import io.devarium.infrastructure.persistence.entity.AnswerEntity;
 import io.devarium.infrastructure.persistence.entity.QuestionEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;

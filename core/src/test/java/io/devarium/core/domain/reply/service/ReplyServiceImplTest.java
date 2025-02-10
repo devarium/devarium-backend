@@ -9,9 +9,9 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.reply.Reply;
+import io.devarium.core.domain.reply.command.UpsertReply;
 import io.devarium.core.domain.reply.exception.ReplyException;
-import io.devarium.core.domain.reply.port.UpsertReply;
-import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.core.domain.reply.port.out.ReplyRepository;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;

@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.member.Member;
 import io.devarium.core.domain.member.exception.MemberErrorCode;
 import io.devarium.core.domain.member.exception.MemberException;
-import io.devarium.core.domain.member.repository.MemberRepository;
+import io.devarium.core.domain.member.port.out.MemberRepository;
 import io.devarium.infrastructure.persistence.entity.MemberEntity;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;

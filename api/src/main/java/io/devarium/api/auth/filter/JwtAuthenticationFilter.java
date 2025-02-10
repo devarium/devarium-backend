@@ -2,7 +2,7 @@ package io.devarium.api.auth.filter;
 
 import static io.devarium.core.auth.AuthConstants.AUTHORIZATION_HEADER;
 
-import io.devarium.core.auth.port.TokenProvider;
+import io.devarium.core.auth.port.in.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

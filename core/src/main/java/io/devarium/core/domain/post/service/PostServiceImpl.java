@@ -1,11 +1,12 @@
 package io.devarium.core.domain.post.service;
 
-import io.devarium.core.domain.comment.service.CommentService;
+import io.devarium.core.domain.comment.port.in.CommentService;
 import io.devarium.core.domain.post.Post;
+import io.devarium.core.domain.post.command.UpsertPost;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
-import io.devarium.core.domain.post.port.UpsertPost;
-import io.devarium.core.domain.post.repository.PostRepository;
+import io.devarium.core.domain.post.port.in.PostService;
+import io.devarium.core.domain.post.port.out.PostRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

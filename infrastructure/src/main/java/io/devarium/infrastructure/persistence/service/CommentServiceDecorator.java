@@ -1,8 +1,8 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.port.UpsertComment;
-import io.devarium.core.domain.comment.service.CommentService;
+import io.devarium.core.domain.comment.command.UpsertComment;
+import io.devarium.core.domain.comment.port.in.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;

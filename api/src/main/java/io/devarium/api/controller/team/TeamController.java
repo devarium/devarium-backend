@@ -8,7 +8,7 @@ import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
 import io.devarium.api.controller.team.dto.UpdateTeamRequest;
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.team.port.in.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

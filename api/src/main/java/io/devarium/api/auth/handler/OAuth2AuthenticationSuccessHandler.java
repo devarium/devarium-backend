@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.controller.auth.dto.TokenResponse;
 import io.devarium.core.auth.Token;
-import io.devarium.core.auth.service.TokenService;
+import io.devarium.core.auth.port.in.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

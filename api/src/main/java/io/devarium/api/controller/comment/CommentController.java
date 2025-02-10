@@ -7,10 +7,10 @@ import io.devarium.api.controller.comment.dto.CommentResponse;
 import io.devarium.api.controller.comment.dto.UpsertCommentRequest;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.core.domain.comment.Comment;
-import io.devarium.core.domain.comment.service.CommentService;
-import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.comment.port.in.CommentService;
+import io.devarium.core.domain.like.port.in.LikeService;
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.service.ReplyService;
+import io.devarium.core.domain.reply.port.in.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,7 +72,8 @@ public class CommentController {
         Page<Reply> replies = replyService.getRepliesByCommentId(commentId, pageable);
         Page<ReplyResponse> replyResponses = replies.map(reply -> {
             Long likeCount = likeService.getLikeCount(reply);
-            boolean userLiked = principal != null && likeService.hasUserLiked(reply, principal.getUser());
+            boolean userLiked =
+                principal != null && likeService.hasUserLiked(reply, principal.getUser());
             return ReplyResponse.of(reply, likeCount, userLiked);
         });
 
@@ -123,7 +124,8 @@ public class CommentController {
 
     private CommentResponse createCommentResponse(Comment comment, CustomUserPrincipal principal) {
         Long likeCount = likeService.getLikeCount(comment);
-        boolean userLiked = principal != null && likeService.hasUserLiked(comment, principal.getUser());
+        boolean userLiked =
+            principal != null && likeService.hasUserLiked(comment, principal.getUser());
         return CommentResponse.of(comment, likeCount, userLiked);
     }
 }

@@ -1,9 +1,9 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.port.UpdateLeader;
-import io.devarium.core.domain.team.port.UpsertTeam;
-import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.team.command.UpdateLeader;
+import io.devarium.core.domain.team.command.UpsertTeam;
+import io.devarium.core.domain.team.port.in.TeamService;
 import io.devarium.core.domain.team.service.TeamServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class TeamServiceDecorator implements TeamService {
     public Page<Team> getTeams(Pageable pageable, User user) {
         return teamService.getTeams(pageable, user);
     }
-    
+
     @Override
     @Transactional
     public Team updateTeam(Long teamId, UpsertTeam request, User user) {
