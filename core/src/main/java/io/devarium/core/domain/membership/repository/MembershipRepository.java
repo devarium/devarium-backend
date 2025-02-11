@@ -11,17 +11,19 @@ public interface MembershipRepository {
 
     void save(Membership membership);
 
-    void saveAll(Long teamId, Set<Membership> memberships);
+    List<Membership> saveAll(List<Membership> memberships);
 
-    void deleteAll(Set<Membership> memberships);
-
-    Set<Membership> findAllById(Set<Long> ids);
-
-    Page<Membership> findByTeamId(Long teamId, Pageable pageable);
-
-    List<Membership> findByUserId(Long userId);
+    void deleteAll(Long teamId, Set<Long> ids);
 
     Optional<Membership> findByUserIdAndTeamId(Long userId, Long teamId);
+
+    List<Membership> findAllByIdInAndTeamId(Set<Long> ids, Long teamId);
+
+    Page<Membership> findAllByTeamId(Long teamId, Pageable pageable);
+
+    List<Membership> findAllByUserId(Long userId);
+
+    List<Membership> findAllByTeamIdAndUserIdIn(Long teamId, Set<Long> userIds);
 
     boolean existsByTeamId(Long teamId);
 }

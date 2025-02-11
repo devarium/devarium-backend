@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface MembershipService {
 
-    void createMemberships(Long teamId, Set<Long> userIds, User user);
+    void createMemberships(Long teamId, List<Long> userIds);
 
     void createLeader(Long teamId, Long userId);
 
@@ -21,7 +21,9 @@ public interface MembershipService {
 
     List<Membership> getMemberships(Long userId);
 
-    void updateMemberships(Long teamId, UpdateMemberships request, User user);
+    List<Membership> getMemberships(Long teamId, Set<Long> userIds);
+
+    List<Membership> updateMemberships(Long teamId, UpdateMemberships request, User user);
 
     void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId);
 

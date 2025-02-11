@@ -8,12 +8,12 @@ import io.devarium.core.domain.membership.port.DeleteMemberships;
 import io.devarium.core.domain.membership.port.UpdateMembership;
 import io.devarium.core.domain.membership.port.UpdateMemberships;
 import io.devarium.core.domain.membership.repository.MembershipRepository;
+import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.user.User;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,34 +23,34 @@ import org.springframework.data.domain.Pageable;
 public class MembershipServiceImpl implements MembershipService {
 
     private final MembershipRepository membershipRepository;
+    private final TeamService teamService;
 
     @Override
-    public void createMemberships(Long teamId, Set<Long> userIds, User user) {
-        getMembership(teamId, user.getId()).validateRole(MemberRole.MANAGER);
-
-        Set<Membership> memberships = userIds.stream()
+    public void createMemberships(Long teamId, List<Long> userIds) {
+        List<Membership> memberships = userIds.stream()
             .map(userId -> Membership.builder()
                 .userId(userId)
                 .teamId(teamId)
                 .role(MemberRole.MEMBER)
-                .isLeader(false)
                 .build())
-            .collect(Collectors.toSet());
+            .toList();
 
-        membershipRepository.saveAll(teamId, memberships);
+        membershipRepository.saveAll(memberships);
     }
 
     @Override
     public void createLeader(Long teamId, Long userId) {
-        if (!membershipRepository.existsByTeamId(teamId)) {
-            throw new MembershipException(MembershipErrorCode.FIRST_MEMBERSHIP_ONLY, userId,
-                teamId);
+        if (membershipRepository.existsByTeamId(teamId)) {
+            throw new MembershipException(
+                MembershipErrorCode.FIRST_MEMBERSHIP_ONLY,
+                userId,
+                teamId
+            );
         }
         Membership membership = Membership.builder()
             .userId(userId)
             .teamId(teamId)
             .role(MemberRole.LEADER)
-            .isLeader(true)
             .build();
         membershipRepository.save(membership);
     }
@@ -69,29 +69,52 @@ public class MembershipServiceImpl implements MembershipService {
     public Page<Membership> getMemberships(Pageable pageable, Long teamId, User user) {
         getMembership(teamId, user.getId()).validateRole(MemberRole.MEMBER);
 
-        return membershipRepository.findByTeamId(teamId, pageable);
+        return membershipRepository.findAllByTeamId(teamId, pageable);
     }
 
     @Override
     public List<Membership> getMemberships(Long userId) {
-        return membershipRepository.findByUserId(userId);
+        return membershipRepository.findAllByUserId(userId);
     }
 
     @Override
-    public void updateMemberships(Long teamId, UpdateMemberships request, User user) {
-        Membership userMembership = getMembership(teamId, user.getId());
-        userMembership.validateRole(MemberRole.MANAGER);
+    public List<Membership> getMemberships(Long teamId, Set<Long> userIds) {
+        return membershipRepository.findAllByTeamIdAndUserIdIn(teamId, userIds);
+    }
 
-        Set<Long> membershipIds = request.memberships().stream()
-            .map(UpdateMembership::membershipId)
+    @Override
+    public List<Membership> updateMemberships(Long teamId, UpdateMemberships request, User user) {
+        if (!teamService.checkTeamExists(teamId)) {
+            throw new MembershipException(MembershipErrorCode.TEAM_NOT_FOUND, teamId);
+        }
+        Membership leader = getMembership(teamId, user.getId());
+        leader.validateRole(MemberRole.LEADER);
+        Set<Long> ids = request.memberships().stream()
+            .map(UpdateMembership::id)
             .collect(Collectors.toSet());
-        Map<Long, Membership> memberships = membershipRepository.findAllById(membershipIds).stream()
-            .collect(Collectors.toMap(Membership::getId, Function.identity()));
+        if (ids.contains(leader.getId())) {
+            throw new MembershipException(
+                MembershipErrorCode.LEADER_ROLE_UNMODIFIABLE,
+                leader.getId()
+            );
+        }
 
-        request.memberships()
-            .forEach(updateRequest -> updateMemberRole(teamId, userMembership, memberships,
-                updateRequest));
-        membershipRepository.saveAll(teamId, new HashSet<>(memberships.values()));
+        Map<Long, Membership> membershipsMap = membershipRepository.findAllByIdInAndTeamId(
+            ids,
+            teamId
+        ).stream().collect(Collectors.toMap(Membership::getId, membership -> membership));
+        if (ids.size() != membershipsMap.size()) {
+            List<Long> unmatchedIds = ids.stream()
+                .filter(id -> !membershipsMap.containsKey(id)).toList();
+            throw new MembershipException(
+                MembershipErrorCode.MEMBERSHIPS_NOT_FOUND,
+                unmatchedIds
+            );
+        }
+
+        request.memberships().forEach(req -> updateMemberRole(membershipsMap, req));
+        List<Membership> memberships = new LinkedList<>(membershipsMap.values());
+        return membershipRepository.saveAll(memberships);
     }
 
     @Override
@@ -101,53 +124,25 @@ public class MembershipServiceImpl implements MembershipService {
 
         oldLeader.update(MemberRole.MANAGER);
         newLeader.update(MemberRole.LEADER);
-        membershipRepository.saveAll(teamId, Set.of(oldLeader, newLeader));
+        membershipRepository.saveAll(List.of(oldLeader, newLeader));
     }
 
     @Override
     public void deleteMemberships(Long teamId, DeleteMemberships request, User user) {
-        getMembership(teamId, user.getId())
-            .validateRole(MemberRole.MANAGER);
-
-        Set<Membership> memberships = membershipRepository.findAllById(request.ids());
-        memberships.forEach(membership -> membership.validateTeam(teamId));
-        membershipRepository.deleteAll(memberships);
+        getMembership(teamId, user.getId()).validateRole(MemberRole.LEADER);
+        membershipRepository.deleteAll(teamId, request.ids());
     }
 
     private void updateMemberRole(
-        Long teamId,
-        Membership userMembership,
         Map<Long, Membership> memberships,
         UpdateMembership updateRequest
     ) {
-        Long membershipId = updateRequest.membershipId();
+        Long id = updateRequest.id();
         MemberRole newRole = updateRequest.role();
-
-        Membership membership = memberships.get(membershipId);
-        if (membership == null) {
-            throw new MembershipException(MembershipErrorCode.MEMBERSHIP_NOT_FOUND, membershipId);
-        }
-
-        membership.validateTeam(teamId);
-        validateRoleChange(userMembership, membership, newRole);
-
-        membership.update(newRole);
-    }
-
-    private void validateRoleChange(
-        Membership userMembership,
-        Membership membership,
-        MemberRole newRole
-    ) {
-        MemberRole oldRole = membership.getRole();
-
-        if (userMembership.getRole().getLevel() <= oldRole.getLevel()) {
-            throw new MembershipException(MembershipErrorCode.MEMBER_ROLE_HIERARCHY_VIOLATION);
-        }
-
+        Membership membership = memberships.get(id);
         if (newRole == MemberRole.LEADER) {
-            throw new MembershipException(MembershipErrorCode.UPDATE_LEADER_ONLY,
-                membership.getId());
+            throw new MembershipException(MembershipErrorCode.INVALID_MEMBER_ROLE);
         }
+        membership.update(newRole);
     }
 }

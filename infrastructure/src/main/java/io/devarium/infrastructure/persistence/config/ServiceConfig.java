@@ -91,8 +91,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public MembershipService membershipService(MembershipRepository membershipRepository) {
-        return new MembershipServiceDecorator(new MembershipServiceImpl(membershipRepository));
+    public MembershipService membershipService(
+        MembershipRepository membershipRepository,
+        TeamService teamService
+    ) {
+        return new MembershipServiceDecorator(
+            new MembershipServiceImpl(membershipRepository, teamService));
     }
 
     @Bean

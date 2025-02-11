@@ -9,6 +9,7 @@ import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,96 +27,103 @@ public class MembershipRepositoryImpl implements MembershipRepository {
 
     @Override
     public void save(Membership membership) {
-        UserEntity user = checkUserDeleted(membership.getUserId());
-        TeamEntity team = checkTeamDeleted(membership.getTeamId());
+        UserEntity user = entityManager.getReference(UserEntity.class, membership.getUserId());
+        TeamEntity team = entityManager.getReference(TeamEntity.class, membership.getTeamId());
         MembershipEntity entity = MembershipEntity.fromDomain(membership, user, team);
         membershipJpaRepository.save(entity);
     }
 
     @Override
-    public void saveAll(Long teamId, Set<Membership> memberships) {
-        TeamEntity team = checkTeamDeleted(teamId);
-        Set<MembershipEntity> entities = memberships.stream()
-            .map(membership -> {
-                UserEntity user = checkUserDeleted(membership.getUserId());
-                if (membership.getId() != null) {
-                    MembershipEntity entity = membershipJpaRepository.findById(membership.getId())
-                        .orElseThrow(() -> new MembershipException(
-                            MembershipErrorCode.MEMBERSHIP_NOT_FOUND,
-                            membership.getId()
-                        ));
-                    entity.update(membership.getRole(), membership.isLeader());
-                    return entity;
+    public List<Membership> saveAll(List<Membership> memberships) {
+        List<MembershipEntity> entities;
+
+        if (memberships.getFirst().getId() != null) {
+            entities = membershipJpaRepository.findAllById(
+                memberships.stream().map(Membership::getId).toList()
+            );
+            if (entities.size() != memberships.size()) {
+                throw new MembershipException(MembershipErrorCode.INVALID_UPDATE_ENTITY);
+            }
+            Map<Long, Membership> membershipMap = memberships.stream()
+                .collect(Collectors.toMap(Membership::getId, membership -> membership));
+
+            entities.forEach(entity -> {
+                Membership updatedMembership = membershipMap.get(entity.getId());
+                if (updatedMembership != null) {
+                    entity.update(updatedMembership);
                 }
-                return MembershipEntity.fromDomain(membership, user, team);
-            })
-            .collect(Collectors.toSet());
-        membershipJpaRepository.saveAll(entities);
+            });
+        } else {
+            entities = memberships.stream()
+                .map(membership -> MembershipEntity.fromDomain(
+                    membership,
+                    entityManager.getReference(UserEntity.class, membership.getUserId()),
+                    entityManager.getReference(TeamEntity.class, membership.getTeamId())
+                )).toList();
+        }
+        return membershipJpaRepository.saveAll(entities).stream()
+            .map(MembershipEntity::toDomain).toList();
     }
 
     @Override
-    public void deleteAll(Set<Membership> memberships) {
-        Set<MembershipEntity> entities = memberships.stream()
-            .map(membership -> {
-                checkUserDeleted(membership.getUserId());
-                checkTeamDeleted(membership.getTeamId());
-                return membershipJpaRepository.findById(membership.getId())
-                    .orElseThrow(() -> new MembershipException(
-                        MembershipErrorCode.MEMBERSHIP_NOT_FOUND,
-                        membership.getId()
-                    ));
-            })
-            .collect(Collectors.toSet());
+    public void deleteAll(Long teamId, Set<Long> ids) {
+        List<MembershipEntity> entities = membershipJpaRepository.findAllByIdInAndTeamId(
+            ids,
+            teamId
+        );
+        if (entities.size() != ids.size()) {
+            List<Long> entityIds = entities.stream().map(MembershipEntity::getId).toList();
+            List<Long> unmatchedIds = ids.stream()
+                .filter(id -> !entityIds.contains(id))
+                .toList();
+            throw new MembershipException(
+                MembershipErrorCode.MEMBERSHIPS_NOT_FOUND,
+                unmatchedIds
+            );
+        }
         membershipJpaRepository.deleteAll(entities);
     }
 
     @Override
-    public Set<Membership> findAllById(Set<Long> ids) {
-        return membershipJpaRepository.findAllById(ids).stream()
-            .map(MembershipEntity::toDomain)
-            .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Page<Membership> findByTeamId(Long teamId, Pageable pageable) {
-        checkTeamDeleted(teamId);
-        return membershipJpaRepository.findByTeamId(teamId, pageable)
+    public Optional<Membership> findByUserIdAndTeamId(Long userId, Long teamId) {
+        return membershipJpaRepository
+            .findByUserIdAndTeamId(userId, teamId)
             .map(MembershipEntity::toDomain);
     }
 
     @Override
-    public List<Membership> findByUserId(Long userId) {
-        checkUserDeleted(userId);
-        return membershipJpaRepository.findByUserId(userId).stream()
+    public List<Membership> findAllByIdInAndTeamId(Set<Long> ids, Long teamId) {
+        return membershipJpaRepository
+            .findAllByIdInAndTeamId(ids, teamId).stream()
             .map(MembershipEntity::toDomain)
             .toList();
     }
 
     @Override
-    public Optional<Membership> findByUserIdAndTeamId(Long userId, Long teamId) {
-        return membershipJpaRepository.findByUserIdAndTeamId(userId, teamId)
+    public Page<Membership> findAllByTeamId(Long teamId, Pageable pageable) {
+        return membershipJpaRepository
+            .findAllByTeamIdAndUser_DeletedAtIsNull(teamId, pageable)
             .map(MembershipEntity::toDomain);
     }
 
     @Override
+    public List<Membership> findAllByUserId(Long userId) {
+        return membershipJpaRepository
+            .findAllByUserIdAndTeam_DeletedAtIsNull(userId).stream()
+            .map(MembershipEntity::toDomain)
+            .toList();
+    }
+
+    @Override
+    public List<Membership> findAllByTeamIdAndUserIdIn(Long teamId, Set<Long> userIds) {
+        return membershipJpaRepository.findAllByTeamIdAndUserIdIn(teamId, userIds).stream()
+            .map(MembershipEntity::toDomain)
+            .toList();
+    }
+
+    @Override
     public boolean existsByTeamId(Long teamId) {
-        checkTeamDeleted(teamId);
-        return membershipJpaRepository.existsByTeamId(teamId);
-    }
-
-    private UserEntity checkUserDeleted(Long userId) {
-        UserEntity user = entityManager.getReference(UserEntity.class, userId);
-        if (user != null && user.getDeletedAt() != null) {
-            throw new MembershipException(MembershipErrorCode.USER_DELETED, user.getId());
-        }
-        return user;
-    }
-
-    private TeamEntity checkTeamDeleted(Long teamId) {
-        TeamEntity team = entityManager.getReference(TeamEntity.class, teamId);
-        if (team != null && team.getDeletedAt() != null) {
-            throw new MembershipException(MembershipErrorCode.TEAM_DELETED, team.getId());
-        }
-        return team;
+        return membershipJpaRepository
+            .existsByTeamId(teamId);
     }
 }

@@ -16,53 +16,59 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MembershipServiceDecorator implements MembershipService {
 
-    private final MembershipServiceImpl memberService;
+    private final MembershipServiceImpl membershipService;
 
     @Override
     @Transactional
-    public void createMemberships(Long teamId, Set<Long> userIds, User user) {
-        memberService.createMemberships(teamId, userIds, user);
+    public void createMemberships(Long teamId, List<Long> userIds) {
+        membershipService.createMemberships(teamId, userIds);
     }
 
     @Override
     @Transactional
     public void createLeader(Long teamId, Long userId) {
-        memberService.createLeader(teamId, userId);
+        membershipService.createLeader(teamId, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Membership getMembership(Long teamId, Long userId) {
-        return memberService.getMembership(teamId, userId);
+        return membershipService.getMembership(teamId, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Membership> getMemberships(Pageable pageable, Long teamId, User user) {
-        return memberService.getMemberships(pageable, teamId, user);
+        return membershipService.getMemberships(pageable, teamId, user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Membership> getMemberships(Long userId) {
-        return memberService.getMemberships(userId);
+        return membershipService.getMemberships(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Membership> getMemberships(Long teamId, Set<Long> userIds) {
+        return membershipService.getMemberships(teamId, userIds);
     }
 
     @Override
     @Transactional
-    public void updateMemberships(Long teamId, UpdateMemberships request, User user) {
-        memberService.updateMemberships(teamId, request, user);
+    public List<Membership> updateMemberships(Long teamId, UpdateMemberships request, User user) {
+        return membershipService.updateMemberships(teamId, request, user);
     }
 
     @Override
     @Transactional
     public void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId) {
-        memberService.updateLeader(teamId, oldLeaderId, newLeaderId);
+        membershipService.updateLeader(teamId, oldLeaderId, newLeaderId);
     }
 
     @Override
     @Transactional
     public void deleteMemberships(Long teamId, DeleteMemberships request, User user) {
-        memberService.deleteMemberships(teamId, request, user);
+        membershipService.deleteMemberships(teamId, request, user);
     }
 }
