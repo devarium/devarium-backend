@@ -5,26 +5,42 @@ import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TeamRequestRepository {
 
     TeamRequest save(TeamRequest teamRequest);
 
-    List<TeamRequest> saveAll(List<TeamRequest> teamRequests);
+    List<TeamRequest> saveAll(
+        List<TeamRequest> createdTeamRequests,
+        List<TeamRequest> updatedTeamRequests
+    );
 
     Optional<TeamRequest> findById(Long id);
 
-    List<TeamRequest> findByTeamIdAndTypeAndStatus(
+    Optional<TeamRequest> findByTeamIdAndUserIdAndType(
+        Long teamId,
+        Long userId,
+        TeamRequestType type
+    );
+
+    List<TeamRequest> findAllByTeamIdAndUserIdInAndType(
+        Long teamId,
+        Set<Long> userIds,
+        TeamRequestType type
+    );
+
+    List<TeamRequest> findAllByTeamIdAndTypeAndStatusIn(
         Long teamId,
         TeamRequestType type,
-        TeamRequestStatus status
+        List<TeamRequestStatus> status
     );
 
-    List<TeamRequest> findByUserIdAndTypeAndStatus(
+    List<TeamRequest> findAllByUserIdAndTypeAndStatusIn(
         Long userId,
         TeamRequestType type,
-        TeamRequestStatus status
+        List<TeamRequestStatus> status
     );
 
-    List<TeamRequest> findByIdInAndTeamId(Long teamId, List<Long> ids);
+    List<TeamRequest> findAllByIdInAndTeamId(Long teamId, Set<Long> ids);
 }

@@ -35,6 +35,13 @@ public class TeamRequest {
     }
 
     public void update(TeamRequestStatus status) {
+        if (this.status == TeamRequestStatus.ACCEPTED) {
+            throw new TeamRequestException(
+                TeamRequestErrorCode.TEAM_REQUEST_ALREADY_ACCEPTED,
+                this.id,
+                status
+            );
+        }
         this.status = status;
         this.statusChangedAt = Instant.now();
     }

@@ -1,15 +1,20 @@
 package io.devarium.core.domain.teamRequest.service;
 
+import io.devarium.core.domain.membership.MemberRole;
+import io.devarium.core.domain.membership.Membership;
+import io.devarium.core.domain.membership.exception.MembershipException;
 import io.devarium.core.domain.membership.service.MembershipService;
+import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
 import io.devarium.core.domain.teamRequest.exception.TeamRequestErrorCode;
 import io.devarium.core.domain.teamRequest.exception.TeamRequestException;
-import io.devarium.core.domain.teamRequest.port.CreateInvitation;
-import io.devarium.core.domain.teamRequest.port.UpdateJoin;
+import io.devarium.core.domain.teamRequest.port.CreateInvitations;
+import io.devarium.core.domain.teamRequest.port.UpdateJoins;
 import io.devarium.core.domain.teamRequest.repository.TeamRequestRepository;
 import io.devarium.core.domain.user.User;
+import io.devarium.core.domain.user.service.UserService;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
@@ -21,26 +26,79 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     private final TeamRequestRepository teamRequestRepository;
     private final MembershipService membershipService;
+    private final TeamService teamService;
+    private final UserService userService;
 
     @Override
     public TeamRequest join(Long teamId, User user) {
-        // TODO: teamId 존재 검증
-        // TODO: User의 멤버십 x 검증
-        TeamRequest teamRequest = TeamRequest.builder()
-            .teamId(teamId)
-            .userId(user.getId())
-            .type(TeamRequestType.JOIN_REQUEST)
-            .status(TeamRequestStatus.PENDING)
-            .statusChangedAt(Instant.now())
-            .build();
-        return teamRequestRepository.save(teamRequest);
+        if (!teamService.checkTeamExists(teamId)) {
+            throw new TeamRequestException(TeamRequestErrorCode.TEAM_NOT_FOUND, teamId);
+        }
+        try {
+            Membership membership = membershipService.getMembership(teamId, user.getId());
+            throw new TeamRequestException(
+                TeamRequestErrorCode.MEMBERSHIP_ALREADY_EXISTS,
+                user.getId(),
+                membership.getId(),
+                teamId
+            );
+        } catch (MembershipException e) {
+            TeamRequest teamRequest = teamRequestRepository.findByTeamIdAndUserIdAndType(
+                teamId,
+                user.getId(),
+                TeamRequestType.JOIN_REQUEST
+            ).orElseGet(() -> TeamRequest.builder()
+                .teamId(teamId)
+                .userId(user.getId())
+                .type(TeamRequestType.JOIN_REQUEST)
+                .build()
+            );
+            teamRequest.update(TeamRequestStatus.PENDING);
+            return teamRequestRepository.save(teamRequest);
+        }
     }
 
     @Override
-    public List<TeamRequest> invite(Long teamId, CreateInvitation request, User user) {
-        // TODO: User의 멤버십 및 MANAGER 이상 권한 검증
-        // TODO: userIds의 멤버십 x 검증
-        List<TeamRequest> teamRequests = request.userIds().stream()
+    public List<TeamRequest> invite(Long teamId, CreateInvitations request, User user) {
+        if (!teamService.checkTeamExists(teamId)) {
+            throw new TeamRequestException(TeamRequestErrorCode.TEAM_NOT_FOUND, teamId);
+        }
+        Set<Long> requestUserIds = request.userIds();
+        List<User> users = userService.getUsers(requestUserIds);
+        if (users.size() != requestUserIds.size()) {
+            List<Long> userIds = users.stream().map(User::getId).toList();
+            List<Long> unmatchedIds = requestUserIds.stream()
+                .filter(id -> !userIds.contains(id))
+                .toList();
+            throw new TeamRequestException(
+                TeamRequestErrorCode.USERS_NOT_FOUND,
+                unmatchedIds
+            );
+        }
+        membershipService.getMembership(teamId, user.getId()).validateRole(MemberRole.MANAGER);
+        List<Membership> memberships = membershipService.getMemberships(teamId, requestUserIds);
+        if (!memberships.isEmpty()) {
+            throw new TeamRequestException(
+                TeamRequestErrorCode.MEMBERSHIPS_ALREADY_EXIST,
+                memberships.stream().map(Membership::getUserId).toList(),
+                teamId
+            );
+        }
+
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByTeamIdAndUserIdInAndType(
+            teamId,
+            requestUserIds,
+            TeamRequestType.INVITATION
+        );
+        List<TeamRequest> updatedTeamRequests = teamRequests.stream()
+            .peek(teamRequest -> teamRequest.update(TeamRequestStatus.PENDING)).toList();
+        if (!teamRequests.isEmpty()) {
+            List<Long> userIds = teamRequests.stream().map(TeamRequest::getUserId).toList();
+            requestUserIds = requestUserIds.stream()
+                .filter(id -> !userIds.contains(id))
+                .collect(Collectors.toSet());
+        }
+        List<TeamRequest> createdTeamRequests = requestUserIds.stream()
             .map(userId -> TeamRequest.builder()
                 .teamId(teamId)
                 .userId(userId)
@@ -49,49 +107,56 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .statusChangedAt(Instant.now())
                 .build())
             .toList();
-        return teamRequestRepository.saveAll(teamRequests);
+        return teamRequestRepository.saveAll(createdTeamRequests, updatedTeamRequests);
     }
 
     @Override
     public List<TeamRequest> getTeamRequests(
         Long teamId,
         TeamRequestType type,
-        TeamRequestStatus status,
+        List<TeamRequestStatus> status,
         User user
     ) {
-        // TODO: User의 멤버십 검증
-        // TODO: INVITATION은 매니저 이상
-        return teamRequestRepository.findByTeamIdAndTypeAndStatus(teamId, type, status);
+        if (!teamService.checkTeamExists(teamId)) {
+            throw new TeamRequestException(TeamRequestErrorCode.TEAM_NOT_FOUND, teamId);
+        }
+        Membership membership = membershipService.getMembership(teamId, user.getId());
+        if (type == TeamRequestType.INVITATION) {
+            membership.validateRole(MemberRole.MANAGER);
+        }
+        return teamRequestRepository.findAllByTeamIdAndTypeAndStatusIn(teamId, type, status);
     }
 
     @Override
     public List<TeamRequest> getTeamRequestsByUser(
         TeamRequestType type,
-        TeamRequestStatus status,
-        User user) {
-        return teamRequestRepository.findByUserIdAndTypeAndStatus(user.getId(), type, status);
+        List<TeamRequestStatus> status,
+        User user
+    ) {
+        return teamRequestRepository.findAllByUserIdAndTypeAndStatusIn(user.getId(), type, status);
     }
 
     @Override
-    public List<TeamRequest> update(
+    public List<TeamRequest> updateJoinRequests(
         Long teamId,
         TeamRequestStatus status,
-        UpdateJoin request,
+        UpdateJoins request,
         User user
     ) {
-        // TODO: User의 멤버십 및 LEADER 권한 검증
-        List<TeamRequest> teamRequests = teamRequestRepository.findByIdInAndTeamId(
+        if (!teamService.checkTeamExists(teamId)) {
+            throw new TeamRequestException(TeamRequestErrorCode.TEAM_NOT_FOUND, teamId);
+        }
+        membershipService.getMembership(teamId, user.getId()).validateRole(MemberRole.LEADER);
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByIdInAndTeamId(
             teamId,
-            request.teamRequestIds()
+            request.ids()
         );
-
-        // teamRequestIds 가 teamId 소속인지 검증
-        if (request.teamRequestIds().size() != teamRequests.size()) {
-            Set<Long> teamRequestIds = teamRequests.stream()
+        if (teamRequests.size() != request.ids().size()) {
+            List<Long> teamRequestIds = teamRequests.stream()
                 .map(TeamRequest::getId)
-                .collect(Collectors.toSet());
+                .toList();
 
-            List<Long> unmatchedIds = request.teamRequestIds().stream()
+            List<Long> unmatchedIds = request.ids().stream()
                 .filter(id -> !teamRequestIds.contains(id))
                 .toList();
 
@@ -101,14 +166,14 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             );
         }
 
-        if (status == TeamRequestStatus.ACCEPTED) {
-            Set<Long> userIds = teamRequests.stream()
-                .map(TeamRequest::getUserId)
-                .collect(Collectors.toSet());
-            membershipService.createMemberships(teamId, userIds, user);
-        }
         teamRequests.forEach(teamRequest -> teamRequest.update(status));
-        return teamRequestRepository.saveAll(teamRequests);
+        if (status == TeamRequestStatus.ACCEPTED) {
+            List<Long> userIds = teamRequests.stream()
+                .map(TeamRequest::getUserId)
+                .toList();
+            membershipService.createMemberships(teamId, userIds);
+        }
+        return teamRequestRepository.saveAll(null, teamRequests);
     }
 
     @Override
@@ -119,14 +184,13 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 teamRequestId)
             );
         teamRequest.validateUser(user.getId());
+        teamRequest.update(status);
         if (status == TeamRequestStatus.ACCEPTED) {
             membershipService.createMemberships(
                 teamRequest.getTeamId(),
-                Set.of(teamRequest.getUserId()),
-                user
+                List.of(user.getId())
             );
         }
-        teamRequest.update(status);
         return teamRequestRepository.save(teamRequest);
     }
 }

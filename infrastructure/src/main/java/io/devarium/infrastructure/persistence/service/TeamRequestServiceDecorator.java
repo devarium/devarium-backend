@@ -3,8 +3,8 @@ package io.devarium.infrastructure.persistence.service;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
-import io.devarium.core.domain.teamRequest.port.CreateInvitation;
-import io.devarium.core.domain.teamRequest.port.UpdateJoin;
+import io.devarium.core.domain.teamRequest.port.CreateInvitations;
+import io.devarium.core.domain.teamRequest.port.UpdateJoins;
 import io.devarium.core.domain.teamRequest.service.TeamRequestService;
 import io.devarium.core.domain.teamRequest.service.TeamRequestServiceImpl;
 import io.devarium.core.domain.user.User;
@@ -25,7 +25,7 @@ public class TeamRequestServiceDecorator implements TeamRequestService {
 
     @Override
     @Transactional
-    public List<TeamRequest> invite(Long teamId, CreateInvitation request, User user) {
+    public List<TeamRequest> invite(Long teamId, CreateInvitations request, User user) {
         return teamRequestService.invite(teamId, request, user);
     }
 
@@ -34,20 +34,33 @@ public class TeamRequestServiceDecorator implements TeamRequestService {
     public List<TeamRequest> getTeamRequests(
         Long teamId,
         TeamRequestType type,
-        TeamRequestStatus status,
+        List<TeamRequestStatus> status,
         User user
     ) {
         return teamRequestService.getTeamRequests(teamId, type, status, user);
     }
 
     @Override
-    @Transactional
-    public List<TeamRequest> update(
-        Long teamId,
-        TeamRequestStatus status,
-        UpdateJoin request,
+    @Transactional(readOnly = true)
+    public List<TeamRequest> getTeamRequestsByUser(
+        TeamRequestType type,
+        List<TeamRequestStatus> status,
         User user
     ) {
-        return teamRequestService.update(teamId, status, request, user);
+        return teamRequestService.getTeamRequestsByUser(type, status, user);
+    }
+
+    @Override
+    @Transactional
+    public List<TeamRequest> updateJoinRequests(Long teamId, TeamRequestStatus status,
+        UpdateJoins request,
+        User user) {
+        return teamRequestService.updateJoinRequests(teamId, status, request, user);
+    }
+
+    @Override
+    @Transactional
+    public TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user) {
+        return teamRequestService.updateInvitation(teamRequestId, status, user);
     }
 }
