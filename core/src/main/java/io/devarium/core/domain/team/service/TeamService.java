@@ -32,4 +32,6 @@ public interface TeamService {
     void deleteTeam(Long teamId, User user);
 
     boolean checkUserIsLeader(Long userId);
+
+    boolean checkTeamExists(Long teamId);
 }

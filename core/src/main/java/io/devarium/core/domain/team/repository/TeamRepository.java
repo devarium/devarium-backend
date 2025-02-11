@@ -10,13 +10,13 @@ public interface TeamRepository {
 
     Team save(Team team);
 
-    void delete(Long id);
-
     Optional<Team> findById(Long id);
 
     List<Team> findAllById(List<Long> Ids);
 
-    boolean existsByLeaderId(Long leaderId);
-
     Page<Team> findByNameContaining(String name, Pageable pageable);
+
+    boolean existsById(Long id);
+
+    boolean existsByLeaderId(Long leaderId);
 }

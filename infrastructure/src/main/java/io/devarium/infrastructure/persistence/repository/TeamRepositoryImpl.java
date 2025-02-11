@@ -36,15 +36,8 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        TeamEntity entity = teamJpaRepository.findById(id)
-            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, id));
-        teamJpaRepository.delete(entity);
-    }
-
-    @Override
     public Optional<Team> findById(Long id) {
-        return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
+        return teamJpaRepository.findByIdAndDeletedAtIsNull(id).map(TeamEntity::toDomain);
     }
 
     @Override
@@ -53,12 +46,18 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public boolean existsByLeaderId(Long leaderId) {
-        return teamJpaRepository.existsByLeaderId(leaderId);
+    public Page<Team> findByNameContaining(String name, Pageable pageable) {
+        return teamJpaRepository.findByNameContainingAndDeletedAtIsNull(name, pageable)
+            .map(TeamEntity::toDomain);
     }
 
     @Override
-    public Page<Team> findByNameContaining(String name, Pageable pageable) {
-        return teamJpaRepository.findByNameContaining(name, pageable).map(TeamEntity::toDomain);
+    public boolean existsById(Long id) {
+        return teamJpaRepository.existsByIdAndDeletedAtIsNull(id);
+    }
+
+    @Override
+    public boolean existsByLeaderId(Long leaderId) {
+        return teamJpaRepository.existsByLeaderIdAndDeletedAtIsNull(leaderId);
     }
 }

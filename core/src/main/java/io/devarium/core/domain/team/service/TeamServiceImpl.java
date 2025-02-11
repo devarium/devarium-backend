@@ -1,5 +1,6 @@
 package io.devarium.core.domain.team.service;
 
+import io.devarium.core.domain.membership.MemberRole;
 import io.devarium.core.domain.membership.service.MembershipService;
 import io.devarium.core.domain.team.Team;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
@@ -59,12 +60,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team updateTeamInfo(Long teamId, UpdateTeamInfo request, User user) {
-        // TODO: User - MANAGER 권한 이상
+        membershipService.getMembership(teamId, user.getId()).validateRole(MemberRole.MANAGER);
         Team team = getTeam(teamId);
-        team.updateInfo(
-            request.description(),
-            request.githubUrl()
-        );
+        team.updateInfo(request.description(), request.githubUrl());
         return teamRepository.save(team);
     }
 
@@ -110,5 +108,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public boolean checkUserIsLeader(Long userId) {
         return teamRepository.existsByLeaderId(userId);
+    }
+
+    @Override
+    public boolean checkTeamExists(Long teamId) {
+        return teamRepository.existsById(teamId);
     }
 }

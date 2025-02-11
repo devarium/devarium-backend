@@ -22,8 +22,8 @@ public class TeamServiceDecorator implements TeamService {
 
     @Override
     @Transactional
-    public Team createTeam(CreateTeam request, User user) {
-        return teamService.createTeam(request, user);
+    public Team createTeam(CreateTeam request, Image image, User user) {
+        return teamService.createTeam(request, image, user);
     }
 
     @Override
@@ -75,8 +75,14 @@ public class TeamServiceDecorator implements TeamService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean checkUserIsLeader(Long userId) {
         return teamService.checkUserIsLeader(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean checkTeamExists(Long teamId) {
+        return teamService.checkTeamExists(teamId);
     }
 }
