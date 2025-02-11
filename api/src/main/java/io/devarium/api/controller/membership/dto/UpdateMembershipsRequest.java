@@ -13,7 +13,7 @@ public record UpdateMembershipsRequest(
 ) implements UpdateMemberships {
 
     public record UpdateMembershipRequest(
-        @NotNull(message = "'membershipId' must not be null") Long membershipId,
+        @NotNull(message = "'id' must not be null") Long id,
         @NotBlank(message = "'role' must not be blank") MemberRole role
     ) implements UpdateMembership {
 
