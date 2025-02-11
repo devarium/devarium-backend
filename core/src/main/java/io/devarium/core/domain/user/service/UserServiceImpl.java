@@ -19,6 +19,7 @@ import io.devarium.core.storage.Image;
 import io.devarium.core.storage.ImageType;
 import io.devarium.core.storage.service.StorageService;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -50,6 +51,11 @@ public class UserServiceImpl implements UserService {
             throw new UserException(UserErrorCode.USER_IS_DELETED, user.getId());
         }
         return user;
+    }
+
+    @Override
+    public List<User> getUsers(Set<Long> userIds) {
+        return userRepository.findAllById(userIds);
     }
 
     @Override
@@ -90,8 +96,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<TeamRequest> getTeamRequests(TeamRequestType type, TeamRequestStatus status,
-        User user) {
+    public List<TeamRequest> getTeamRequests(
+        TeamRequestType type,
+        List<TeamRequestStatus> status,
+        User user
+    ) {
         return teamRequestService.getTeamRequestsByUser(type, status, user);
     }
 

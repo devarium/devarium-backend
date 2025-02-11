@@ -12,6 +12,7 @@ import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.Image;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,12 @@ public class UserServiceDecorator implements UserService {
     @Transactional(readOnly = true)
     public User getUser(Long userId) {
         return userService.getUser(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getUsers(Set<Long> userIds) {
+        return userService.getUsers(userIds);
     }
 
     @Override
@@ -66,7 +73,7 @@ public class UserServiceDecorator implements UserService {
     @Transactional(readOnly = true)
     public List<TeamRequest> getTeamRequests(
         TeamRequestType type,
-        TeamRequestStatus status,
+        List<TeamRequestStatus> status,
         User user
     ) {
         return userService.getTeamRequests(type, status, user);

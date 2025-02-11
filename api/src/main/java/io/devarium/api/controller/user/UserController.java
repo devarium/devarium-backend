@@ -108,7 +108,11 @@ public class UserController {
     ) {
         List<TeamRequest> teamRequests = userService.getTeamRequests(
             TeamRequestType.JOIN_REQUEST,
-            null,
+            List.of(
+                TeamRequestStatus.PENDING,
+                TeamRequestStatus.ACCEPTED,
+                TeamRequestStatus.REJECTED
+            ),
             principal.getUser()
         );
         List<TeamRequestResponse> response = teamRequests.stream()
@@ -122,7 +126,7 @@ public class UserController {
     ) {
         List<TeamRequest> teamRequests = userService.getTeamRequests(
             TeamRequestType.INVITATION,
-            TeamRequestStatus.PENDING,
+            List.of(TeamRequestStatus.PENDING),
             principal.getUser()
         );
         List<TeamRequestResponse> response = teamRequests.stream()

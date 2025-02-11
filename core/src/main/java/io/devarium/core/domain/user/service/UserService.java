@@ -10,12 +10,15 @@ import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.port.UpdateUser;
 import io.devarium.core.storage.Image;
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
     User createUser(OAuth2UserInfo userInfo);
 
     User getUser(Long userId);
+
+    List<User> getUsers(Set<Long> userIds);
 
     User getByEmail(String email);
 
@@ -27,7 +30,11 @@ public interface UserService {
 
     List<Membership> getMemberships(User user);
 
-    List<TeamRequest> getTeamRequests(TeamRequestType type, TeamRequestStatus status, User user);
+    List<TeamRequest> getTeamRequests(
+        TeamRequestType type,
+        List<TeamRequestStatus> status,
+        User user
+    );
 
     TeamRequest updateInvitation(Long teamRequestId, TeamRequestStatus status, User user);
 
