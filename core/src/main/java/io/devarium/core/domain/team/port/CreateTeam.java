@@ -6,7 +6,5 @@ public interface CreateTeam {
 
     String description();
 
-    String profileImageUrl();
-
     String githubUrl();
 }

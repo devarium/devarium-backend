@@ -42,9 +42,14 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<TeamResponse>> createTeam(
         @Valid @RequestBody CreateTeamRequest request,
+        @RequestPart(required = false) MultipartFile file,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.createTeam(request, principal.getUser());
+        Team team = teamService.createTeam(
+            request,
+            file == null ? null : Image.from(file),
+            principal.getUser()
+        );
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity

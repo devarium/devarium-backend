@@ -26,12 +26,13 @@ public class TeamServiceImpl implements TeamService {
     private final StorageService storageService;
 
     @Override
-    public Team createTeam(CreateTeam request, User user) {
+    public Team createTeam(CreateTeam request, Image image, User user) {
         // TODO: 프로필 이미지 없을 시 디폴트 이미지 사용
+        String profileImageUrl = storageService.upload(image, ImageType.PROFILE);
         Team team = Team.builder()
             .name(request.name())
             .description(request.description())
-            .profileImageUrl(request.profileImageUrl())
+            .profileImageUrl(profileImageUrl)
             .githubUrl(request.githubUrl())
             .leaderId(user.getId())
             .build();

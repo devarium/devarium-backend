@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface TeamService {
 
-    Team createTeam(CreateTeam request, User user);
+    Team createTeam(CreateTeam request, Image image, User user);
 
     Team getTeam(Long teamId);
 
