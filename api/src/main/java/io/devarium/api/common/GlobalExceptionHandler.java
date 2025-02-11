@@ -15,6 +15,8 @@ import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
+import io.devarium.core.domain.teamRequest.exception.TeamRequestErrorCode;
+import io.devarium.core.domain.teamRequest.exception.TeamRequestException;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.storage.exception.StorageErrorCode;
@@ -130,6 +132,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorResponse> handleUserException(UserException e) {
         UserErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(TeamRequestException.class)
+    public ResponseEntity<ErrorResponse> handleTeamRequestException(TeamRequestException e) {
+        TeamRequestErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
