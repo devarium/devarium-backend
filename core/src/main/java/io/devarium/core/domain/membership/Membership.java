@@ -2,8 +2,6 @@ package io.devarium.core.domain.membership;
 
 import io.devarium.core.domain.membership.exception.MembershipErrorCode;
 import io.devarium.core.domain.membership.exception.MembershipException;
-import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,23 +15,12 @@ public class Membership {
     private final Long teamId;
     private MemberRole role;
 
-    @Getter(AccessLevel.NONE)
-    private Boolean isLeader;
-
     @Builder
-    public Membership(Long id, Long userId, Long teamId, MemberRole role, Boolean isLeader) {
+    public Membership(Long id, Long userId, Long teamId, MemberRole role) {
         this.id = id;
         this.userId = userId;
         this.teamId = teamId;
         this.role = role;
-        this.isLeader = isLeader;
-    }
-
-    public void validateTeam(Long teamId) {
-        if (!Objects.equals(this.teamId, teamId)) {
-            throw new MembershipException(MembershipErrorCode.MEMBERSHIP_NOT_IN_TEAM, this.userId,
-                teamId);
-        }
     }
 
     public void validateRole(MemberRole requiredRole) {
@@ -48,15 +35,6 @@ public class Membership {
     }
 
     public void update(MemberRole role) {
-        if (role == MemberRole.MANAGER && this.isLeader) {
-            this.isLeader = false;
-        } else if (role == MemberRole.LEADER) {
-            this.isLeader = true;
-        }
         this.role = role;
-    }
-
-    public Boolean isLeader() {
-        return this.isLeader;
     }
 }

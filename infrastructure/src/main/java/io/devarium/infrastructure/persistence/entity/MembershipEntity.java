@@ -43,25 +43,22 @@ public class MembershipEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @Column(nullable = false)
-    @Getter(AccessLevel.NONE)
-    private Boolean isLeader;
-
     @Builder
-    private MembershipEntity(UserEntity user, TeamEntity team, MemberRole role, Boolean isLeader) {
+    private MembershipEntity(UserEntity user, TeamEntity team, MemberRole role) {
         this.user = user;
         this.team = team;
         this.role = role;
-        this.isLeader = isLeader;
     }
 
-    public static MembershipEntity fromDomain(Membership membership, UserEntity user,
-        TeamEntity team) {
+    public static MembershipEntity fromDomain(
+        Membership membership,
+        UserEntity user,
+        TeamEntity team
+    ) {
         return MembershipEntity.builder()
             .user(user)
             .team(team)
             .role(membership.getRole())
-            .isLeader(membership.isLeader())
             .build();
     }
 
@@ -71,16 +68,10 @@ public class MembershipEntity extends BaseEntity {
             .userId(user.getId())
             .teamId(team.getId())
             .role(role)
-            .isLeader(isLeader)
             .build();
     }
 
-    public void update(MemberRole role, Boolean isLeader) {
-        this.role = role;
-        this.isLeader = isLeader;
-    }
-
-    public Boolean isLeader() {
-        return this.isLeader;
+    public void update(Membership domain) {
+        this.role = domain.getRole();
     }
 }
