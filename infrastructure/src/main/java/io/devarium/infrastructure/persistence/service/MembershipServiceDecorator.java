@@ -71,4 +71,10 @@ public class MembershipServiceDecorator implements MembershipService {
     public void deleteMemberships(Long teamId, DeleteMemberships request, User user) {
         membershipService.deleteMemberships(teamId, request, user);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean checkMembershipExists(Long teamId, Long userId) {
+        return membershipService.checkMembershipExists(teamId, userId);
+    }
 }

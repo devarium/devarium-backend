@@ -1,6 +1,7 @@
 package io.devarium.infrastructure.persistence.entity;
 
 import io.devarium.core.domain.project.Project;
+import io.devarium.core.domain.project.ProjectStatus;
 import io.devarium.core.domain.skill.Skill;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -35,11 +36,15 @@ public class ProjectEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
+    private String description;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "team_id", nullable = false, unique = true)
     private TeamEntity team;
-
-    private String description;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
@@ -54,20 +59,24 @@ public class ProjectEntity extends BaseEntity {
         Long id,
         String name,
         String description,
+        ProjectStatus status,
         Set<Skill> skills,
         TeamEntity team
     ) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.status = status;
         this.skills = skills != null ? new HashSet<>(skills) : new HashSet<>();
         this.team = team;
     }
 
-    public static ProjectEntity fromDomain(Project project) {
+    public static ProjectEntity fromDomain(Project project, TeamEntity team) {
         return ProjectEntity.builder()
             .name(project.getName())
             .description(project.getDescription())
+            .status(project.getStatus())
+            .team(team)
             .skills(new HashSet<>(project.getSkills()))
             .build();
     }
@@ -77,6 +86,8 @@ public class ProjectEntity extends BaseEntity {
             .id(id)
             .name(name)
             .description(description)
+            .status(status)
+            .teamId(team.getId())
             .skills(new HashSet<>(skills))
             .build();
     }
@@ -84,6 +95,7 @@ public class ProjectEntity extends BaseEntity {
     public void update(Project project) {
         this.name = project.getName();
         this.description = project.getDescription();
+        this.status = project.getStatus();
         this.skills.clear();
         this.skills.addAll(project.getSkills());
     }

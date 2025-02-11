@@ -17,6 +17,11 @@ public interface MembershipJpaRepository extends JpaRepository<MembershipEntity,
 
     List<MembershipEntity> findAllByIdInAndTeamId(Set<Long> ids, Long teamId);
 
+    List<MembershipEntity> findAllByIdInAndTeamIdAndTeam_DeletedAtIsNullAndUser_DeletedAtIsNull(
+        Set<Long> ids,
+        Long teamId
+    );
+
     Page<MembershipEntity> findAllByTeamIdAndUser_DeletedAtIsNull(
         Long teamId,
         Pageable pageable
@@ -29,4 +34,6 @@ public interface MembershipJpaRepository extends JpaRepository<MembershipEntity,
     List<MembershipEntity> findAllByTeamIdAndUserIdIn(Long teamId, Set<Long> userIds);
 
     boolean existsByTeamId(Long teamId);
+
+    boolean existsByTeamIdAndUserIdAndTeam_DeletedAtIsNull(Long teamId, Long userId);
 }

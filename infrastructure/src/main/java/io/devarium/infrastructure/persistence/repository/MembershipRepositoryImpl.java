@@ -94,9 +94,10 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     @Override
     public List<Membership> findAllByIdInAndTeamId(Set<Long> ids, Long teamId) {
         return membershipJpaRepository
-            .findAllByIdInAndTeamId(ids, teamId).stream()
-            .map(MembershipEntity::toDomain)
-            .toList();
+            .findAllByIdInAndTeamIdAndTeam_DeletedAtIsNullAndUser_DeletedAtIsNull(
+                ids,
+                teamId
+            ).stream().map(MembershipEntity::toDomain).toList();
     }
 
     @Override
@@ -123,7 +124,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
 
     @Override
     public boolean existsByTeamId(Long teamId) {
-        return membershipJpaRepository
-            .existsByTeamId(teamId);
+        return membershipJpaRepository.existsByTeamId(teamId);
+    }
+
+    @Override
+    public boolean existsByTeamIdAndUserId(Long teamId, Long userId) {
+        return membershipJpaRepository.existsByTeamIdAndUserIdAndTeam_DeletedAtIsNull(teamId,
+            userId);
     }
 }

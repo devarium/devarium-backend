@@ -26,4 +26,6 @@ public interface MembershipRepository {
     List<Membership> findAllByTeamIdAndUserIdIn(Long teamId, Set<Long> userIds);
 
     boolean existsByTeamId(Long teamId);
+
+    boolean existsByTeamIdAndUserId(Long teamId, Long userId);
 }

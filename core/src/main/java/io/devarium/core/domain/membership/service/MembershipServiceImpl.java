@@ -8,7 +8,6 @@ import io.devarium.core.domain.membership.port.DeleteMemberships;
 import io.devarium.core.domain.membership.port.UpdateMembership;
 import io.devarium.core.domain.membership.port.UpdateMemberships;
 import io.devarium.core.domain.membership.repository.MembershipRepository;
-import io.devarium.core.domain.team.service.TeamService;
 import io.devarium.core.domain.user.User;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 public class MembershipServiceImpl implements MembershipService {
 
     private final MembershipRepository membershipRepository;
-    private final TeamService teamService;
 
     @Override
     public void createMemberships(Long teamId, List<Long> userIds) {
@@ -84,9 +82,6 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public List<Membership> updateMemberships(Long teamId, UpdateMemberships request, User user) {
-        if (!teamService.checkTeamExists(teamId)) {
-            throw new MembershipException(MembershipErrorCode.TEAM_NOT_FOUND, teamId);
-        }
         Membership leader = getMembership(teamId, user.getId());
         leader.validateRole(MemberRole.LEADER);
         Set<Long> ids = request.memberships().stream()
@@ -131,6 +126,11 @@ public class MembershipServiceImpl implements MembershipService {
     public void deleteMemberships(Long teamId, DeleteMemberships request, User user) {
         getMembership(teamId, user.getId()).validateRole(MemberRole.LEADER);
         membershipRepository.deleteAll(teamId, request.ids());
+    }
+
+    @Override
+    public boolean checkMembershipExists(Long teamId, Long userId) {
+        return membershipRepository.existsByTeamIdAndUserId(teamId, userId);
     }
 
     private void updateMemberRole(

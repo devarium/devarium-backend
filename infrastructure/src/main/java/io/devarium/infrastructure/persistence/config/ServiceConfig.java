@@ -3,6 +3,14 @@ package io.devarium.infrastructure.persistence.config;
 import io.devarium.core.domain.comment.repository.CommentRepository;
 import io.devarium.core.domain.comment.service.CommentService;
 import io.devarium.core.domain.comment.service.CommentServiceImpl;
+import io.devarium.core.domain.feedback.answer.repository.AnswerRepository;
+import io.devarium.core.domain.feedback.port.TextSummarizer;
+import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
+import io.devarium.core.domain.feedback.service.FeedbackService;
+import io.devarium.core.domain.feedback.service.FeedbackServiceImpl;
+import io.devarium.core.domain.like.repository.LikeRepository;
+import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.like.service.LikeServiceImpl;
 import io.devarium.core.domain.membership.repository.MembershipRepository;
 import io.devarium.core.domain.membership.service.MembershipService;
 import io.devarium.core.domain.membership.service.MembershipServiceImpl;
@@ -26,6 +34,8 @@ import io.devarium.core.domain.user.service.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.service.StorageService;
 import io.devarium.infrastructure.persistence.service.CommentServiceDecorator;
+import io.devarium.infrastructure.persistence.service.FeedbackServiceDecorator;
+import io.devarium.infrastructure.persistence.service.LikeServiceDecorator;
 import io.devarium.infrastructure.persistence.service.MembershipServiceDecorator;
 import io.devarium.infrastructure.persistence.service.PostServiceDecorator;
 import io.devarium.infrastructure.persistence.service.ProjectServiceDecorator;
@@ -92,11 +102,10 @@ public class ServiceConfig {
 
     @Bean
     public MembershipService membershipService(
-        MembershipRepository membershipRepository,
-        TeamService teamService
+        MembershipRepository membershipRepository
     ) {
         return new MembershipServiceDecorator(
-            new MembershipServiceImpl(membershipRepository, teamService));
+            new MembershipServiceImpl(membershipRepository));
     }
 
     @Bean
@@ -113,5 +122,29 @@ public class ServiceConfig {
                 teamService,
                 userService
             ));
+    }
+
+    @Bean
+    public FeedbackService feedbackService(
+        QuestionRepository questionRepository,
+        AnswerRepository answerRepository,
+        ProjectService projectService,
+        MembershipService membershipService,
+        TextSummarizer textSummarizer
+    ) {
+        return new FeedbackServiceDecorator(
+            new FeedbackServiceImpl(
+                questionRepository,
+                answerRepository,
+                projectService,
+                membershipService,
+                textSummarizer
+            )
+        );
+    }
+
+    @Bean
+    public LikeService likeService(LikeRepository likeRepository) {
+        return new LikeServiceDecorator(new LikeServiceImpl(likeRepository));
     }
 }

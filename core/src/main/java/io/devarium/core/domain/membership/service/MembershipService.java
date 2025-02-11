@@ -28,4 +28,6 @@ public interface MembershipService {
     void updateLeader(Long teamId, Long oldLeaderId, Long newLeaderId);
 
     void deleteMemberships(Long teamId, DeleteMemberships request, User user);
+
+    boolean checkMembershipExists(Long teamId, Long userId);
 }
