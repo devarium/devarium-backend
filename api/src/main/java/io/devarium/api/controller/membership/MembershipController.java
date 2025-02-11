@@ -1,6 +1,7 @@
 package io.devarium.api.controller.membership;
 
 import io.devarium.api.auth.CustomUserPrincipal;
+import io.devarium.api.common.dto.ListResponse;
 import io.devarium.api.common.dto.PagedListResponse;
 import io.devarium.api.controller.membership.dto.DeleteMembershipsRequest;
 import io.devarium.api.controller.membership.dto.MembershipResponse;
@@ -8,6 +9,7 @@ import io.devarium.api.controller.membership.dto.UpdateMembershipsRequest;
 import io.devarium.core.domain.membership.Membership;
 import io.devarium.core.domain.membership.service.MembershipService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,13 +49,20 @@ public class MembershipController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateMemberships(
+    public ResponseEntity<ListResponse<MembershipResponse>> updateMemberships(
         @PathVariable Long teamId,
         @Valid @RequestBody UpdateMembershipsRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        membershipService.updateMemberships(teamId, request, principal.getUser());
-        return ResponseEntity.noContent().build();
+        List<Membership> memberships = membershipService.updateMemberships(
+            teamId,
+            request,
+            principal.getUser()
+        );
+        List<MembershipResponse> response = memberships.stream()
+            .map(MembershipResponse::from).toList();
+
+        return ResponseEntity.ok(ListResponse.from(response));
     }
 
     @DeleteMapping
