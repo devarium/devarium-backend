@@ -1,12 +1,13 @@
 package io.devarium.core.domain.team.service;
 
-import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.member.port.in.MemberService;
 import io.devarium.core.domain.team.Team;
+import io.devarium.core.domain.team.command.UpdateLeader;
+import io.devarium.core.domain.team.command.UpsertTeam;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
-import io.devarium.core.domain.team.port.UpdateLeader;
-import io.devarium.core.domain.team.port.UpsertTeam;
-import io.devarium.core.domain.team.repository.TeamRepository;
+import io.devarium.core.domain.team.port.in.TeamService;
+import io.devarium.core.domain.team.port.out.TeamRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

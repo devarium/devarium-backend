@@ -2,8 +2,8 @@ package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.port.UpdateUser;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.command.UpdateUser;
+import io.devarium.core.domain.user.port.in.UserService;
 import io.devarium.core.domain.user.service.UserServiceImpl;
 import io.devarium.core.storage.Image;
 import lombok.RequiredArgsConstructor;

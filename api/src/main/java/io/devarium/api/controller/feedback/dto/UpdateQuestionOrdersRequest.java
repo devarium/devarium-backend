@@ -1,6 +1,6 @@
 package io.devarium.api.controller.feedback.dto;
 
-import io.devarium.core.domain.feedback.question.port.UpdateQuestionOrders;
+import io.devarium.core.domain.feedback.question.command.UpdateQuestionOrders;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.List;

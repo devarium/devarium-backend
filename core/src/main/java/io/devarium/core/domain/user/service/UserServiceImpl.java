@@ -3,13 +3,14 @@ package io.devarium.core.domain.user.service;
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
+import io.devarium.core.domain.user.command.UpdateUser;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
-import io.devarium.core.domain.user.port.UpdateUser;
-import io.devarium.core.domain.user.repository.UserRepository;
+import io.devarium.core.domain.user.port.in.UserService;
+import io.devarium.core.domain.user.port.out.UserRepository;
 import io.devarium.core.storage.Image;
 import io.devarium.core.storage.ImageType;
-import io.devarium.core.storage.service.StorageService;
+import io.devarium.core.storage.port.in.StorageService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

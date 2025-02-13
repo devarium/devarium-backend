@@ -1,8 +1,8 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.project.Project;
-import io.devarium.core.domain.project.port.UpsertProject;
-import io.devarium.core.domain.project.service.ProjectService;
+import io.devarium.core.domain.project.command.UpsertProject;
+import io.devarium.core.domain.project.port.in.ProjectService;
 import io.devarium.core.domain.project.service.ProjectServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;

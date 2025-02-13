@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.reply.Reply;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
-import io.devarium.core.domain.reply.repository.ReplyRepository;
+import io.devarium.core.domain.reply.port.out.ReplyRepository;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.ReplyEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;

@@ -1,8 +1,8 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.post.Post;
-import io.devarium.core.domain.post.port.UpsertPost;
-import io.devarium.core.domain.post.service.PostService;
+import io.devarium.core.domain.post.command.UpsertPost;
+import io.devarium.core.domain.post.port.in.PostService;
 import io.devarium.core.domain.post.service.PostServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;

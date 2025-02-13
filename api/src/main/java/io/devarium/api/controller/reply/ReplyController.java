@@ -4,9 +4,9 @@ import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.reply.dto.ReplyResponse;
 import io.devarium.api.controller.reply.dto.UpsertReplyRequest;
-import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.like.port.in.LikeService;
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.service.ReplyService;
+import io.devarium.core.domain.reply.port.in.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -96,7 +96,8 @@ public class ReplyController {
 
     private ReplyResponse createReplyResponse(Reply reply, CustomUserPrincipal principal) {
         Long likeCount = likeService.getLikeCount(reply);
-        boolean userLiked = principal != null && likeService.hasUserLiked(reply, principal.getUser());
+        boolean userLiked =
+            principal != null && likeService.hasUserLiked(reply, principal.getUser());
         return ReplyResponse.of(reply, likeCount, userLiked);
     }
 }

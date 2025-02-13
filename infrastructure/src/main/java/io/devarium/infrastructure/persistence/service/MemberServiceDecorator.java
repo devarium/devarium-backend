@@ -1,10 +1,10 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.member.Member;
-import io.devarium.core.domain.member.port.CreateMembers;
-import io.devarium.core.domain.member.port.DeleteMembers;
-import io.devarium.core.domain.member.port.UpdateMembers;
-import io.devarium.core.domain.member.service.MemberService;
+import io.devarium.core.domain.member.command.CreateMembers;
+import io.devarium.core.domain.member.command.DeleteMembers;
+import io.devarium.core.domain.member.command.UpdateMembers;
+import io.devarium.core.domain.member.port.in.MemberService;
 import io.devarium.core.domain.member.service.MemberServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;

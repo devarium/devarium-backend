@@ -5,7 +5,7 @@ import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.user.dto.UpdateUserRequest;
 import io.devarium.api.controller.user.dto.UserResponse;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.port.in.UserService;
 import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

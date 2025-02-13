@@ -1,8 +1,8 @@
 package io.devarium.api.controller.member.dto;
 
 import io.devarium.core.domain.member.MemberRole;
-import io.devarium.core.domain.member.port.CreateMember;
-import io.devarium.core.domain.member.port.CreateMembers;
+import io.devarium.core.domain.member.command.CreateMember;
+import io.devarium.core.domain.member.command.CreateMembers;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

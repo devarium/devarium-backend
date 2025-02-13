@@ -1,8 +1,8 @@
 package io.devarium.infrastructure.persistence.repository;
 
-import io.devarium.core.domain.like.LikeTargetType;
 import io.devarium.core.domain.like.Like;
-import io.devarium.core.domain.like.repository.LikeRepository;
+import io.devarium.core.domain.like.LikeTargetType;
+import io.devarium.core.domain.like.port.out.LikeRepository;
 import io.devarium.core.domain.user.User;
 import io.devarium.infrastructure.persistence.entity.LikeEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
@@ -30,13 +30,16 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public boolean existsByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId, User user) {
+    public boolean existsByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId,
+        User user) {
         UserEntity userEntity = entityManager.getReference(UserEntity.class, user.getId());
-        return likeJpaRepository.existsByTargetTypeAndTargetIdAndUser(targetType, targetId, userEntity);
+        return likeJpaRepository.existsByTargetTypeAndTargetIdAndUser(targetType, targetId,
+            userEntity);
     }
 
     @Override
-    public void deleteByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId, User user) {
+    public void deleteByTargetTypeAndTargetIdAndUser(LikeTargetType targetType, Long targetId,
+        User user) {
         UserEntity userEntity = entityManager.getReference(UserEntity.class, user.getId());
         likeJpaRepository.deleteByTargetTypeAndTargetIdAndUser(targetType, targetId, userEntity);
     }

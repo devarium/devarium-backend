@@ -1,7 +1,7 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.like.Likeable;
-import io.devarium.core.domain.like.service.LikeService;
+import io.devarium.core.domain.like.port.in.LikeService;
 import io.devarium.core.domain.like.service.LikeServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
