@@ -14,7 +14,7 @@ import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.port.in.UserService;
 import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import java.util.List;

@@ -1,8 +1,8 @@
 package io.devarium.api.controller.membership.dto;
 
 import io.devarium.core.domain.membership.MemberRole;
-import io.devarium.core.domain.membership.port.UpdateMembership;
-import io.devarium.core.domain.membership.port.UpdateMemberships;
+import io.devarium.core.domain.membership.command.UpdateMembership;
+import io.devarium.core.domain.membership.command.UpdateMemberships;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

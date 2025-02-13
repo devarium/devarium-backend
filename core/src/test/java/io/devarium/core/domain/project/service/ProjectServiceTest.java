@@ -9,10 +9,10 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.project.Project;
+import io.devarium.core.domain.project.command.UpsertProject;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
-import io.devarium.core.domain.project.port.UpsertProject;
-import io.devarium.core.domain.project.repository.ProjectRepository;
+import io.devarium.core.domain.project.port.out.ProjectRepository;
 import io.devarium.core.domain.skill.Skill;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;

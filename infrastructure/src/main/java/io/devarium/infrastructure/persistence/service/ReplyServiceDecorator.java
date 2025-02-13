@@ -1,8 +1,8 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.reply.Reply;
-import io.devarium.core.domain.reply.port.UpsertReply;
-import io.devarium.core.domain.reply.service.ReplyService;
+import io.devarium.core.domain.reply.command.UpsertReply;
+import io.devarium.core.domain.reply.port.in.ReplyService;
 import io.devarium.core.domain.reply.service.ReplyServiceImpl;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;

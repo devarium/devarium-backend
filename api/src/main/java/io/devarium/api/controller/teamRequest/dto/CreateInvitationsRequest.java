@@ -1,6 +1,6 @@
 package io.devarium.api.controller.teamRequest.dto;
 
-import io.devarium.core.domain.teamRequest.port.CreateInvitations;
+import io.devarium.core.domain.teamRequest.command.CreateInvitations;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 

@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
-import io.devarium.core.domain.teamRequest.repository.TeamRequestRepository;
+import io.devarium.core.domain.teamRequest.port.out.TeamRequestRepository;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.TeamRequestEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;

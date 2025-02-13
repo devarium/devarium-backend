@@ -1,9 +1,9 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.membership.Membership;
-import io.devarium.core.domain.membership.port.DeleteMemberships;
-import io.devarium.core.domain.membership.port.UpdateMemberships;
-import io.devarium.core.domain.membership.service.MembershipService;
+import io.devarium.core.domain.membership.command.DeleteMemberships;
+import io.devarium.core.domain.membership.command.UpdateMemberships;
+import io.devarium.core.domain.membership.port.in.MembershipService;
 import io.devarium.core.domain.membership.service.MembershipServiceImpl;
 import io.devarium.core.domain.user.User;
 import java.util.List;

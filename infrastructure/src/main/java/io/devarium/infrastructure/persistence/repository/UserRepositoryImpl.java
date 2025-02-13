@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
-import io.devarium.core.domain.user.repository.UserRepository;
+import io.devarium.core.domain.user.port.out.UserRepository;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import java.util.List;
 import java.util.Optional;

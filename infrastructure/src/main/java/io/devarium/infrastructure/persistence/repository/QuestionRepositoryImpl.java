@@ -5,8 +5,8 @@ import static io.devarium.infrastructure.persistence.entity.QQuestionEntity.ques
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
 import io.devarium.core.domain.feedback.exception.FeedbackException;
+import io.devarium.core.domain.feedback.port.out.QuestionRepository;
 import io.devarium.core.domain.feedback.question.Question;
-import io.devarium.core.domain.feedback.question.repository.QuestionRepository;
 import io.devarium.infrastructure.persistence.entity.ProjectEntity;
 import io.devarium.infrastructure.persistence.entity.QuestionEntity;
 import jakarta.persistence.EntityManager;

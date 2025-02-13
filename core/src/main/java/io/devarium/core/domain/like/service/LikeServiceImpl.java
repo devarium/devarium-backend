@@ -2,7 +2,8 @@ package io.devarium.core.domain.like.service;
 
 import io.devarium.core.domain.like.Like;
 import io.devarium.core.domain.like.Likeable;
-import io.devarium.core.domain.like.repository.LikeRepository;
+import io.devarium.core.domain.like.port.in.LikeService;
+import io.devarium.core.domain.like.port.out.LikeRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +28,8 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void unlike(Likeable likeable, User user) {
-        likeRepository.deleteByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user);
+        likeRepository.deleteByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(),
+            user);
     }
 
     @Override
@@ -37,6 +39,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public boolean hasUserLiked(Likeable likeable, User user) {
-        return likeRepository.existsByTargetTypeAndTargetIdAndUser(likeable.getType(), likeable.getId(), user);
+        return likeRepository.existsByTargetTypeAndTargetIdAndUser(likeable.getType(),
+            likeable.getId(), user);
     }
 }

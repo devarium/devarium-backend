@@ -1,6 +1,6 @@
 package io.devarium.api.controller.teamRequest.dto;
 
-import io.devarium.core.domain.teamRequest.port.UpdateJoins;
+import io.devarium.core.domain.teamRequest.command.UpdateJoins;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 

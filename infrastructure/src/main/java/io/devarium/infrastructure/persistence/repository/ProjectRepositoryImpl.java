@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
-import io.devarium.core.domain.project.repository.ProjectRepository;
+import io.devarium.core.domain.project.port.out.ProjectRepository;
 import io.devarium.infrastructure.persistence.entity.ProjectEntity;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import jakarta.persistence.EntityManager;

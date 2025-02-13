@@ -9,7 +9,7 @@ import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
 import io.devarium.api.controller.team.dto.UpdateTeamInfoRequest;
 import io.devarium.api.controller.team.dto.UpdateTeamNameRequest;
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.team.port.in.TeamService;
 import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

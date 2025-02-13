@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.comment.Comment;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
-import io.devarium.core.domain.comment.repository.CommentRepository;
+import io.devarium.core.domain.comment.port.out.CommentRepository;
 import io.devarium.infrastructure.persistence.entity.CommentEntity;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;

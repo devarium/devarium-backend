@@ -3,7 +3,7 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.post.Post;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
-import io.devarium.core.domain.post.repository.PostRepository;
+import io.devarium.core.domain.post.port.out.PostRepository;
 import io.devarium.infrastructure.persistence.entity.PostEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;

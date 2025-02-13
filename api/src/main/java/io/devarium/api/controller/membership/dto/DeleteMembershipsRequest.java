@@ -1,6 +1,6 @@
 package io.devarium.api.controller.membership.dto;
 
-import io.devarium.core.domain.membership.port.DeleteMemberships;
+import io.devarium.core.domain.membership.command.DeleteMemberships;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 

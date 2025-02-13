@@ -1,7 +1,7 @@
 package io.devarium.api.auth;
 
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.port.in.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

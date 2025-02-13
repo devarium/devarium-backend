@@ -1,5 +1,7 @@
 package io.devarium.api.controller.auth;
 
+import static io.devarium.core.auth.AuthConstants.REFRESH_HEADER;
+
 import io.devarium.api.auth.CustomUserPrincipal;
 import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.auth.dto.TokenResponse;
@@ -7,7 +9,6 @@ import io.devarium.core.auth.Token;
 import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.auth.service.AuthService;
-import io.devarium.infrastructure.auth.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<SingleItemResponse<TokenResponse>> refresh(
-        @RequestHeader(JwtConstants.REFRESH_HEADER) String refreshToken
+        @RequestHeader(REFRESH_HEADER) String refreshToken
     ) {
         Token token = authService.refresh(refreshToken);
         TokenResponse response = TokenResponse.from(token);

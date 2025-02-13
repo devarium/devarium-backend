@@ -1,6 +1,6 @@
 package io.devarium.api.controller.team.dto;
 
-import io.devarium.core.domain.team.port.CreateTeam;
+import io.devarium.core.domain.team.command.CreateTeam;
 import jakarta.validation.constraints.NotBlank;
 
 public record CreateTeamRequest(

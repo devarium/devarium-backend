@@ -2,12 +2,13 @@ package io.devarium.core.domain.membership.service;
 
 import io.devarium.core.domain.membership.MemberRole;
 import io.devarium.core.domain.membership.Membership;
+import io.devarium.core.domain.membership.command.DeleteMemberships;
+import io.devarium.core.domain.membership.command.UpdateMembership;
+import io.devarium.core.domain.membership.command.UpdateMemberships;
 import io.devarium.core.domain.membership.exception.MembershipErrorCode;
 import io.devarium.core.domain.membership.exception.MembershipException;
-import io.devarium.core.domain.membership.port.DeleteMemberships;
-import io.devarium.core.domain.membership.port.UpdateMembership;
-import io.devarium.core.domain.membership.port.UpdateMemberships;
-import io.devarium.core.domain.membership.repository.MembershipRepository;
+import io.devarium.core.domain.membership.port.in.MembershipService;
+import io.devarium.core.domain.membership.port.out.MembershipRepository;
 import io.devarium.core.domain.user.User;
 import java.util.LinkedList;
 import java.util.List;

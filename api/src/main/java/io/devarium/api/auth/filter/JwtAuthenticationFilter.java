@@ -1,7 +1,8 @@
 package io.devarium.api.auth.filter;
 
-import io.devarium.infrastructure.auth.jwt.JwtConstants;
-import io.devarium.infrastructure.auth.jwt.JwtUtil;
+import static io.devarium.core.auth.AuthConstants.AUTHORIZATION_HEADER;
+
+import io.devarium.core.auth.port.in.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j(topic = "JwtAuthenticationFilter")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final TokenProvider tokenProvider;
     private final UserDetailsService customUserDetailsService;
 
     @Override
@@ -34,8 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         try {
-            if (token != null && jwtUtil.isTokenValid(token)) {
-                String email = jwtUtil.extractEmail(token);
+            if (token != null && this.tokenProvider.isTokenValid(token)) {
+                String email = this.tokenProvider.extractEmail(token);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
                 //TODO: 사용자 정보 로드 (소프트 딜리트 확인 포함)
                 /*if (userDetails instanceof CustomUserDetails customUserDetails) {
@@ -62,9 +63,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String extractToken(HttpServletRequest request) {
-        String token = request.getHeader(JwtConstants.AUTHORIZATION_HEADER);
+        String token = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(token)) {
-            return jwtUtil.resolveToken(token);
+            return this.tokenProvider.resolveToken(token);
         }
         return null;
     }

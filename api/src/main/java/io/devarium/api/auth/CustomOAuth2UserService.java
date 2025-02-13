@@ -4,7 +4,7 @@ import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.auth.OAuth2UserInfo;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.exception.UserException;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.port.in.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

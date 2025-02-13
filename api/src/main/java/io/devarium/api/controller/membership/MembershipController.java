@@ -7,7 +7,7 @@ import io.devarium.api.controller.membership.dto.DeleteMembershipsRequest;
 import io.devarium.api.controller.membership.dto.MembershipResponse;
 import io.devarium.api.controller.membership.dto.UpdateMembershipsRequest;
 import io.devarium.core.domain.membership.Membership;
-import io.devarium.core.domain.membership.service.MembershipService;
+import io.devarium.core.domain.membership.port.in.MembershipService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,11 @@
 package io.devarium.infrastructure.persistence.service;
 
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.port.CreateTeam;
-import io.devarium.core.domain.team.port.UpdateLeader;
-import io.devarium.core.domain.team.port.UpdateTeamInfo;
-import io.devarium.core.domain.team.port.UpdateTeamName;
-import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.team.command.CreateTeam;
+import io.devarium.core.domain.team.command.UpdateLeader;
+import io.devarium.core.domain.team.command.UpdateTeamInfo;
+import io.devarium.core.domain.team.command.UpdateTeamName;
+import io.devarium.core.domain.team.port.in.TeamService;
 import io.devarium.core.domain.team.service.TeamServiceImpl;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.storage.Image;

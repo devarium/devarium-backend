@@ -9,7 +9,7 @@ import io.devarium.api.controller.teamRequest.dto.UpdateJoinsRequest;
 import io.devarium.core.domain.teamRequest.TeamRequest;
 import io.devarium.core.domain.teamRequest.TeamRequestStatus;
 import io.devarium.core.domain.teamRequest.TeamRequestType;
-import io.devarium.core.domain.teamRequest.service.TeamRequestService;
+import io.devarium.core.domain.teamRequest.port.in.TeamRequestService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
