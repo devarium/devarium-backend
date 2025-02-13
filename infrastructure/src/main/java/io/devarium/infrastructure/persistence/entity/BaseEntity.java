@@ -1,4 +1,4 @@
-package io.devarium.core.common;
+package io.devarium.infrastructure.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -21,3 +21,4 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private Instant updatedAt;
 }
+
