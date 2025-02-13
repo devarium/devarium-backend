@@ -91,4 +91,5 @@ jobs:
               -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
               -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
               -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
