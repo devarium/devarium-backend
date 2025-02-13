@@ -34,8 +34,8 @@ public class TeamServiceDecorator implements TeamService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Team> getTeams(Pageable pageable, String teamName) {
-        return teamService.getTeams(pageable, teamName);
+    public Page<Team> getTeams(String teamName, Pageable pageable) {
+        return teamService.getTeams(teamName, pageable);
     }
 
     @Override

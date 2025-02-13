@@ -50,7 +50,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Page<Team> getTeams(Pageable pageable, String teamName) {
+    public Page<Team> getTeams(String teamName, Pageable pageable) {
         return teamRepository.findByNameContaining(teamName, pageable);
     }
 

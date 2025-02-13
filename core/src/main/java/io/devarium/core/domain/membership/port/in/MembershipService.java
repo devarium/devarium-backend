@@ -17,7 +17,7 @@ public interface MembershipService {
 
     Membership getMembership(Long teamId, Long userId);
 
-    Page<Membership> getMemberships(Pageable pageable, Long teamId, User user);
+    Page<Membership> getMemberships(Long teamId, User user, Pageable pageable);
 
     List<Membership> getMemberships(Long userId);
 

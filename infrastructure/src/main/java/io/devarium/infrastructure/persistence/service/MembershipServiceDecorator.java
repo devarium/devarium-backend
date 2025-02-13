@@ -38,8 +38,8 @@ public class MembershipServiceDecorator implements MembershipService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Membership> getMemberships(Pageable pageable, Long teamId, User user) {
-        return membershipService.getMemberships(pageable, teamId, user);
+    public Page<Membership> getMemberships(Long teamId, User user, Pageable pageable) {
+        return membershipService.getMemberships(teamId, user, pageable);
     }
 
     @Override

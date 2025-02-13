@@ -66,8 +66,8 @@ public class PostController {
     @GetMapping("/{postId}/comments")
     public ResponseEntity<PagedListResponse<CommentResponse>> getCommentsByPostId(
         @PathVariable Long postId,
-        @PageableDefault(size = Comment.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
-        @AuthenticationPrincipal CustomUserPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal,
+        @PageableDefault(size = Comment.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
     ) {
         Page<Comment> comments = commentService.getCommentsByPostId(postId, pageable);
         Page<CommentResponse> commentResponses = comments.map(comment -> {
@@ -82,8 +82,8 @@ public class PostController {
 
     @GetMapping("/all")
     public ResponseEntity<PagedListResponse<PostResponse>> getAllPosts(
-        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
-        @AuthenticationPrincipal CustomUserPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal,
+        @PageableDefault(size = Post.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
         Page<Post> posts = postService.getAllPosts(pageable);
         Page<PostResponse> postResponses = posts.map(post -> createPostResponse(post, principal));

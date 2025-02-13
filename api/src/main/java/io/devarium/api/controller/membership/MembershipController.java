@@ -34,14 +34,14 @@ public class MembershipController {
 
     @GetMapping
     public ResponseEntity<PagedListResponse<MembershipResponse>> getMemberships(
-        @PageableDefault(size = Membership.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
         @PathVariable Long teamId,
-        @AuthenticationPrincipal CustomUserPrincipal principal
+        @AuthenticationPrincipal CustomUserPrincipal principal,
+        @PageableDefault(size = Membership.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
     ) {
         Page<Membership> memberships = membershipService.getMemberships(
-            pageable,
             teamId,
-            principal.getUser()
+            principal.getUser(),
+            pageable
         );
         Page<MembershipResponse> response = memberships.map(MembershipResponse::from);
 

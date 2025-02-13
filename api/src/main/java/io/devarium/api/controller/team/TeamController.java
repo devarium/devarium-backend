@@ -67,10 +67,10 @@ public class TeamController {
 
     @GetMapping
     public ResponseEntity<PagedListResponse<TeamResponse>> getTeams(
-        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
-        @RequestParam String name
+        @RequestParam String name,
+        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
     ) {
-        Page<Team> teams = teamService.getTeams(pageable, name);
+        Page<Team> teams = teamService.getTeams(name, pageable);
         Page<TeamResponse> response = teams.map(TeamResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));

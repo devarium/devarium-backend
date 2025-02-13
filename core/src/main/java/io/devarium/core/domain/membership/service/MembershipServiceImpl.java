@@ -65,7 +65,7 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
-    public Page<Membership> getMemberships(Pageable pageable, Long teamId, User user) {
+    public Page<Membership> getMemberships(Long teamId, User user, Pageable pageable) {
         getMembership(teamId, user.getId()).validateRole(MemberRole.MEMBER);
 
         return membershipRepository.findAllByTeamId(teamId, pageable);
