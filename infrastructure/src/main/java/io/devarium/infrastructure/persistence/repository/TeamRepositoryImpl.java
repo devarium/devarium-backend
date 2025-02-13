@@ -7,6 +7,7 @@ import io.devarium.core.domain.team.port.out.TeamRepository;
 import io.devarium.infrastructure.persistence.entity.TeamEntity;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,34 +23,41 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     @Override
     public Team save(Team team) {
+        TeamEntity entity;
         UserEntity leader = entityManager.getReference(UserEntity.class, team.getLeaderId());
-
         if (team.getId() != null) {
-            TeamEntity entity = teamJpaRepository.findById(team.getId())
+            entity = teamJpaRepository.findById(team.getId())
                 .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, team.getId()));
-            entity.update(team);
-            entity.updateLeader(leader);
-            return teamJpaRepository.save(entity).toDomain();
+            entity.update(team, leader);
+        } else {
+            entity = TeamEntity.fromDomain(team, leader);
         }
-
-        TeamEntity entity = TeamEntity.fromDomain(team, leader);
         return teamJpaRepository.save(entity).toDomain();
     }
 
     @Override
-    public void delete(Long id) {
-        TeamEntity entity = teamJpaRepository.findById(id)
-            .orElseThrow(() -> new TeamException(TeamErrorCode.TEAM_NOT_FOUND, id));
-        teamJpaRepository.delete(entity);
-    }
-
-    @Override
     public Optional<Team> findById(Long id) {
-        return teamJpaRepository.findById(id).map(TeamEntity::toDomain);
+        return teamJpaRepository.findByIdAndDeletedAtIsNull(id).map(TeamEntity::toDomain);
     }
 
     @Override
-    public Page<Team> findAllByUserId(Long userId, Pageable pageable) {
-        return teamJpaRepository.findAllByUserId(userId, pageable).map(TeamEntity::toDomain);
+    public List<Team> findAllById(List<Long> Ids) {
+        return teamJpaRepository.findAllById(Ids).stream().map(TeamEntity::toDomain).toList();
+    }
+
+    @Override
+    public Page<Team> findByNameContaining(String name, Pageable pageable) {
+        return teamJpaRepository.findByNameContainingAndDeletedAtIsNull(name, pageable)
+            .map(TeamEntity::toDomain);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return teamJpaRepository.existsByIdAndDeletedAtIsNull(id);
+    }
+
+    @Override
+    public boolean existsByLeaderId(Long leaderId) {
+        return teamJpaRepository.existsByLeaderIdAndDeletedAtIsNull(leaderId);
     }
 }

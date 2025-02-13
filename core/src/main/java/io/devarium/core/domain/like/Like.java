@@ -2,7 +2,6 @@ package io.devarium.core.domain.like;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.tool.schema.TargetType;
 
 @Getter
 public class Like {

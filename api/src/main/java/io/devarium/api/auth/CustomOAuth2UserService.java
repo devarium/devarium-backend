@@ -39,6 +39,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuth2UserInfo userInfo = OAuth2UserInfo.of(id, email, name, picture, provider);
 
+        // 동일 이메일로 등록된 다른 Provider 확인
         User user;
         try {
             user = userService.getByEmail(email);
@@ -49,7 +50,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 );
             }
         } catch (UserException e) {
-            // 사용자를 찾지 못한 경우 새로 생성
+            // 등록된 user가 없을 때 신규 사용자 등록 (로그인 시에는 업데이트하지 않음)
             user = userService.createUser(userInfo);
         }
 

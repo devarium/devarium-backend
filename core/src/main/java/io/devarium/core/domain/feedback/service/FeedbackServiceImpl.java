@@ -16,8 +16,7 @@ import io.devarium.core.domain.feedback.question.command.CreateQuestion;
 import io.devarium.core.domain.feedback.question.command.UpdateQuestion;
 import io.devarium.core.domain.feedback.question.command.UpdateQuestionOrders;
 import io.devarium.core.domain.feedback.question.command.UpdateQuestionOrders.UpdateQuestionOrder;
-import io.devarium.core.domain.member.Member;
-import io.devarium.core.domain.member.port.in.MemberService;
+import io.devarium.core.domain.membership.port.in.MembershipService;
 import io.devarium.core.domain.project.Project;
 import io.devarium.core.domain.project.port.in.ProjectService;
 import io.devarium.core.domain.user.User;
@@ -34,14 +33,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final ProjectService projectService;
-    private final MemberService memberService;
+    private final MembershipService membershipService;
     private final TextSummarizer textSummarizer;
 
     @Override
     public Question createFeedbackQuestion(Long projectId, CreateQuestion request, User user) {
         Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
+        validateMembership(project.getTeamId(), user.getId());
 
         questionRepository.incrementOrderNumbersFrom(projectId, request.orderNumber());
 
@@ -100,8 +98,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<Feedback> getFeedbacks(Long projectId, User user) {
         Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
+        validateMembership(project.getTeamId(), user.getId());
 
         List<Question> questions = questionRepository.findAllByProjectId(projectId);
         List<Answer> answers = answerRepository.findAllByQuestionIdIn(
@@ -140,8 +137,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         User user
     ) {
         Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
+        validateMembership(project.getTeamId(), user.getId());
 
         Question question = questionRepository.findById(questionId)
             .orElseThrow(() ->
@@ -164,8 +160,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         User user
     ) {
         Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
+        validateMembership(project.getTeamId(), user.getId());
 
         List<Question> questions = questionRepository.findAllByProjectId(projectId);
 
@@ -185,10 +180,19 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public void deleteFeedbackQuestion(Long projectId, Long questionId, User user) {
         Project project = projectService.getProject(projectId);
-        Member member = memberService.getUserMembership(project.getTeamId(), user.getId());
-        member.validateMembership(project.getTeamId());
+        validateMembership(project.getTeamId(), user.getId());
 
         questionRepository.deleteById(questionId);
+    }
+
+    private void validateMembership(Long teamId, Long userId) {
+        if (!membershipService.checkMembershipExists(teamId, userId)) {
+            throw new FeedbackException(
+                FeedbackErrorCode.MEMBERSHIP_NOT_FOUND,
+                teamId,
+                userId
+            );
+        }
     }
 
     private FeedbackSummary summarizeFeedback(Feedback feedback) {

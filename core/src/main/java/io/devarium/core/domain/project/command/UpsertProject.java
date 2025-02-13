@@ -5,11 +5,11 @@ import java.util.Set;
 
 public interface UpsertProject {
 
-    public String name();
+    String name();
 
-    public String description();
+    String description();
 
-    public Long teamId();
+    Long teamId();
 
-    public Set<Skill> skills();
+    Set<Skill> skills();
 }
