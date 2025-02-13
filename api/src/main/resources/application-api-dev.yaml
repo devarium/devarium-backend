@@ -1,0 +1,2 @@
+api:
+  base-url: ${DEV_EC2_HOST}:8080
