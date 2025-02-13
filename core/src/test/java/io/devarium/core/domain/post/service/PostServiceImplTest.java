@@ -9,9 +9,9 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.post.Post;
+import io.devarium.core.domain.post.command.UpsertPost;
 import io.devarium.core.domain.post.exception.PostException;
-import io.devarium.core.domain.post.port.UpsertPost;
-import io.devarium.core.domain.post.repository.PostRepository;
+import io.devarium.core.domain.post.port.out.PostRepository;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
@@ -32,9 +32,9 @@ public class PostServiceImplTest {
     private static final User USER = User.builder()
         .id(10L)
         .email("testUser@email.com")
-        .name("testUser")
+        .username("testUser")
         .bio("bio")
-        .picture("picture")
+        .profileImageUrl("profileImageUrl")
         .blogUrl("blogUrl")
         .githubUrl("githubUrl")
         .role(UserRole.USER)

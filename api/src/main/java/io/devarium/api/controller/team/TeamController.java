@@ -6,13 +6,16 @@ import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.team.dto.CreateTeamRequest;
 import io.devarium.api.controller.team.dto.TeamResponse;
 import io.devarium.api.controller.team.dto.UpdateLeaderRequest;
-import io.devarium.api.controller.team.dto.UpdateTeamRequest;
+import io.devarium.api.controller.team.dto.UpdateTeamInfoRequest;
+import io.devarium.api.controller.team.dto.UpdateTeamNameRequest;
 import io.devarium.core.domain.team.Team;
-import io.devarium.core.domain.team.service.TeamService;
+import io.devarium.core.domain.team.port.in.TeamService;
+import io.devarium.core.storage.Image;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/${api.version}/teams")
@@ -36,9 +42,14 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<SingleItemResponse<TeamResponse>> createTeam(
         @Valid @RequestBody CreateTeamRequest request,
+        @RequestPart(required = false) MultipartFile file,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.createTeam(request, principal.getUser());
+        Team team = teamService.createTeam(
+            request,
+            file == null ? null : Image.from(file),
+            principal.getUser()
+        );
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity
@@ -56,22 +67,50 @@ public class TeamController {
 
     @GetMapping
     public ResponseEntity<PagedListResponse<TeamResponse>> getTeams(
-        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE) Pageable pageable,
-        @AuthenticationPrincipal CustomUserPrincipal principal
+        @RequestParam String name,
+        @PageableDefault(size = Team.DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.ASC) Pageable pageable
     ) {
-        Page<Team> teams = teamService.getTeams(pageable, principal.getUser());
+        Page<Team> teams = teamService.getTeams(name, pageable);
         Page<TeamResponse> response = teams.map(TeamResponse::from);
 
         return ResponseEntity.ok(PagedListResponse.from(response));
     }
 
-    @PutMapping("/{teamId}")
-    public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeam(
+    @PutMapping("/{teamId}/info")
+    public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeamInfo(
         @PathVariable Long teamId,
-        @Valid @RequestBody UpdateTeamRequest request,
+        @Valid @RequestBody UpdateTeamInfoRequest request,
         @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        Team team = teamService.updateTeam(teamId, request, principal.getUser());
+        Team team = teamService.updateTeamInfo(teamId, request, principal.getUser());
+        TeamResponse response = TeamResponse.from(team);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @PutMapping("/{teamId}/name")
+    public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeamName(
+        @PathVariable Long teamId,
+        @Valid @RequestBody UpdateTeamNameRequest request,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Team team = teamService.updateTeamName(teamId, request, principal.getUser());
+        TeamResponse response = TeamResponse.from(team);
+
+        return ResponseEntity.ok(SingleItemResponse.from(response));
+    }
+
+    @PutMapping("/{teamId}/profile-image")
+    public ResponseEntity<SingleItemResponse<TeamResponse>> updateTeamProfileImage(
+        @PathVariable Long teamId,
+        @RequestPart MultipartFile file,
+        @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        Team team = teamService.updateTeamProfileImage(
+            teamId,
+            Image.from(file),
+            principal.getUser()
+        );
         TeamResponse response = TeamResponse.from(team);
 
         return ResponseEntity.ok(SingleItemResponse.from(response));

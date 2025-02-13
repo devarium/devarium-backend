@@ -3,9 +3,11 @@ package io.devarium.infrastructure.persistence.repository;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.exception.UserErrorCode;
 import io.devarium.core.domain.user.exception.UserException;
-import io.devarium.core.domain.user.repository.UserRepository;
+import io.devarium.core.domain.user.port.out.UserRepository;
 import io.devarium.infrastructure.persistence.entity.UserEntity;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +41,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findById(Long userId) {
         return userJpaRepository.findById(userId).map(UserEntity::toDomain);
+    }
+
+    @Override
+    public List<User> findAllById(Set<Long> userIds) {
+        return userJpaRepository.findAllByIdInAndDeletedAtIsNull(userIds).stream()
+            .map(UserEntity::toDomain).toList();
     }
 }

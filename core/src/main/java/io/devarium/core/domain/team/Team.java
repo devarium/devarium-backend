@@ -10,13 +10,13 @@ import lombok.Getter;
 @Getter
 public class Team {
 
-    public static final int DEFAULT_PAGE_SIZE = 1;
+    public static final int DEFAULT_PAGE_SIZE = 10;
 
     private final Long id;
 
     private String name;
     private String description;
-    private String picture;
+    private String profileImageUrl;
     private String githubUrl;
     private Long leaderId;
     private Instant deletedAt;
@@ -26,7 +26,7 @@ public class Team {
         Long id,
         String name,
         String description,
-        String picture,
+        String profileImageUrl,
         String githubUrl,
         Long leaderId,
         Instant deletedAt
@@ -34,7 +34,7 @@ public class Team {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.picture = picture;
+        this.profileImageUrl = profileImageUrl;
         this.githubUrl = githubUrl;
         this.leaderId = leaderId;
         this.deletedAt = deletedAt;
@@ -46,11 +46,17 @@ public class Team {
         }
     }
 
-    public void update(String name, String description, String picture, String githubUrl) {
-        this.name = name;
+    public void updateInfo(String description, String githubUrl) {
         this.description = description;
-        this.picture = picture;
         this.githubUrl = githubUrl;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateProfileImage(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateLeader(Long newLeaderId) {

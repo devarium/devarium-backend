@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: infrastructure
   datasource:
     url: jdbc:mysql://localhost:3306/devarium
     username: root
@@ -14,6 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
   data:
     redis:
       host: localhost
@@ -30,7 +32,7 @@ oauth2:
     user-info-endpoint: ${spring.security.oauth2.client.provider.google.user-info-uri}
     client-id: ${GOOGLE_CLIENT_ID}
     client-secret: ${GOOGLE_CLIENT_SECRET}
-    redirect-uri: ${api.base-url}/api/${api.version}/auth/google/callback
+    redirect-uri: http://${api.base-url}/api/${api.version}/auth/google/callback
 
 cloud:
   aws:
@@ -43,3 +45,11 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
+logging:
+  level:
+    com.theokanning.openai: DEBUG

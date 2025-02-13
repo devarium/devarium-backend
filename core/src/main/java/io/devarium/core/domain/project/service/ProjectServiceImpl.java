@@ -1,10 +1,12 @@
 package io.devarium.core.domain.project.service;
 
 import io.devarium.core.domain.project.Project;
+import io.devarium.core.domain.project.ProjectStatus;
+import io.devarium.core.domain.project.command.UpsertProject;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
-import io.devarium.core.domain.project.port.UpsertProject;
-import io.devarium.core.domain.project.repository.ProjectRepository;
+import io.devarium.core.domain.project.port.in.ProjectService;
+import io.devarium.core.domain.project.port.out.ProjectRepository;
 import io.devarium.core.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +20,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = Project.builder()
             .name(request.name())
             .description(request.description())
+            .status(ProjectStatus.TODO)
+            .teamId(request.teamId())
             .skills(request.skills())
             .build();
         return projectRepository.save(project);

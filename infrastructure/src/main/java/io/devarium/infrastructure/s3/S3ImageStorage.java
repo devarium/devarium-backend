@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import io.devarium.core.storage.Image;
 import io.devarium.core.storage.exception.StorageErrorCode;
 import io.devarium.core.storage.exception.StorageException;
-import io.devarium.core.storage.port.ImageStorage;
+import io.devarium.core.storage.port.out.ImageStorage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

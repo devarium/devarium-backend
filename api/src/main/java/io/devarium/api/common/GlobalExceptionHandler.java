@@ -5,20 +5,26 @@ import io.devarium.core.auth.exception.AuthErrorCode;
 import io.devarium.core.auth.exception.CustomAuthException;
 import io.devarium.core.domain.comment.exception.CommentErrorCode;
 import io.devarium.core.domain.comment.exception.CommentException;
-import io.devarium.core.domain.member.exception.MemberErrorCode;
-import io.devarium.core.domain.member.exception.MemberException;
+import io.devarium.core.domain.feedback.exception.FeedbackErrorCode;
+import io.devarium.core.domain.feedback.exception.FeedbackException;
+import io.devarium.core.domain.like.exception.LikeErrorCode;
+import io.devarium.core.domain.like.exception.LikeException;
+import io.devarium.core.domain.membership.exception.MembershipErrorCode;
+import io.devarium.core.domain.membership.exception.MembershipException;
 import io.devarium.core.domain.post.exception.PostErrorCode;
 import io.devarium.core.domain.post.exception.PostException;
 import io.devarium.core.domain.project.exception.ProjectErrorCode;
 import io.devarium.core.domain.project.exception.ProjectException;
 import io.devarium.core.domain.reply.exception.ReplyErrorCode;
 import io.devarium.core.domain.reply.exception.ReplyException;
-import io.devarium.core.storage.exception.StorageErrorCode;
-import io.devarium.core.storage.exception.StorageException;
-import io.devarium.core.domain.user.exception.UserErrorCode;
-import io.devarium.core.domain.user.exception.UserException;
 import io.devarium.core.domain.team.exception.TeamErrorCode;
 import io.devarium.core.domain.team.exception.TeamException;
+import io.devarium.core.domain.teamRequest.exception.TeamRequestErrorCode;
+import io.devarium.core.domain.teamRequest.exception.TeamRequestException;
+import io.devarium.core.domain.user.exception.UserErrorCode;
+import io.devarium.core.domain.user.exception.UserException;
+import io.devarium.core.storage.exception.StorageErrorCode;
+import io.devarium.core.storage.exception.StorageException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
@@ -91,8 +97,20 @@ public class GlobalExceptionHandler {
             );
     }
 
+    @ExceptionHandler(FeedbackException.class)
+    public ResponseEntity<ErrorResponse> handleFeedbackException(FeedbackException e) {
+        FeedbackErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
     @ExceptionHandler(TeamException.class)
-    public ResponseEntity<ErrorResponse> handlerTeamException(TeamException e) {
+    public ResponseEntity<ErrorResponse> handleTeamException(TeamException e) {
         TeamErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
@@ -103,9 +121,9 @@ public class GlobalExceptionHandler {
             );
     }
 
-    @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ErrorResponse> handlerMemberException(MemberException e) {
-        MemberErrorCode errorCode = e.getErrorCode();
+    @ExceptionHandler(MembershipException.class)
+    public ResponseEntity<ErrorResponse> handlerMembershipException(MembershipException e) {
+        MembershipErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(
@@ -130,6 +148,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorResponse> handleUserException(UserException e) {
         UserErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(TeamRequestException.class)
+    public ResponseEntity<ErrorResponse> handleTeamRequestException(TeamRequestException e) {
+        TeamRequestErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(
+                errorCode.getStatus().name(),
+                errorCode.getStatus().value(),
+                e.getMessage())
+            );
+    }
+
+    @ExceptionHandler(LikeException.class)
+    public ResponseEntity<ErrorResponse> handleLikeException(LikeException e) {
+        LikeErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(ErrorResponse.of(

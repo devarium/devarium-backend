@@ -1,7 +1,7 @@
 package io.devarium.api.auth;
 
 import io.devarium.core.domain.user.User;
-import io.devarium.core.domain.user.service.UserService;
+import io.devarium.core.domain.user.port.in.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,10 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // UserService를 통해 사용자 정보를 조회
         User user = userService.getByEmail(email);
-        //TODO: 소프트 딜리트 상태 확인 로직
-        /*if (user == null || user.isDeleted()) { // 소프트 딜리트 상태 확인
-            throw new UsernameNotFoundException("User not found or is deleted: " + email);
-        }*/
+
         // User 객체를 UserDetails로 변환하여 반환
         return new CustomUserPrincipal(user);
     }

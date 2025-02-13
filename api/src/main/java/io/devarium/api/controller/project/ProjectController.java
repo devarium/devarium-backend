@@ -5,7 +5,7 @@ import io.devarium.api.common.dto.SingleItemResponse;
 import io.devarium.api.controller.project.dto.ProjectResponse;
 import io.devarium.api.controller.project.dto.UpsertProjectRequest;
 import io.devarium.core.domain.project.Project;
-import io.devarium.core.domain.project.service.ProjectService;
+import io.devarium.core.domain.project.port.in.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

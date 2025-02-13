@@ -1,6 +1,7 @@
 package io.devarium.core.auth.service;
 
 import io.devarium.core.auth.Token;
+import io.devarium.core.auth.port.in.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

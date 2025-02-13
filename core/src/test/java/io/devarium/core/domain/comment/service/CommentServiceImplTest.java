@@ -9,9 +9,9 @@ import static org.mockito.BDDMockito.then;
 
 import io.devarium.core.auth.OAuth2Provider;
 import io.devarium.core.domain.comment.Comment;
+import io.devarium.core.domain.comment.command.UpsertComment;
 import io.devarium.core.domain.comment.exception.CommentException;
-import io.devarium.core.domain.comment.port.UpsertComment;
-import io.devarium.core.domain.comment.repository.CommentRepository;
+import io.devarium.core.domain.comment.port.out.CommentRepository;
 import io.devarium.core.domain.user.User;
 import io.devarium.core.domain.user.UserRole;
 import java.util.Optional;
@@ -32,9 +32,9 @@ public class CommentServiceImplTest {
     private static final User USER = User.builder()
         .id(10L)
         .email("testUser@email.com")
-        .name("testUser")
+        .username("testUser")
         .bio("bio")
-        .picture("picture")
+        .profileImageUrl("profileImageUrl")
         .blogUrl("blogUrl")
         .githubUrl("githubUrl")
         .role(UserRole.USER)
