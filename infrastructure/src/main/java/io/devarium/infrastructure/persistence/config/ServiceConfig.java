@@ -45,6 +45,7 @@ import io.devarium.infrastructure.persistence.service.TeamServiceDecorator;
 import io.devarium.infrastructure.persistence.service.UserServiceDecorator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class ServiceConfig {
@@ -73,7 +74,7 @@ public class ServiceConfig {
         StorageService storageService,
         TeamService teamService,
         MembershipService membershipService,
-        TeamRequestService teamRequestService
+        @Lazy TeamRequestService teamRequestService
     ) {
         return new UserServiceDecorator(
             new UserServiceImpl(
