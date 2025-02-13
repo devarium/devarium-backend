@@ -1,8 +1,4 @@
 spring:
-  application:
-    name: devarium
-  config:
-    import: file:infrastructure/src/main/resources/application.yaml
   security:
     oauth2:
       client:
@@ -21,7 +17,7 @@ spring:
 
 api:
   version: v1
-  base-url: http://localhost:8080
+  base-url: ${DEV_EC2_HOST}:8080
 
 springdoc:
   version: '1.0.0'

@@ -11,3 +11,7 @@ dependencies {
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.security:spring-security-test'
 }
+
+tasks.named('bootJar') {
+    enabled = false
+}
