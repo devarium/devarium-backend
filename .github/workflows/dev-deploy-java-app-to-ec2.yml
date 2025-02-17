@@ -78,7 +78,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
 
             sudo docker run -d -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=api,infrastructure,infrastructure-dev \
+              -e SPRING_PROFILES_ACTIVE=api,api-dev,infrastructure,infrastructure-dev \
               -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} \
               -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} \
               -e DEV_DB_NAME=${{ secrets.DEV_DB_NAME }} \
