@@ -60,6 +60,12 @@ springBoot {
     mainClass = 'io.devarium.api.ApiApplication'
 }
 
+processResources {
+    from('.') {
+        include 'application.yaml'
+    }
+}
+
 tasks.named('bootJar') {
     archiveClassifier.set('')
 }
